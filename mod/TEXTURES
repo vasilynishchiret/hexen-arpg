@@ -1,0 +1,72 @@
+// Temporary aliases to original Hexen sprites. No image data is stored in this mod.
+Sprite ARAXA0, 94, 69
+{
+    Offset -186, -111
+    Patch FAXEA0, 0, 0
+}
+
+Sprite ARAXB0, 66, 188
+{
+    Offset -254, 131
+    Patch FAXEB0, 0, 0
+}
+
+Sprite ARAXC0, 169, 200
+{
+    Offset -151, 20
+    Patch FAXEC0, 0, 0
+}
+
+Sprite ARAXD0, 190, 155
+{
+    Offset -100, -25
+    Patch FAXED0, 0, 0
+}
+
+Sprite ARAXE0, 57, 65
+{
+    Offset -66, -115
+    Patch FAXEE0, 0, 0
+}
+
+Sprite ARAXL0, 102, 73
+{
+    Offset -182, -107
+    Patch FAXEL0, 0, 0
+}
+
+Sprite ARAXM0, 102, 73
+{
+    Offset -182, -107
+    Patch FAXEM0, 0, 0
+}
+
+Sprite ARAXN0, 70, 188
+{
+    Offset -250, 134
+    Patch FAXEN0, 0, 0
+}
+
+Sprite ARAXO0, 173, 200
+{
+    Offset -147, 29
+    Patch FAXEO0, 0, 0
+}
+
+Sprite ARAXP0, 194, 159
+{
+    Offset -96, -21
+    Patch FAXEP0, 0, 0
+}
+
+Sprite ARAXQ0, 65, 69
+{
+    Offset -62, -111
+    Patch FAXEQ0, 0, 0
+}
+
+Sprite ARAWA0, 28, 41
+{
+    Offset 12, 37
+    Patch WFAXA0, 0, 0
+}
