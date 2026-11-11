@@ -1,6 +1,17 @@
 class ARPGKillRewards : EventHandler
 {
     Array<Actor> rewarded;
+    Array<Actor> lethalVictims;
+    Array<Actor> lethalSources;
+
+    override void WorldThingDamaged(WorldEvent e)
+    {
+        if (e.Thing == null || e.Thing.health > 0 || !e.Thing.bIsMonster || e.Thing.bFriendly) return;
+        let cleric = ARPGCleric(e.DamageSource);
+        if (cleric == null) return;
+        lethalVictims.Push(e.Thing);
+        lethalSources.Push(cleric);
+    }
 
     override void WorldThingDied(WorldEvent e)
     {
@@ -17,6 +28,14 @@ class ARPGKillRewards : EventHandler
             source = source.target;
         }
         let cleric = ARPGCleric(source);
+        for (int i = lethalVictims.Size() - 1; i >= 0; i--)
+        {
+            if (lethalVictims[i] != e.Thing) continue;
+            cleric = ARPGCleric(lethalSources[i]);
+            lethalVictims.Delete(i);
+            lethalSources.Delete(i);
+            break;
+        }
         if (cleric == null || cleric.health <= 0) return;
 
         rewarded.Push(e.Thing);
