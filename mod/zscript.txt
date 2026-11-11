@@ -1,0 +1,4 @@
+version "5.0"
+
+#include "zscript/player/fighter_gauntlets.zs"
+#include "zscript/player/fighter_player.zs"
