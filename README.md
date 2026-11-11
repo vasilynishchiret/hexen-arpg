@@ -1,25 +1,31 @@
-﻿# HEXEN-ARPG
+# HEXEN-ARPG
 
-Minimal UZDoom 5.0.3 mod for the original Hexen IWAD. This is an independent project, not an engine fork.
+Минимальный ARPG-прототип для оригинального Hexen на UZDoom 5.0.3. Движок и `HEXEN.WAD` не изменяются и не входят в Git.
 
-## Current change
+## Версия 0.2
 
-The Fighter starts with `ARPGFighterGauntlets`, a subclass of the original `FWeapFist`. Its `Inventory.ModifyDamage` hook doubles outgoing `Melee` damage while the gauntlets are selected. The original attack action, animation, timing, number of hits, and combo logic are inherited unchanged. `MAPINFO` lists this Fighter subclass alongside the original Cleric and Mage classes. The original IWAD and engine are untouched.
+Выберите **Cleric**. Его класс `ARPGCleric` получает при старте:
 
-## Run
+- **1 — булаву** `ARPGMace`: исходная механика `CWeapMace`, двойной урон через `Inventory.ModifyDamage`.
+- **2 — заряженный меч** `ARPGSword`: ближний удар на 70 HP при попадании, расход 3 Mana1 за каждый взмах, включая промах. Временно использует анимацию булавы.
+- **3 — книгу молний** `ARPGLightning`: исходное поведение Arc of Death, расход 5 Mana2 за атаку. Временно использует исходные спрайты молнии.
 
-From the project root in PowerShell:
+Cleric начинает с 30 единиц Mana1 и Mana2. Mana1 восстанавливается на 1 единицу каждые 35 игровых тиков (1 секунда при обычной скорости игры), пока персонаж жив. Mana2 не восстанавливается сама: за убийство монстра игрок получает 5 единиц, не превышая стандартного максимума. Обычные игровые предметы маны продолжают работать.
+
+Каждое убийство Ettin приносит 10 XP. Для остальных монстров временная награда равна `clamp(максимальное HP / 15, 5, 100)` XP. Уровень начинается с 1, первый порог — 100 XP, каждый следующий порог примерно на 35% выше. Каждый новый уровень добавляет 5 к максимальному HP и текущему HP. Уровень и XP показаны в верхнем левом углу; при повышении появляется короткое сообщение. Прогрессия хранится в классе игрока и сохраняется при переходе между картами хаба.
+
+Оригинальные Fighter и Mage остаются доступными без новых способностей. Прежняя модификация перчаток Fighter сохранена в первом коммите Git, но исключена из этой версии мода.
+
+## Запуск
+
+В PowerShell из корня репозитория:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1
 ```
 
-The script defaults to `C:\Games\UZDoom\uzdoom.exe` and `C:\Games\UZDoom\HEXEN.WAD`. Override either path with `-UZDoom` or `-IWAD`. Other arguments are passed to UZDoom, for example `+playerclass 0 +map MAP01` to start as Fighter on the first map.
+По умолчанию используются `C:\Games\UZDoom\uzdoom.exe` и `C:\Games\UZDoom\HEXEN.WAD`. Пути можно переопределить аргументами `-UZDoom` и `-IWAD`; остальные аргументы передаются UZDoom.
 
-In VS Code, open the `hexen-arpg` folder and use **Terminal -> Run Task -> Run Hexen ARPG**.
+В VS Code откройте папку `hexen-arpg`, затем запустите задачу **Run Hexen ARPG**.
 
-## Manual A/B check
-
-Launch the mod with the command above and choose Fighter. Save at the start of MAP01, then hit a nearby Ettin with the starting gauntlets. For the baseline, start UZDoom with `-iwad C:\Games\UZDoom\HEXEN.WAD` and no `-file` argument, choose Fighter, and repeat from the same position. The unmodified punch rolls 40-55 base damage; this mod rolls 80-110. The third successful contact in either version triggers the original stronger combo hit. For a precise comparison, use the same target and inspect its health through a ZScript test handler; counts of hits to kill can vary with the random damage roll and combo.
-
-Do not commit game WADs, engine binaries, saves, or other copyrighted game resources.
+Подробная ручная проверка: [docs/TESTING.md](docs/TESTING.md).
