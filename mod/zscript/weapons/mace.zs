@@ -1,4 +1,4 @@
-class ARPGFighterGauntlets : FWeapFist replaces FWeapFist
+class ARPGMace : CWeapMace
 {
     override void ModifyDamage(int damage, Name damageType, out int newdamage,
         bool passive, Actor inflictor, Actor source, int flags, double angle)

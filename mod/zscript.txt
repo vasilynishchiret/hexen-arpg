@@ -1,4 +1,10 @@
 version "5.0"
 
-#include "zscript/player/fighter_gauntlets.zs"
-#include "zscript/player/fighter_player.zs"
+#include "zscript/systems/balance.zs"
+#include "zscript/weapons/mace.zs"
+#include "zscript/weapons/sword.zs"
+#include "zscript/weapons/lightning.zs"
+#include "zscript/player/arpg_cleric.zs"
+#include "zscript/mana/regeneration.zs"
+#include "zscript/systems/kill_rewards.zs"
+#include "zscript/hud/level_xp.zs"
