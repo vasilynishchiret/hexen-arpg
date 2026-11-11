@@ -10,8 +10,8 @@ class ARPGCleric : ClericPlayer
         Player.StartItem "ARPGMace";
         Player.StartItem "ARPGSword";
         Player.StartItem "ARPGLightning";
-        Player.StartItem "Mana1", 30;
-        Player.StartItem "Mana2", 30;
+        Player.StartItem "Mana1", ARPGBalance.START_MANA1;
+        Player.StartItem "Mana2", ARPGBalance.START_MANA2;
         Player.WeaponSlot 1, "ARPGMace";
         Player.WeaponSlot 2, "ARPGSword";
         Player.WeaponSlot 3, "ARPGLightning";

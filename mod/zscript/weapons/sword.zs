@@ -11,7 +11,7 @@ class ARPGSword : CWeapMace
     action void A_ARPGSwordAttack()
     {
         if (player == null || player.ReadyWeapon == null || !player.ReadyWeapon.DepleteAmmo(false)) return;
-        A_CustomPunch(70, true, 0, "HammerPuff", 2 * DEFMELEERANGE);
+        A_CustomPunch(ARPGBalance.SWORD_DAMAGE, true, 0, "HammerPuff", 2 * DEFMELEERANGE);
     }
     States
     {

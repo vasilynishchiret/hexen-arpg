@@ -20,7 +20,7 @@ class ARPGKillRewards : EventHandler
         if (cleric == null || cleric.health <= 0) return;
 
         rewarded.Push(e.Thing);
-        int xp = e.Thing is "Ettin" ? ARPGBalance.XP_ETTIN : clamp(e.Thing.GetMaxHealth() / 15, 5, 100);
+        int xp = e.Thing is "Ettin" ? ARPGBalance.XP_ETTIN : clamp(e.Thing.GetMaxHealth() / ARPGBalance.OTHER_XP_HP_DIVISOR, ARPGBalance.OTHER_XP_MIN, ARPGBalance.OTHER_XP_MAX);
         cleric.AddXP(xp);
         cleric.GiveInventory("Mana2", ARPGBalance.GREEN_MANA_PER_KILL);
     }

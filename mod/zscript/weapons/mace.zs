@@ -6,7 +6,7 @@ class ARPGMace : CWeapMace
         if (!passive && damageType == 'Melee' && Owner != null &&
             Owner.player != null && Owner.player.ReadyWeapon == self)
         {
-            newdamage = damage * 2;
+            newdamage = damage * ARPGBalance.MACE_DAMAGE_MULTIPLIER;
         }
     }
 }
