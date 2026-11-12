@@ -1,8 +1,8 @@
-// Temporary aliases to original Hexen sprites. No image data is stored in this mod.
+// Sword sprites use original Hexen frames only where custom PNGs are not yet available.
 Sprite ARAXA0, 94, 69
 {
     Offset -186, -111
-    Patch FAXEA0, 0, 0
+    Patch "patches/arpg_sword/FBLADEA0.png", 0, 0
 }
 
 Sprite ARAXB0, 66, 188
