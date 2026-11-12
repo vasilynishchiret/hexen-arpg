@@ -1,5 +1,6 @@
 class ARPGSword : CWeapMace
 {
+    ARPGWeaponData loot;
     Default
     {
         Weapon.AmmoType1 "Mana1";
@@ -8,9 +9,19 @@ class ARPGSword : CWeapMace
         Tag "Charged Sword";
     }
 
+    int CurrentDamage() const
+    {
+        return loot.damage > 0 ? loot.damage : ARPGBalance.SWORD_DAMAGE;
+    }
+
+    int CurrentManaCost() const
+    {
+        return loot.manaCost > 0 ? loot.manaCost : ARPGBalance.SWORD_MANA_COST;
+    }
+
     bool HasCharge() const
     {
-        return Ammo1 != null && Ammo1.Amount >= AmmoUse1;
+        return Ammo1 != null && Ammo1.Amount >= CurrentManaCost();
     }
 
     override State GetUpState()
@@ -33,7 +44,12 @@ class ARPGSword : CWeapMace
 
     override State GetAtkState(bool hold)
     {
-        if (HasCharge()) return FindState('FireGlow');
+        if (HasCharge())
+        {
+            if (loot.speed == 1) return FindState('FireGlowAxe');
+            if (loot.speed == 2) return FindState('FireGlowHammer');
+            return FindState('FireGlow');
+        }
         return FindState('Fire');
     }
 
@@ -52,8 +68,10 @@ class ARPGSword : CWeapMace
 
     action void A_ARPGSwordAttack()
     {
-        if (player == null || player.ReadyWeapon == null || !player.ReadyWeapon.DepleteAmmo(false)) return;
-        A_CustomPunch(ARPGBalance.SWORD_DAMAGE, true, 0, "ARPGSwordPuff", 2 * DEFMELEERANGE);
+        if (player == null) return;
+        let sword = ARPGSword(player.ReadyWeapon);
+        if (sword == null || !sword.DepleteAmmo(false)) return;
+        A_CustomPunch(sword.CurrentDamage(), true, 0, "ARPGSwordPuff", 2 * DEFMELEERANGE);
     }
 
     States
@@ -105,6 +123,36 @@ class ARPGSword : CWeapMace
         ARAX Q 1 Offset(15, 32);
         ARAX Q 2 Offset(10, 54);
         ARAX Q 7 Offset(10, 150);
+        ARAX A 1 Offset(0, 60) A_ReFire;
+        ARAX A 1 Offset(0, 52);
+        ARAX A 1 Offset(0, 44);
+        ARAX A 1 Offset(0, 36);
+        ARAX A 1;
+        Goto Ready;
+    FireGlowAxe:
+        ARAX N 4 Offset(15, 32);
+        ARAX O 3 Offset(15, 32);
+        ARAX P 2 Offset(15, 32);
+        ARAX P 1 Offset(-5, 70) A_ARPGSwordAttack;
+        ARAX P 2 Offset(-25, 90);
+        ARAX Q 1 Offset(15, 32);
+        ARAX Q 2 Offset(10, 54);
+        ARAX Q 14 Offset(10, 150);
+        ARAX A 1 Offset(0, 60) A_ReFire;
+        ARAX A 1 Offset(0, 52);
+        ARAX A 1 Offset(0, 44);
+        ARAX A 1 Offset(0, 36);
+        ARAX A 1;
+        Goto Ready;
+    FireGlowHammer:
+        ARAX N 4 Offset(15, 32);
+        ARAX O 3 Offset(15, 32);
+        ARAX P 2 Offset(15, 32);
+        ARAX P 1 Offset(-5, 70) A_ARPGSwordAttack;
+        ARAX P 2 Offset(-25, 90);
+        ARAX Q 1 Offset(15, 32);
+        ARAX Q 2 Offset(10, 54);
+        ARAX Q 22 Offset(10, 150);
         ARAX A 1 Offset(0, 60) A_ReFire;
         ARAX A 1 Offset(0, 52);
         ARAX A 1 Offset(0, 44);

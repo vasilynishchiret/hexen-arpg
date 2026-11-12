@@ -4,6 +4,7 @@ class ARPGCleric : ClericPlayer
     int arpgXP;
     int arpgNextXP;
     int arpgManaTicks;
+    ARPGGroundWeapon arpgLookDrop;
 
     Default
     {

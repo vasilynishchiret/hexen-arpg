@@ -1,4 +1,4 @@
-class ARPGKillRewards : EventHandler
+class ARPGKillRewards : ARPGLootGeneration
 {
     Array<Actor> rewarded;
     Array<Actor> lethalVictims;
@@ -42,5 +42,6 @@ class ARPGKillRewards : EventHandler
         int xp = e.Thing is "Ettin" ? ARPGBalance.XP_ETTIN : clamp(e.Thing.GetMaxHealth() / ARPGBalance.OTHER_XP_HP_DIVISOR, ARPGBalance.OTHER_XP_MIN, ARPGBalance.OTHER_XP_MAX);
         cleric.AddXP(xp);
         cleric.GiveInventory("Mana2", ARPGBalance.GREEN_MANA_PER_KILL);
+        TryDrop(e.Thing);
     }
 }

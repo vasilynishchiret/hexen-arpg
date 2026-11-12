@@ -14,4 +14,6 @@ class ARPGBalance : Object
     const MACE_DAMAGE_MULTIPLIER = 2;
     const SWORD_DAMAGE = 70;
     const SWORD_MANA_COST = 3;
+    const LOOT_CHANCE_PERCENT = 25;
+    const LOOT_INTERACT_RANGE = 96;
 }
