@@ -32,13 +32,13 @@ Sprite ARAXE0, 57, 65
 Sprite ARAXL0, 102, 73
 {
     Offset -182, -107
-    Patch "patches/arpg_axe/glow_l.png", 0, 0
+    Patch "patches/arpg_sword/glow_l.png", 0, 0
 }
 
 Sprite ARAXM0, 102, 73
 {
     Offset -182, -107
-    Patch "patches/arpg_axe/glow_m.png", 0, 0
+    Patch "patches/arpg_sword/glow_m.png", 0, 0
 }
 
 Sprite ARAXN0, 70, 188
@@ -50,19 +50,19 @@ Sprite ARAXN0, 70, 188
 Sprite ARAXO0, 173, 200
 {
     Offset -147, 29
-    Patch FAXEO0, 0, 0
+    Patch "patches/arpg_sword/FBLADEO0.png", 0, 0
 }
 
 Sprite ARAXP0, 194, 159
 {
     Offset -96, -21
-    Patch FAXEP0, 0, 0
+    Patch "patches/arpg_sword/FBLADEP0.png", 0, 0
 }
 
 Sprite ARAXQ0, 65, 69
 {
     Offset -62, -111
-    Patch FAXEQ0, 0, 0
+    Patch "patches/arpg_sword/FBLADEQ0.png", 0, 0
 }
 
 Sprite ARAWA0, 28, 41

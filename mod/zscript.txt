@@ -2,6 +2,7 @@ version "5.0"
 
 #include "zscript/systems/balance.zs"
 #include "zscript/weapons/mace.zs"
+#include "zscript/weapons/sword_puff.zs"
 #include "zscript/weapons/sword.zs"
 #include "zscript/weapons/lightning.zs"
 #include "zscript/player/arpg_cleric.zs"
