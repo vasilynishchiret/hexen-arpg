@@ -32,13 +32,13 @@ Sprite ARAXE0, 57, 65
 Sprite ARAXL0, 102, 73
 {
     Offset -182, -107
-    Patch FAXEL0, 0, 0
+    Patch "patches/arpg_axe/glow_l.png", 0, 0
 }
 
 Sprite ARAXM0, 102, 73
 {
     Offset -182, -107
-    Patch FAXEM0, 0, 0
+    Patch "patches/arpg_axe/glow_m.png", 0, 0
 }
 
 Sprite ARAXN0, 70, 188
