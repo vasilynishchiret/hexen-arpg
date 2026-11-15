@@ -1,6 +1,6 @@
 struct ARPGWeaponData
 {
-    int kind;       // 0 Sword, 1 Axe, 2 Hammer, 3 Mace, 4 Lightning
+    int kind;       // 0..9 weapons, 10 Chest, 11 Helmet, 12 Bracers, 13 Ring
     int damage;
     int speed;      // 0 fast, 1 medium, 2 slow
     int manaCost;
@@ -14,6 +14,14 @@ class ARPGWeaponRules : Object
         if (kind == 2) return "Hammer";
         if (kind == 3) return "Mace";
         if (kind == 4) return "Lightning";
+        if (kind == 5) return "Frost Shards";
+        if (kind == 6) return "Serpent Staff";
+        if (kind == 7) return "Sapphire Wand";
+        if (kind == 8) return "Firestorm";
+        if (kind == 10) return "Chest Armor";
+        if (kind == 11) return "Helmet";
+        if (kind == 12) return "Bracers";
+        if (kind == 13) return "Ring";
         return "Sword";
     }
 
@@ -26,6 +34,7 @@ class ARPGWeaponRules : Object
 
     clearscope static int BaseDamage(int kind)
     {
+        if (kind >= 4 && kind <= 8) return 100; // spell potency percent
         if (kind == 1) return ARPGBalance.AXE_DAMAGE;
         if (kind == 2) return ARPGBalance.HAMMER_DAMAGE;
         return ARPGBalance.SWORD_DAMAGE;
@@ -50,6 +59,10 @@ class ARPGWeaponRules : Object
         if (kind == 2) return ARPGBalance.HAMMER_ATTACK_TICS;
         if (kind == 3) return ARPGBalance.MACE_ATTACK_TICS;
         if (kind == 4) return ARPGBalance.LIGHTNING_ATTACK_TICS;
+        if (kind == 5) return 31;
+        if (kind == 6) return 10;
+        if (kind == 7) return 18;
+        if (kind == 8) return 20;
         return ARPGBalance.SWORD_ATTACK_TICS;
     }
 
@@ -57,6 +70,7 @@ class ARPGWeaponRules : Object
     {
         if (kind == 3) return 65;
         if (kind == 4) return 0;
+        if (kind >= 5) return 0;
         return damage;
     }
 
@@ -64,6 +78,10 @@ class ARPGWeaponRules : Object
     {
         if (kind == 3) return 0;
         if (kind == 4) return 5;
+        if (kind == 5) return 3;
+        if (kind == 6) return 1;
+        if (kind == 7) return 0;
+        if (kind == 8) return 4;
         if (kind == 1) return 4;
         if (kind == 2) return 6;
         return 3;
@@ -72,7 +90,8 @@ class ARPGWeaponRules : Object
     clearscope static string ManaName(int kind)
     {
         if (kind == 3) return "No mana";
-        if (kind == 4) return "Mana2";
+        if (kind == 4 || kind == 8) return "Mana2";
+        if (kind == 7) return "No mana";
         return "Mana1";
     }
 }

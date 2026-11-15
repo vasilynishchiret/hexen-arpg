@@ -9,14 +9,21 @@ class ARPGCleric : ClericPlayer
     ARPGGroundWeapon arpgLookDrop;
     ARPGEquippedWeapon arpgComparedWeapon;
     int arpgActiveSlot;
+    ARPGWeaponData arpgBag[20];
+    ARPGWeaponData arpgArmor[5];
+    bool arpgInventoryOpen;
+    int arpgSelectedItem;
+    int arpgEquipTarget;
 
     Default
     {
         Health ARPGBalance.BASE_HEALTH;
         Player.MaxHealth ARPGBalance.BASE_HEALTH;
+        Player.Hexenarmor 0, 0, 0, 0, 0;
         Player.StartItem "ARPGSlot1";
         Player.StartItem "ARPGSlot2";
         Player.StartItem "ARPGSlot3";
+        Player.StartItem "ARPGArmorEffect";
         Player.StartItem "Mana1", ARPGBalance.START_MANA1;
         Player.StartItem "Mana2", ARPGBalance.START_MANA2;
         Player.WeaponSlot 1, "ARPGSlot1";
@@ -36,7 +43,92 @@ class ARPGCleric : ClericPlayer
 
     override int GetMaxHealth(bool withupgrades) const
     {
-        return Super.GetMaxHealth(withupgrades) + ARPGBalance.HP_PER_LEVEL * max(0, arpgLevel - 1);
+        int rings = 0;
+        if (arpgArmor[3].damage > 0) rings += 5;
+        if (arpgArmor[4].damage > 0) rings += 5;
+        return Super.GetMaxHealth(withupgrades) + ARPGBalance.HP_PER_LEVEL * max(0, arpgLevel - 1) + rings;
+    }
+
+    int FirstFreeBagSlot()
+    {
+        for (int i = 0; i < 20; i++) if (arpgBag[i].damage == 0) return i;
+        return -1;
+    }
+
+    bool StoreItem(int kind, int damage, int speed, int manaCost)
+    {
+        int slot = FirstFreeBagSlot();
+        if (slot < 0) return false;
+        arpgBag[slot].kind = kind;
+        arpgBag[slot].damage = damage;
+        arpgBag[slot].speed = speed;
+        arpgBag[slot].manaCost = manaCost;
+        return true;
+    }
+
+    bool EquipBagItem(int bagSlot, int equipSlot)
+    {
+        if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage == 0) return false;
+        int kind = arpgBag[bagSlot].kind;
+        int damage = arpgBag[bagSlot].damage;
+        int speed = arpgBag[bagSlot].speed;
+        int manaCost = arpgBag[bagSlot].manaCost;
+        if (kind < 10)
+        {
+            if (equipSlot < 1 || equipSlot > 3) return false;
+            ARPGEquippedWeapon weapon = ARPGEquippedWeapon(FindInventory(String.Format("ARPGSlot%d", equipSlot)));
+            if (weapon == null) return false;
+            arpgBag[bagSlot].kind = weapon.loot.kind;
+            arpgBag[bagSlot].damage = weapon.loot.damage;
+            arpgBag[bagSlot].speed = weapon.loot.speed;
+            arpgBag[bagSlot].manaCost = weapon.loot.manaCost;
+            weapon.loot.kind = kind;
+            weapon.loot.damage = damage;
+            weapon.loot.speed = speed;
+            weapon.loot.manaCost = manaCost;
+            weapon.SetTag(ARPGWeaponRules.TypeName(kind));
+            if (player != null && player.ReadyWeapon == weapon)
+                player.SetPsprite(PSP_WEAPON, weapon.GetReadyState());
+            return true;
+        }
+        int armorSlot = equipSlot - 4;
+        if (armorSlot < 0 || armorSlot > 4) return false;
+        if (kind != (armorSlot >= 3 ? 13 : armorSlot + 10)) return false;
+        arpgBag[bagSlot].kind = arpgArmor[armorSlot].kind;
+        arpgBag[bagSlot].damage = arpgArmor[armorSlot].damage;
+        arpgBag[bagSlot].speed = arpgArmor[armorSlot].speed;
+        arpgBag[bagSlot].manaCost = arpgArmor[armorSlot].manaCost;
+        arpgArmor[armorSlot].kind = kind;
+        arpgArmor[armorSlot].damage = damage;
+        arpgArmor[armorSlot].speed = speed;
+        arpgArmor[armorSlot].manaCost = manaCost;
+        if (health > GetMaxHealth()) health = GetMaxHealth();
+        if (player != null) player.health = health;
+        return true;
+    }
+
+    bool UnequipItem(int equipSlot)
+    {
+        if (FirstFreeBagSlot() < 0) return false;
+        if (equipSlot >= 1 && equipSlot <= 3)
+        {
+            ARPGEquippedWeapon weapon = ARPGEquippedWeapon(FindInventory(String.Format("ARPGSlot%d", equipSlot)));
+            if (weapon == null || weapon.loot.damage == 0) return false;
+            if (!StoreItem(weapon.loot.kind, weapon.loot.damage, weapon.loot.speed, weapon.loot.manaCost)) return false;
+            weapon.loot.damage = 0;
+            weapon.loot.kind = -1;
+            weapon.SetTag("Empty weapon slot");
+            if (player != null && player.ReadyWeapon == weapon)
+                player.SetPsprite(PSP_WEAPON, weapon.GetReadyState());
+            return true;
+        }
+        int armorSlot = equipSlot - 4;
+        if (armorSlot < 0 || armorSlot > 4 || arpgArmor[armorSlot].damage == 0) return false;
+        if (!StoreItem(arpgArmor[armorSlot].kind, arpgArmor[armorSlot].damage, arpgArmor[armorSlot].speed, arpgArmor[armorSlot].manaCost)) return false;
+        arpgArmor[armorSlot].damage = 0;
+        health = min(health, GetMaxHealth());
+        if (player != null) player.health = health;
+        return true;
     }
 
     override void FireWeapon(State stat)
