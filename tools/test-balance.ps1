@@ -7,6 +7,7 @@ $weapons = Get-Content (Join-Path $root 'mod/zscript/weapons/equipped.zs') -Raw 
 $regen = Get-Content (Join-Path $root 'mod/zscript/mana/regeneration.zs') -Raw -Encoding UTF8
 $cleric = Get-Content (Join-Path $root 'mod/zscript/player/arpg_cleric.zs') -Raw -Encoding UTF8
 $textures = Get-Content (Join-Path $root 'mod/TEXTURES') -Raw -Encoding UTF8
+$ground = Get-Content (Join-Path $root 'mod/zscript/loot/ground_weapon.zs') -Raw -Encoding UTF8
 
 function Assert([bool] $condition, [string] $message) {
     if (-not $condition) { throw $message }
@@ -53,6 +54,12 @@ $common = Const 'LOOT_COMMON_PERCENT'
 $strong = Const 'LOOT_STRONG_PERCENT'
 $exceptional = Const 'LOOT_EXCEPTIONAL_PERCENT'
 Assert ($oneIn -eq 15) 'Drop chance is not 1/15'
+$melee = Const 'LOOT_MELEE_PERCENT'
+$magic = Const 'LOOT_MAGIC_PERCENT'
+$armor = Const 'LOOT_ARMOR_PERCENT'
+Assert ($melee -eq 40 -and $magic -eq 35 -and $armor -eq 25) 'Item group balance changed'
+Assert ($melee + $magic + $armor -eq 100) 'Item group percentages must total 100%'
+Assert ($ground.Contains('random[ARPGLootType](0, 99)')) 'Missing shared item-group roll'
 Assert ($common + $strong + $exceptional -eq 100) 'Damage tiers must total 100%'
 $scale = Const 'LOOT_MULTIPLIER_SCALE'
 $bands = @(
@@ -64,9 +71,14 @@ $rng = [Random]::new(20261115)
 $kills = 300000
 $drops = 0
 $counts = @(0, 0, 0)
+$groups = @(0, 0, 0)
 for ($i = 0; $i -lt $kills; $i++) {
     if ($rng.Next($oneIn) -ne 0) { continue }
     $drops++
+    $groupRoll = $rng.Next(100)
+    $group = if ($groupRoll -lt $melee) { 0 } elseif ($groupRoll -lt $melee + $magic) { 1 } else { 2 }
+    $groups[$group]++
+    if ($group -ne 0) { continue }
     $roll = $rng.Next(100)
     $tier = if ($roll -lt $common) { 0 } elseif ($roll -lt $common + $strong) { 1 } else { 2 }
     $counts[$tier]++
@@ -79,9 +91,15 @@ for ($i = 0; $i -lt $kills; $i++) {
 $dropRate = $drops / $kills
 Assert ([Math]::Abs($dropRate - 1 / $oneIn) -lt 0.003) "Drop sample outside tolerance: $dropRate"
 foreach ($tier in 0..2) {
-    $observed = $counts[$tier] / $drops
+    $observed = $counts[$tier] / $groups[0]
     $expected = @($common, $strong, $exceptional)[$tier] / 100
     Assert ([Math]::Abs($observed - $expected) -lt 0.012) "Tier $tier outside tolerance: $observed"
 }
 Write-Output "Simulated $kills kills: $drops drops ($([Math]::Round($dropRate * 100, 2))%)"
-Write-Output "Damage tiers: $($counts -join ', ') ($([Math]::Round($counts[0]/$drops*100,2))% / $([Math]::Round($counts[1]/$drops*100,2))% / $([Math]::Round($counts[2]/$drops*100,2))%)"
+foreach ($group in 0..2) {
+    $observed = $groups[$group] / $drops
+    $expected = @($melee, $magic, $armor)[$group] / 100
+    Assert ([Math]::Abs($observed - $expected) -lt 0.02) "Item group $group outside tolerance: $observed"
+}
+Write-Output "Item groups (melee/magic/armor): $($groups -join ', ')"
+Write-Output "Melee damage tiers: $($counts -join ', ')"
