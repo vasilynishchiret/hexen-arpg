@@ -66,6 +66,28 @@ class ARPGCleric : ClericPlayer
         return true;
     }
 
+    int AutoEquipTarget(int bagSlot, int preferredRing)
+    {
+        if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage <= 0) return 0;
+        int kind = arpgBag[bagSlot].kind;
+        if (kind == 10) return 4;
+        if (kind == 11) return 5;
+        if (kind == 12) return 6;
+        if (kind == 13)
+        {
+            if (arpgArmor[3].damage <= 0) return 7;
+            if (arpgArmor[4].damage <= 0) return 8;
+            return preferredRing == 8 ? 8 : 7;
+        }
+        if (kind < 0 || kind >= 10) return 0;
+        for (int slot = 1; slot <= 3; slot++)
+        {
+            let weapon = ARPGEquippedWeapon(FindInventory(String.Format("ARPGSlot%d", slot)));
+            if (weapon != null && weapon.loot.damage <= 0) return slot;
+        }
+        return arpgActiveSlot >= 1 && arpgActiveSlot <= 3 ? arpgActiveSlot : 1;
+    }
+
     bool EquipBagItem(int bagSlot, int equipSlot)
     {
         if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage == 0) return false;

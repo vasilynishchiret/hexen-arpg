@@ -23,5 +23,12 @@ foreach ($path in @($UZDoom, $IWAD, (Join-Path $mod 'zscript.txt'))) {
 }
 
 $controls = (Join-Path $PSScriptRoot 'controls.cfg').Replace('\', '/')
-& $UZDoom -iwad $IWAD -file $mod '+exec' $controls @gameArgs
+if ($gameArgs -contains '-config') {
+    & $UZDoom -iwad $IWAD -file $mod '+exec' $controls @gameArgs
+} else {
+    $profileDir = Join-Path $env:LOCALAPPDATA 'HEXEN-ARPG'
+    New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+    $profileConfig = Join-Path $profileDir 'uzdoom.ini'
+    & $UZDoom -config $profileConfig -iwad $IWAD -file $mod '+exec' $controls @gameArgs
+}
 exit $LASTEXITCODE

@@ -2,18 +2,52 @@ class ARPGInteraction : ARPGEquipment
 {
     int useWasDown[MAXPLAYERS];
 
+    void DropBagItem(ARPGCleric cleric, int index)
+    {
+        if (index < 0 || index >= 20 || cleric.arpgBag[index].damage <= 0) return;
+        let dropped = ARPGGroundWeapon(Actor.Spawn("ARPGGroundWeapon", cleric.Pos));
+        if (dropped == null) return;
+        dropped.loot.kind = cleric.arpgBag[index].kind;
+        dropped.loot.damage = cleric.arpgBag[index].damage;
+        dropped.loot.speed = cleric.arpgBag[index].speed;
+        dropped.loot.manaCost = cleric.arpgBag[index].manaCost;
+        dropped.RefreshAppearance();
+        dropped.pickupBlockOwner = cleric;
+        dropped.pickupBlockUntil = level.maptime + 35;
+        cleric.arpgBag[index].damage = 0;
+    }
+
     override void NetworkProcess(ConsoleEvent e)
     {
         let cleric = ARPGCleric(players[e.Player].mo);
         if (cleric == null || cleric.health <= 0) return;
-        if (e.Name == "arpg_inventory")
+        if (e.Name == "arpg_inventory_state")
         {
-            cleric.arpgInventoryOpen = !cleric.arpgInventoryOpen;
-            if (cleric.arpgEquipTarget < 1) cleric.arpgEquipTarget = 1;
+            cleric.arpgInventoryOpen = e.Args[0] != 0;
             return;
         }
-        if (!cleric.arpgInventoryOpen) return;
-        if (e.Name == "arpg_prev") cleric.arpgSelectedItem = (cleric.arpgSelectedItem + 19) % 20;
+        if (e.Name == "arpg_auto_equip")
+        {
+            int bagSlot = e.Args[0];
+            int target = cleric.AutoEquipTarget(bagSlot, e.Args[1]);
+            if (target == 0 || !cleric.EquipBagItem(bagSlot, target))
+                cleric.A_PrintBold("Cannot equip item", 2.0);
+            else cleric.arpgEquipTarget = target;
+        }
+        else if (e.Name == "arpg_slot_equip")
+        {
+            if (!cleric.EquipBagItem(e.Args[0], e.Args[1]))
+                cleric.A_PrintBold("Cannot equip in this slot", 2.0);
+            else cleric.arpgEquipTarget = e.Args[1];
+        }
+        else if (e.Name == "arpg_slot_unequip")
+        {
+            if (!cleric.UnequipItem(e.Args[0]))
+                cleric.A_PrintBold("No free space or slot is empty", 2.0);
+        }
+        else if (e.Name == "arpg_slot_drop") DropBagItem(cleric, e.Args[0]);
+        else if (!cleric.arpgInventoryOpen) return;
+        else if (e.Name == "arpg_prev") cleric.arpgSelectedItem = (cleric.arpgSelectedItem + 19) % 20;
         else if (e.Name == "arpg_next") cleric.arpgSelectedItem = (cleric.arpgSelectedItem + 1) % 20;
         else if (e.Name == "arpg_target_prev") cleric.arpgEquipTarget = cleric.arpgEquipTarget <= 1 ? 8 : cleric.arpgEquipTarget - 1;
         else if (e.Name == "arpg_target_next") cleric.arpgEquipTarget = cleric.arpgEquipTarget >= 8 ? 1 : cleric.arpgEquipTarget + 1;
@@ -29,18 +63,7 @@ class ARPGInteraction : ARPGEquipment
         }
         else if (e.Name == "arpg_drop")
         {
-            int index = cleric.arpgSelectedItem;
-            if (cleric.arpgBag[index].damage == 0) return;
-            let dropped = ARPGGroundWeapon(Actor.Spawn("ARPGGroundWeapon", cleric.Pos));
-            if (dropped == null) return;
-            dropped.loot.kind = cleric.arpgBag[index].kind;
-            dropped.loot.damage = cleric.arpgBag[index].damage;
-            dropped.loot.speed = cleric.arpgBag[index].speed;
-            dropped.loot.manaCost = cleric.arpgBag[index].manaCost;
-            dropped.RefreshAppearance();
-            dropped.pickupBlockOwner = cleric;
-            dropped.pickupBlockUntil = level.maptime + 35;
-            cleric.arpgBag[index].damage = 0;
+            DropBagItem(cleric, cleric.arpgSelectedItem);
         }
     }
 

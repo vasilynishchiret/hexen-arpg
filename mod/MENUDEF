@@ -1,0 +1,4 @@
+ListMenu "ARPGInventory"
+{
+    Class "ARPGInventoryMenu"
+}
