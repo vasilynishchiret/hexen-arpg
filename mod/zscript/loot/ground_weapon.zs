@@ -121,6 +121,8 @@ class ARPGTestHammer : ARPGGroundWeapon
     }
 }
 
+class ARPGTestMace : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 3; loot.damage = 65; loot.manaCost = 0; RefreshAppearance(); } }
+
 class ARPGTestLightning : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 4; loot.damage = 100; loot.manaCost = 5; RefreshAppearance(); } }
 class ARPGTestFrost : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 5; loot.damage = 100; loot.manaCost = 3; RefreshAppearance(); } }
 class ARPGTestStaff : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 6; loot.damage = 100; loot.manaCost = 1; RefreshAppearance(); } }
