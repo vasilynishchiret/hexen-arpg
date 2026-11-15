@@ -14,14 +14,27 @@ class ARPGEquippedWeapon : CWeapMace
 
     bool HasMana() const
     {
-        if (loot.kind == 3 || loot.manaCost <= 0) return true;
+        if (loot.kind == 3 || loot.kind == 7 || loot.manaCost <= 0) return true;
         if (Owner == null) return false;
-        let mana = Owner.FindInventory(loot.kind == 4 ? "Mana2" : "Mana1");
+        let mana = Owner.FindInventory(loot.kind == 4 || loot.kind == 8 ? "Mana2" : "Mana1");
         return mana != null && mana.Amount >= loot.manaCost;
+    }
+
+    override void ModifyDamage(int damage, Name damageType, out int newdamage,
+        bool passive, Actor inflictor, Actor source, int flags, double angle)
+    {
+        if (!passive && loot.kind >= 4 && loot.kind <= 8 && Owner != null && source == Owner &&
+            Owner.player != null && Owner.player.ReadyWeapon == self)
+            newdamage = max(1, (damage * loot.damage + 50) / 100);
     }
 
     override State GetUpState()
     {
+        if (loot.kind < 0) return FindState('EmptySelect');
+        if (loot.kind == 5) return FindState('FrostSelect');
+        if (loot.kind == 6) return FindState('StaffSelect');
+        if (loot.kind == 7) return FindState('WandSelect');
+        if (loot.kind == 8) return FindState('FirestormSelect');
         if (loot.kind == 1) return FindState('AxeSelect');
         if (loot.kind == 2) return FindState('HammerSelect');
         if (loot.kind == 3) return FindState('MaceSelect');
@@ -31,6 +44,11 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetDownState()
     {
+        if (loot.kind < 0) return FindState('EmptyDeselect');
+        if (loot.kind == 5) return FindState('FrostDeselect');
+        if (loot.kind == 6) return FindState('StaffDeselect');
+        if (loot.kind == 7) return FindState('WandDeselect');
+        if (loot.kind == 8) return FindState('FirestormDeselect');
         if (loot.kind == 1) return FindState('AxeDeselect');
         if (loot.kind == 2) return FindState('HammerDeselect');
         if (loot.kind == 3) return FindState('MaceDeselect');
@@ -40,6 +58,11 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetReadyState()
     {
+        if (loot.kind < 0) return FindState('EmptyReady');
+        if (loot.kind == 5) return FindState('FrostReady');
+        if (loot.kind == 6) return FindState('StaffReady');
+        if (loot.kind == 7) return FindState('WandReady');
+        if (loot.kind == 8) return FindState('FirestormReady');
         if (loot.kind == 1) return FindState('AxeReady');
         if (loot.kind == 2) return FindState('HammerReady');
         if (loot.kind == 3) return FindState('MaceReady');
@@ -49,12 +72,17 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetAtkState(bool hold)
     {
+        if (loot.kind < 0) return FindState('EmptyReady');
         let cleric = ARPGCleric(Owner);
         if (cleric != null && cleric.arpgAttackCooldown > 0) return GetReadyState();
         if (loot.kind == 1) return FindState('AxeFire');
         if (loot.kind == 2) return FindState('HammerFire');
         if (loot.kind == 3) return FindState('MaceFire');
         if (loot.kind == 4) return FindState('LightningFire');
+        if (loot.kind == 5) return FindState('FrostFire');
+        if (loot.kind == 6) return FindState('StaffFire');
+        if (loot.kind == 7) return FindState('WandFire');
+        if (loot.kind == 8) return FindState('FirestormFire');
         return FindState('SwordFire');
     }
 
@@ -106,8 +134,78 @@ class ARPGEquippedWeapon : CWeapMace
         A_StartSound("MageLightningFire", CHAN_BODY);
     }
 
+    action void A_ARPGFrostAttack()
+    {
+        if (player == null) return;
+        let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
+        if (weapon == null || !weapon.HasMana()) return;
+        player.mo.TakeInventory("Mana1", weapon.loot.manaCost);
+        A_StartSound("MageShardsFire", CHAN_WEAPON);
+        FTranslatedLineTarget hit;
+        bool found = false;
+        for (int i = 0; i < 16; i++)
+        {
+            double ang = angle + i * (45. / 16);
+            AimLineAttack(ang, DEFMELEERANGE, hit, 0., ALF_CHECK3D);
+            if (hit.linetarget != null)
+            {
+                hit.linetarget.DamageMobj(self, self, random[ARPGFrostDamage](90, 105), 'Ice', DMG_USEANGLE, hit.angleFromSource);
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            Actor missile = SpawnPlayerMissile("FrostMissile");
+            if (missile != null)
+            {
+                missile.special1 = FrostMissile.SHARDSPAWN_LEFT | FrostMissile.SHARDSPAWN_DOWN | FrostMissile.SHARDSPAWN_UP | FrostMissile.SHARDSPAWN_RIGHT;
+                missile.special2 = 3;
+                missile.target = self;
+                missile.args[0] = 3;
+            }
+        }
+    }
+
+    action void A_ARPGStaffAttack()
+    {
+        if (player == null) return;
+        let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
+        if (weapon == null || !weapon.HasMana()) return;
+        player.mo.TakeInventory("Mana1", weapon.loot.manaCost);
+        Actor left = SpawnPlayerMissile("CStaffMissile", angle - 3.0);
+        Actor right = SpawnPlayerMissile("CStaffMissile", angle + 3.0);
+        if (left != null) left.WeaveIndexXY = 32;
+        if (right != null) right.WeaveIndexXY = 0;
+        A_StartSound("ClericCStaffFire", CHAN_WEAPON);
+    }
+
+    action void A_ARPGWandAttack()
+    {
+        if (player != null) A_FireProjectile("MageWandMissile");
+    }
+
+    action void A_ARPGFirestormAttack()
+    {
+        if (player == null) return;
+        let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
+        if (weapon == null || !weapon.HasMana()) return;
+        player.mo.TakeInventory("Mana2", weapon.loot.manaCost);
+        SpawnPlayerMissile("CFlameMissile");
+        A_StartSound("ClericFlameFire", CHAN_WEAPON);
+    }
+
     States
     {
+    EmptySelect:
+        TNT1 A 1 A_Raise;
+        Loop;
+    EmptyDeselect:
+        TNT1 A 1 A_Lower;
+        Loop;
+    EmptyReady:
+        TNT1 A 1 A_WeaponReady;
+        Loop;
     Spawn:
         ARAW A -1;
         Stop;
@@ -205,6 +303,72 @@ class ARPGEquippedWeapon : CWeapMace
         MLNG C 2 Bright Offset(0, 55);
         MLNG B 8 Bright Offset(0, 40);
         Goto LightningReady;
+    FrostSelect:
+        CONE A 1 A_Raise;
+        Loop;
+    FrostDeselect:
+        CONE A 1 A_Lower;
+        Loop;
+    FrostReady:
+        CONE A 1 A_WeaponReady;
+        Loop;
+    FrostFire:
+        CONE B 3 A_ARPGBeginAttack;
+        CONE C 4;
+        CONE D 3;
+        CONE E 5;
+        CONE F 3 A_ARPGFrostAttack;
+        CONE G 3;
+        CONE A 9;
+        CONE A 1 A_ReFire;
+        Goto FrostReady;
+    StaffSelect:
+        CSSF C 1 A_Raise;
+        Loop;
+    StaffDeselect:
+        CSSF C 1 A_Lower;
+        Loop;
+    StaffReady:
+        CSSF A 1 A_WeaponReady;
+        Loop;
+    StaffFire:
+        CSSF A 1 Offset(0, 45) A_ARPGBeginAttack;
+        CSSF J 1 Offset(0, 50) A_ARPGStaffAttack;
+        CSSF J 4 Offset(0, 50);
+        CSSF A 4 Offset(0, 40);
+        Goto StaffReady;
+    WandSelect:
+        MWND A 1 A_Raise;
+        Loop;
+    WandDeselect:
+        MWND A 1 A_Lower;
+        Loop;
+    WandReady:
+        MWND A 1 A_WeaponReady;
+        Loop;
+    WandFire:
+        MWND A 6 A_ARPGBeginAttack;
+        MWND B 6 Bright Offset(0, 48) A_ARPGWandAttack;
+        MWND A 3 Offset(0, 40);
+        MWND A 3 Offset(0, 36) A_ReFire;
+        Goto WandReady;
+    FirestormSelect:
+        CFLM A 1 A_Raise;
+        Loop;
+    FirestormDeselect:
+        CFLM A 1 A_Lower;
+        Loop;
+    FirestormReady:
+        CFLM ABC 1 A_WeaponReady;
+        Loop;
+    FirestormFire:
+        CFLM A 2 Offset(0, 40) A_ARPGBeginAttack;
+        CFLM D 4 Offset(0, 50);
+        CFLM E 4 Bright;
+        CFLM F 4 Bright A_ARPGFirestormAttack;
+        CFLM E 4 Bright;
+        CFLM G 4 Offset(0, 40);
+        Goto FirestormReady;
     }
 }
 
@@ -237,6 +401,6 @@ class ARPGSlot3 : ARPGEquippedWeapon
     {
         Super.PostBeginPlay();
         equipmentSlot = 3;
-        if (loot.damage == 0) { loot.kind = 4; loot.damage = 1; loot.speed = 0; loot.manaCost = 5; }
+        if (loot.damage == 0) { loot.kind = 4; loot.damage = 100; loot.speed = 0; loot.manaCost = 5; }
     }
 }
