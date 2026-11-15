@@ -1,6 +1,6 @@
 struct ARPGWeaponData
 {
-    int kind;       // 0 Sword, 1 Axe, 2 Hammer
+    int kind;       // 0 Sword, 1 Axe, 2 Hammer, 3 Mace, 4 Lightning
     int damage;
     int speed;      // 0 fast, 1 medium, 2 slow
     int manaCost;
@@ -12,6 +12,8 @@ class ARPGWeaponRules : Object
     {
         if (kind == 1) return "Axe";
         if (kind == 2) return "Hammer";
+        if (kind == 3) return "Mace";
+        if (kind == 4) return "Lightning";
         return "Sword";
     }
 
@@ -38,8 +40,17 @@ class ARPGWeaponRules : Object
 
     clearscope static int ManaCost(int kind)
     {
+        if (kind == 3) return 0;
+        if (kind == 4) return 5;
         if (kind == 1) return 4;
         if (kind == 2) return 6;
         return 3;
+    }
+
+    clearscope static string ManaName(int kind)
+    {
+        if (kind == 3) return "No mana";
+        if (kind == 4) return "Mana2";
+        return "Mana1";
     }
 }

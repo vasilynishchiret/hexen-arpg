@@ -13,6 +13,7 @@ class ARPGInteraction : ARPGEquipment
         {
             double distance = cleric.Distance2D(item);
             if (distance > bestDistance || abs(item.Pos.Z - cleric.Pos.Z) > 64) continue;
+            if (item.pickupBlockOwner == cleric && level.maptime < item.pickupBlockUntil) continue;
             double yaw = abs(cleric.AngleTo(item) - cleric.Angle);
             if (yaw > 180) yaw = 360 - yaw;
             if (yaw > 13) continue;
@@ -32,6 +33,7 @@ class ARPGInteraction : ARPGEquipment
             bool down = (players[i].cmd.buttons & BT_USE) != 0;
             if (cleric != null)
             {
+                cleric.arpgActiveSlot = ActiveSlot(cleric);
                 cleric.arpgLookDrop = FindTarget(cleric);
                 if (down && useWasDown[i] == 0 && cleric.arpgLookDrop != null)
                     Exchange(cleric, cleric.arpgLookDrop);
