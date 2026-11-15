@@ -3,7 +3,7 @@ class ARPGLootPrompt : EventHandler
     clearscope static String DamageText(int kind, int damage)
     {
         if (kind == 3) return "50-80 (avg 65)";
-        if (kind == 4) return "Arc of Death";
+        if (kind >= 4) return String.Format("%d%% spell power", damage);
         return String.Format("%d", damage);
     }
 
@@ -16,7 +16,7 @@ class ARPGLootPrompt : EventHandler
 
     clearscope static String DPSText(int kind, int damage)
     {
-        if (kind == 4) return "Arc (variable)";
+        if (kind >= 4) return "Variable";
         int tenths = (ARPGWeaponRules.AverageDamage(kind, damage) * 350 + ARPGWeaponRules.AttackTics(kind) / 2) / ARPGWeaponRules.AttackTics(kind);
         return String.Format("%d.%d", tenths / 10, tenths % 10);
     }
@@ -24,11 +24,21 @@ class ARPGLootPrompt : EventHandler
     override void RenderOverlay(RenderEvent e)
     {
         let cleric = ARPGCleric(players[consoleplayer].mo);
-        if (cleric == null || cleric.arpgLookDrop == null || cleric.arpgComparedWeapon == null) return;
+        if (cleric == null || cleric.arpgLookDrop == null) return;
         let found = cleric.arpgLookDrop;
+        int foundKind = found.loot.kind;
+        if (foundKind >= 10)
+        {
+            Screen.DrawText(SmallFont, Font.CR_GOLD, 8, 32,
+                String.Format("FOUND: %s  [E] PICK UP", ARPGWeaponRules.TypeName(foundKind)));
+            Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 42,
+                foundKind == 13 ? "+5 max HP" : String.Format("Protection: %d%%", foundKind == 10 ? 10 : foundKind == 11 ? 5 : 3));
+            return;
+        }
+        if (cleric.arpgComparedWeapon == null) return;
         let equipped = cleric.arpgComparedWeapon;
         int currentKind = equipped.loot.kind;
-        int foundKind = found.loot.kind;
+        if (currentKind < 0) currentKind = 3;
         int currentTics = ARPGWeaponRules.AttackTics(currentKind);
         int foundTics = ARPGWeaponRules.AttackTics(foundKind);
         int currentDamage = ARPGWeaponRules.AverageDamage(currentKind, equipped.loot.damage);
@@ -37,7 +47,7 @@ class ARPGLootPrompt : EventHandler
         int speedColor = Font.CR_GRAY;
         int costColor = Font.CR_GRAY;
         int dpsColor = Font.CR_GRAY;
-        if (currentKind != 4 && foundKind != 4)
+        if (currentKind < 4 && foundKind < 4)
         {
             if (foundDamage > currentDamage) damageColor = Font.CR_GREEN;
             if (foundDamage < currentDamage) damageColor = Font.CR_RED;
@@ -54,9 +64,9 @@ class ARPGLootPrompt : EventHandler
         int left = 8;
         int right = 204;
         Screen.DrawText(SmallFont, Font.CR_GOLD, left, 32, String.Format("EQUIPPED  SLOT %d", cleric.arpgActiveSlot));
-        Screen.DrawText(SmallFont, Font.CR_GOLD, right, 32, String.Format("FOUND  [E] SLOT %d", cleric.arpgActiveSlot));
-        Screen.DrawText(SmallFont, Font.CR_GRAY, left, 42, String.Format("%s / %s", ARPGWeaponRules.TypeName(currentKind), currentKind == 4 ? "Magic" : "Melee"));
-        Screen.DrawText(SmallFont, Font.CR_GRAY, right, 42, String.Format("%s / %s", ARPGWeaponRules.TypeName(foundKind), foundKind == 4 ? "Magic" : "Melee"));
+        Screen.DrawText(SmallFont, Font.CR_GOLD, right, 32, "FOUND  [E] PICK UP");
+        Screen.DrawText(SmallFont, Font.CR_GRAY, left, 42, String.Format("%s / %s", ARPGWeaponRules.TypeName(currentKind), currentKind >= 4 ? "Magic" : "Melee"));
+        Screen.DrawText(SmallFont, Font.CR_GRAY, right, 42, String.Format("%s / %s", ARPGWeaponRules.TypeName(foundKind), foundKind >= 4 ? "Magic" : "Melee"));
         Screen.DrawText(SmallFont, Font.CR_GRAY, left, 52, String.Format("Damage: %s", DamageText(currentKind, equipped.loot.damage)));
         Screen.DrawText(SmallFont, damageColor, right, 52, String.Format("Damage: %s", DamageText(foundKind, found.loot.damage)));
         Screen.DrawText(SmallFont, Font.CR_GRAY, left, 62, String.Format("Speed: %s", RateText(currentKind)));

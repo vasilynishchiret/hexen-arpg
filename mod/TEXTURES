@@ -70,3 +70,9 @@ Sprite ARAWA0, 28, 41
     Offset 12, 37
     Patch "patches/arpg_sword/WBLADEA0.png", 0, 0
 }
+
+Sprite ARRGA0, 32, 32
+{
+    Offset 16, 24
+    Patch "patches/arpg_ring/ARRGA0.png", 0, 0
+}
