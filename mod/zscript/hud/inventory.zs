@@ -91,6 +91,6 @@ class ARPGInventoryHud : EventHandler
                 Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 245,
                     String.Format("vs equipped %s", ARPGWeaponRules.TypeName(cleric.arpgArmor[target - 4].kind)));
         }
-        Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 260, "J/K item  H/L slot  U equip  O remove  P drop  I close");
+        Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 260, "J/K item  H/L slot  U equip  O remove  P drop  ALT close");
     }
 }

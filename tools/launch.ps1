@@ -22,5 +22,6 @@ foreach ($path in @($UZDoom, $IWAD, (Join-Path $mod 'zscript.txt'))) {
     }
 }
 
-& $UZDoom -iwad $IWAD -file $mod @gameArgs
+$controls = (Join-Path $PSScriptRoot 'controls.cfg').Replace('\', '/')
+& $UZDoom -iwad $IWAD -file $mod '+exec' $controls @gameArgs
 exit $LASTEXITCODE
