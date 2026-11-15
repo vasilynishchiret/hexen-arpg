@@ -7,6 +7,7 @@ class ARPGBalance : Object
     const OTHER_XP_MIN = 5;
     const OTHER_XP_MAX = 100;
     const HP_PER_LEVEL = 5;
+    const BASE_HEALTH = 50;
     const BLUE_REGEN_TICS = 35;
     const GREEN_MANA_PER_KILL = 5;
     const START_MANA1 = 30;
@@ -14,6 +15,23 @@ class ARPGBalance : Object
     const MACE_DAMAGE_MULTIPLIER = 2;
     const SWORD_DAMAGE = 70;
     const SWORD_MANA_COST = 3;
-    const LOOT_CHANCE_PERCENT = 25;
+    const LOOT_ONE_IN = 15;
+    const LOOT_COMMON_PERCENT = 80;
+    const LOOT_STRONG_PERCENT = 17;
+    const LOOT_EXCEPTIONAL_PERCENT = 3;
+    const LOOT_MULTIPLIER_SCALE = 1000;
+    const LOOT_COMMON_MIN = 650;
+    const LOOT_COMMON_MAX = 1100;
+    const LOOT_STRONG_MIN = 1150;
+    const LOOT_STRONG_MAX = 1800;
+    const LOOT_EXCEPTIONAL_MIN = 2000;
+    const LOOT_EXCEPTIONAL_MAX = 3500;
+    const AXE_DAMAGE = 85;
+    const HAMMER_DAMAGE = 115;
+    const SWORD_ATTACK_TICS = 16;
+    const AXE_ATTACK_TICS = 30;
+    const HAMMER_ATTACK_TICS = 70;
+    const MACE_ATTACK_TICS = 22;
+    const LIGHTNING_ATTACK_TICS = 36;
     const LOOT_INTERACT_RANGE = 96;
 }

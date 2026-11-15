@@ -34,6 +34,7 @@ class ARPGInteraction : ARPGEquipment
             if (cleric != null)
             {
                 cleric.arpgActiveSlot = ActiveSlot(cleric);
+                cleric.arpgComparedWeapon = SlotWeapon(cleric, cleric.arpgActiveSlot);
                 cleric.arpgLookDrop = FindTarget(cleric);
                 if (down && useWasDown[i] == 0 && cleric.arpgLookDrop != null)
                     Exchange(cleric, cleric.arpgLookDrop);

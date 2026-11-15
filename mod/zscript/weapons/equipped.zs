@@ -49,11 +49,22 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetAtkState(bool hold)
     {
+        let cleric = ARPGCleric(Owner);
+        if (cleric != null && cleric.arpgAttackCooldown > 0) return GetReadyState();
         if (loot.kind == 1) return FindState('AxeFire');
         if (loot.kind == 2) return FindState('HammerFire');
         if (loot.kind == 3) return FindState('MaceFire');
         if (loot.kind == 4) return FindState('LightningFire');
         return FindState('SwordFire');
+    }
+
+    action void A_ARPGBeginAttack()
+    {
+        if (player == null) return;
+        let cleric = ARPGCleric(player.mo);
+        let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
+        if (cleric != null && weapon != null)
+            cleric.arpgAttackCooldown = ARPGWeaponRules.AttackTics(weapon.loot.kind);
     }
 
     action void A_ARPGStrike()
@@ -110,16 +121,16 @@ class ARPGEquippedWeapon : CWeapMace
         ARAX L 1 A_WeaponReady;
         Loop;
     SwordFire:
-        ARAX N 4 Offset(15, 32);
-        ARAX O 3 Offset(15, 32);
-        ARAX P 2 Offset(15, 32);
+        ARAX N 2 Offset(15, 32) A_ARPGBeginAttack;
+        ARAX O 2 Offset(15, 32);
+        ARAX P 1 Offset(15, 32);
         ARAX P 1 Offset(-5, 70) A_ARPGStrike;
-        ARAX P 2 Offset(-25, 90);
+        ARAX P 1 Offset(-25, 90);
         ARAX Q 1 Offset(15, 32);
         ARAX Q 2 Offset(10, 54);
-        ARAX Q 7 Offset(10, 150);
-        ARAX A 1 Offset(0, 60) A_ReFire;
-        ARAX A 4 Offset(0, 36);
+        ARAX Q 4 Offset(10, 150);
+        ARAX A 1 Offset(0, 60);
+        ARAX A 1 Offset(0, 36) A_ReFire;
         Goto SwordReady;
     AxeSelect:
         FAXE L 1 A_Raise;
@@ -131,7 +142,7 @@ class ARPGEquippedWeapon : CWeapMace
         FAXE L 1 A_WeaponReady;
         Loop;
     AxeFire:
-        FAXE N 4 Offset(15, 32);
+        FAXE N 4 Offset(15, 32) A_ARPGBeginAttack;
         FAXE O 3 Offset(15, 32);
         FAXE P 2 Offset(15, 32);
         FAXE P 1 Offset(-5, 70) A_ARPGStrike;
@@ -140,7 +151,6 @@ class ARPGEquippedWeapon : CWeapMace
         FAXE Q 2 Offset(10, 54);
         FAXE Q 14 Offset(10, 150);
         FAXE A 1 Offset(0, 60) A_ReFire;
-        FAXE A 4 Offset(0, 36);
         Goto AxeReady;
     HammerSelect:
         FHMR A 1 A_Raise;
@@ -152,11 +162,11 @@ class ARPGEquippedWeapon : CWeapMace
         FHMR A 1 A_WeaponReady;
         Loop;
     HammerFire:
-        FHMR B 6 Offset(5, 0);
-        FHMR C 3 Offset(5, 0) A_ARPGStrike;
-        FHMR D 3 Offset(5, 0);
-        FHMR E 22 Offset(5, 150);
-        FHMR A 6 Offset(0, 40) A_ReFire;
+        FHMR B 8 Offset(5, 0) A_ARPGBeginAttack;
+        FHMR C 5 Offset(5, 0) A_ARPGStrike;
+        FHMR D 5 Offset(5, 0);
+        FHMR E 51 Offset(5, 150);
+        FHMR A 1 Offset(0, 40) A_ReFire;
         Goto HammerReady;
     MaceSelect:
         CMCE A 1 A_Raise;
@@ -168,7 +178,7 @@ class ARPGEquippedWeapon : CWeapMace
         CMCE A 1 A_WeaponReady;
         Loop;
     MaceFire:
-        CMCE B 2 Offset(60, 20);
+        CMCE B 2 Offset(60, 20) A_ARPGBeginAttack;
         CMCE B 3 Offset(8, 45);
         CMCE CDE 1 Offset(8, 45);
         CMCE E 1 Offset(-11, 58) A_ARPGStrike;
@@ -186,7 +196,8 @@ class ARPGEquippedWeapon : CWeapMace
         MLNG A 1 Bright A_WeaponReady;
         Loop;
     LightningFire:
-        MLNG DE 3 Bright;
+        MLNG D 3 Bright A_ARPGBeginAttack;
+        MLNG E 3 Bright;
         MLNG F 4 Bright A_ARPGLightningAttack;
         MLNG G 4 Bright;
         MLNG HI 3 Bright;

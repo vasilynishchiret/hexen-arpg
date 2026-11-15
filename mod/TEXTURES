@@ -65,8 +65,8 @@ Sprite ARAXQ0, 65, 69
     Patch "patches/arpg_sword/FBLADEQ0.png", 0, 0
 }
 
-Sprite ARAWA0, 94, 69
+Sprite ARAWA0, 28, 41
 {
-    Offset 47, 65
-    Patch "patches/arpg_sword/FBLADEA0.png", 0, 0
+    Offset 12, 37
+    Patch "patches/arpg_sword/WBLADEA0.png", 0, 0
 }

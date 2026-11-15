@@ -17,7 +17,7 @@ class ARPGGroundWeapon : Actor
         if (loot.damage == 0)
         {
             loot.kind = random[ARPGLootType](0, 2);
-            loot.damage = random[ARPGLootDamage](ARPGWeaponRules.MinDamage(loot.kind), ARPGWeaponRules.MaxDamage(loot.kind));
+            loot.damage = ARPGWeaponRules.RollDamage(loot.kind);
             loot.speed = loot.kind;
             loot.manaCost = ARPGWeaponRules.ManaCost(loot.kind);
         }
