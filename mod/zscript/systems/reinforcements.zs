@@ -5,6 +5,18 @@ class ARPGReinfEttin : ARPGEttin { Default { -COUNTKILL } }
 class ARPGReinfCentaur : Centaur { Default { -COUNTKILL } }
 class ARPGReinfDemon : Demon1 { Default { -COUNTKILL } }
 
+// Keep Hexen's smoke animation, but bound this mod's visual effect independently.
+class ARPGReinfSmoke : TeleSmoke
+{
+    int age;
+
+    override void Tick()
+    {
+        Super.Tick();
+        if (++age >= ARPGBalance.REINF_SMOKE_TICS) Destroy();
+    }
+}
+
 class ARPGReinforcements : EventHandler
 {
     String currentMap;
@@ -68,7 +80,7 @@ class ARPGReinforcements : EventHandler
             monster.bCountKill = false;
             monster.special = 0;
             monster.target = cleric;
-            Actor.Spawn("TeleSmoke", monster.Pos, NO_REPLACE);
+            Actor.Spawn("ARPGReinfSmoke", monster.Pos, NO_REPLACE);
             return true;
         }
         return false;

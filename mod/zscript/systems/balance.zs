@@ -73,6 +73,7 @@ class ARPGBalance : Object
     const REINF_POSITION_TRIES = 24;
     const REINF_MAX_FLOOR_DELTA = 48;
     const REINF_AFRIT_HEIGHT = 64;
+    const REINF_SMOKE_TICS = 175;
 
     static Class<Actor> ReinforcementNormal(int choice)
     {
