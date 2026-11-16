@@ -32,6 +32,8 @@ Cleric начинает с 30 единиц Mana1 и Mana2. Mana1 восстан�
 
 ## Запуск
 
+Для проверки на стороннем уровне укажите `-MapWad` и при необходимости `-StartMap` в `tools/launch.ps1`. Примеры и ограничения: [docs/custom-maps.md](docs/custom-maps.md).
+
 В PowerShell из корня репозитория:
 
 ```powershell

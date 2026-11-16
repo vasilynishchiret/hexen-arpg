@@ -28,8 +28,12 @@ class ARPGEquippedWeapon : CWeapMace
 
     void SyncSpritePosition()
     {
-        // MWeapLightning uses +20; the inherited Cleric mace uses -8.
-        YAdjust = loot.kind == 4 ? 20 : -8;
+        // These are the original Hexen Weapon.YAdjust values. The shared
+        // slot class otherwise inherits the Cleric mace's -8 adjustment.
+        if (loot.kind == 4 || loot.kind == 5) YAdjust = 20;
+        else if (loot.kind == 6 || loot.kind == 8) YAdjust = 10;
+        else if (loot.kind == 7) YAdjust = 9;
+        else YAdjust = -8;
     }
 
     override void ModifyDamage(int damage, Name damageType, out int newdamage,
@@ -57,6 +61,7 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetDownState()
     {
+        SyncSpritePosition();
         if (loot.kind < 0) return FindState('EmptyDeselect');
         if (loot.kind == 5) return FindState('FrostDeselect');
         if (loot.kind == 6) return FindState('StaffDeselect');
@@ -210,6 +215,29 @@ class ARPGEquippedWeapon : CWeapMace
         A_StartSound("ClericFlameFire", CHAN_WEAPON);
     }
 
+    action void A_ARPGLightningReady()
+    {
+        A_WeaponReady();
+        if (random[ARPGLightningReady]() < 160)
+            A_StartSound("MageLightningReady", CHAN_WEAPON);
+    }
+
+    action void A_ARPGStaffInitBlink()
+    {
+        weaponspecial = (random[ARPGStaffBlink]() >> 1) + 20;
+    }
+
+    action void A_ARPGStaffCheckBlink()
+    {
+        if (player == null || player.ReadyWeapon == null) return;
+        if (!--weaponspecial)
+        {
+            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("StaffBlink"));
+            weaponspecial = (random[ARPGStaffBlink]() + 50) >> 2;
+        }
+        else A_WeaponReady();
+    }
+
     States
     {
     EmptySelect:
@@ -307,10 +335,10 @@ class ARPGEquippedWeapon : CWeapMace
         Loop;
     LightningReady:
         MLNG AAAAA 1 Bright A_WeaponReady;
-        MLNG A 1 Bright A_WeaponReady;
+        MLNG A 1 Bright A_ARPGLightningReady;
         MLNG BBBBBB 1 Bright A_WeaponReady;
         MLNG CCCCC 1 Bright A_WeaponReady;
-        MLNG C 1 Bright A_WeaponReady;
+        MLNG C 1 Bright A_ARPGLightningReady;
         MLNG BBBBBB 1 Bright A_WeaponReady;
         Loop;
     LightningFire:
@@ -337,6 +365,7 @@ class ARPGEquippedWeapon : CWeapMace
     FrostFire:
         CONE B 3 A_ARPGBeginAttack;
         CONE C 4;
+    FrostHold:
         CONE D 3;
         CONE E 5;
         CONE F 3 A_ARPGFrostAttack;
@@ -348,17 +377,28 @@ class ARPGEquippedWeapon : CWeapMace
         CSSF C 1 A_Raise;
         Loop;
     StaffDeselect:
+        CSSF B 3;
+        CSSF C 4;
         CSSF C 1 A_Lower;
-        Loop;
+        Wait;
     StaffReady:
-        CSSF A 1 A_WeaponReady;
-        Loop;
+        CSSF C 4;
+        CSSF B 3 A_ARPGStaffInitBlink;
+    StaffReadyLoop:
+        CSSF AAAAAAA 1 A_WeaponReady;
+        CSSF A 1 A_ARPGStaffCheckBlink;
+        Goto StaffReadyLoop;
     StaffFire:
         CSSF A 1 Offset(0, 45) A_ARPGBeginAttack;
         CSSF J 1 Offset(0, 50) A_ARPGStaffAttack;
-        CSSF J 4 Offset(0, 50);
-        CSSF A 4 Offset(0, 40);
-        Goto StaffReady;
+        CSSF J 2 Offset(0, 50);
+        CSSF J 2 Offset(0, 45);
+        CSSF A 2 Offset(0, 40);
+        CSSF A 2 Offset(0, 36);
+        Goto StaffReadyLoop;
+    StaffBlink:
+        CSSF BBBCCCCCBBB 1 A_WeaponReady;
+        Goto StaffReadyLoop;
     WandSelect:
         MWND A 1 A_Raise;
         Loop;
@@ -381,15 +421,20 @@ class ARPGEquippedWeapon : CWeapMace
         CFLM A 1 A_Lower;
         Loop;
     FirestormReady:
-        CFLM ABC 1 A_WeaponReady;
+        // One-tic states keep A_WeaponReady responsive on every game tic.
+        CFLM AAAAAAAAAAAA 1 A_WeaponReady;
+        CFLM BBBBBBBBBBBB 1 A_WeaponReady;
+        CFLM CCCCCCCCCCCC 1 A_WeaponReady;
         Loop;
     FirestormFire:
         CFLM A 2 Offset(0, 40) A_ARPGBeginAttack;
-        CFLM D 4 Offset(0, 50);
+        CFLM D 2 Offset(0, 50);
+        CFLM D 2 Offset(0, 36);
         CFLM E 4 Bright;
         CFLM F 4 Bright A_ARPGFirestormAttack;
         CFLM E 4 Bright;
-        CFLM G 4 Offset(0, 40);
+        CFLM G 2 Offset(0, 40);
+        CFLM G 2;
         Goto FirestormReady;
     }
 }

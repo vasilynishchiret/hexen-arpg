@@ -1,4 +1,4 @@
-# Asset catalog: HEXEN-ARPG v0.3
+# Asset catalog: HEXEN-ARPG v0.5
 
 This catalog was checked against UZDoom 5.0.3's bundled ZScript and the user's local `HEXEN.WAD` (SHA-256 `F74B857076B3FFE2597D0E05BDECC687496E6A9582D7A47DB681E0E78E4001`). The WAD and UZDoom assets are **dependencies**, not files in this repository. All original frames below should be extracted by the user from their own copy in SLADE when making replacement art. No commercial image is copied into Git.
 
@@ -21,6 +21,20 @@ The `Sprite` names in ZScript are four-letter prefixes plus frame letters; the p
 | Ring | No original Hexen ring | `ARPGGroundWeapon` / ARPG ring slots, 13 | None | Custom `ARRGA0` | None | No original icon; custom `ARRGA0` | `mod/patches/arpg_ring/ARRGA0.png`, `mod/TEXTURES`, `tools/generate-ring-icon.ps1` |
 
 The inventory shows small versions of each item's ground sprite or the Bracers icon. Item types have distinct on-ground states. The original Hexen images are displayed at runtime from the player's WAD; they are not shipped here.
+
+## Original weapon animation mapping (UZDoom 5.0.3)
+
+Compared with the `zscript/actors/hexen/*.zs` files inside the installed `uzdoom.pk3`. Frame names refer to unchanged sprites in the player's `HEXEN.WAD`; the ARPG code only chooses weapon states and `Weapon.YAdjust`.
+
+| Weapon | Select / Deselect | Ready | Fire / Hold and recovery | Original and ARPG YAdjust |
+| --- | --- | --- | --- | --- |
+| Serpent Staff (`clericstaff.zs`) | `CSSF C` raise; `B` 3, `C` 4, then lower | `C` 4, `B` 3, `A` 8-tic loop with intermittent `BBBCCCCCBBB` blink | `A` 1, `J` 1+2+2, `A` 2+2; original offset path `(0,45)→(0,50)→(0,45)→(0,40)→(0,36)` | `10 / 10` (ARPG previously `-8`) |
+| Firestorm (`clericflame.zs`) | `CFLM A` raise/lower | Original `AAAA BBBB CCCC` at 1 tic each; ARPG `A×12 B×12 C×12`, invoking `A_WeaponReady` every tic | `A` 2, `D` 2+2 at Y 50/36, `E` 4, `F` 4, `E` 4, `G` 2+2 at Y 40/default. The 22-tic attack cycle and shot timing are unchanged. | `10 / 10` (previously `-8`) |
+| Frost Shards (`magecone.zs`) | `CONE A` raise/lower | `A` 1 loop | `B` 3, `C` 4; Hold `D` 3, `E` 5, `F` 3, `G` 3, `A` 9+1. The original final refire frame lasts 10; ARPG retains 1 to preserve its existing 31-tic attack cadence. | `20 / 20` (previously `-8`) |
+| Sapphire Wand (`magewand.zs`) | `MWND A` raise/lower | `A` 1 loop | `A` 6, `B` 6 at `(0,48)`, `A` 3 at `(0,40)`, `A` 3 at `(0,36)` | `9 / 9` (previously `-8`) |
+| Arc of Death (`magelightning.zs`) | `MLNG A` raise/lower | `A×6 B×6 C×6 B×6`, with original occasional ready sound | `D` 3, `E` 3, `F` 4, `G` 4, `H` 3, `I` 3+6, `C` 2, `B` 2+2+2. Original recovery offsets retained. | `20 / 20` |
+
+The Staff's original close-range draining `Drain` branch is deliberately absent from the ARPG projectile attack. The original Frost ten-tic recovery is likewise not copied because both change established gameplay timing. No PNG, virtual `TEXTURES` offset, sprite dimensions, projectile behavior, mana cost, or damage was changed in this animation pass.
 
 ## Own PNG and TEXTURES mappings
 
