@@ -21,6 +21,24 @@ class ARPGMana : EventHandler
             }
             cleric.arpgJumpWasDown = jump;
 
+            bool shieldHeld = (players[i].cmd.buttons & BT_ALTATTACK) != 0;
+            if (cleric.arpgShieldActive &&
+                (!shieldHeld || cleric.arpgInventoryOpen ||
+                !ARPGAffixes.Has(cleric.arpgArmor[2], ARPGAffixes.ARCANE_SHIELD) ||
+                level.maptime >= cleric.arpgShieldEndAt)) cleric.EndARPGShield();
+            if (!cleric.arpgShieldActive && shieldHeld && !cleric.arpgShieldWasHeld && !cleric.arpgInventoryOpen &&
+                ARPGAffixes.Has(cleric.arpgArmor[2], ARPGAffixes.ARCANE_SHIELD) &&
+                level.maptime >= cleric.arpgShieldReadyAt)
+            {
+                let shieldMana = cleric.FindInventory("Mana1");
+                if (shieldMana != null && shieldMana.Amount > 0)
+                {
+                    cleric.arpgShieldActive = true;
+                    cleric.arpgShieldEndAt = level.maptime + cleric.arpgArmor[2].affix[0].duration;
+                }
+            }
+            cleric.arpgShieldWasHeld = shieldHeld;
+
             if (cleric.arpgInventoryOpen)
             {
                 cleric.arpgShiftTicks = 0;

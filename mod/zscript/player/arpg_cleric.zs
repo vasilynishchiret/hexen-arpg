@@ -19,6 +19,11 @@ class ARPGCleric : ClericPlayer
     bool arpgSprintActive;
     int arpgSprintManaTicks;
     int arpgDashReadyAt;
+    bool arpgShieldActive;
+    bool arpgShieldWasHeld;
+    int arpgShieldEndAt;
+    int arpgShieldReadyAt;
+    int arpgGuardianReadyAt;
     bool arpgInventoryOpen;
     int arpgSelectedItem;
     int arpgEquipTarget;
@@ -177,6 +182,41 @@ class ARPGCleric : ClericPlayer
     {
         if (arpgAttackCooldown > 0 && player != null && player.ReadyWeapon is "ARPGEquippedWeapon") return;
         Super.FireWeapon(stat);
+    }
+
+    override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod,
+        int flags, double angle)
+    {
+        if (damage > 0 && health > 0 &&
+            ARPGAffixes.Has(arpgArmor[2], ARPGAffixes.GUARDIAN) &&
+            level.maptime >= arpgGuardianReadyAt)
+        {
+            arpgGuardianReadyAt = level.maptime + ARPGBalance.GUARDIAN_COOLDOWN_TICS;
+            return 0;
+        }
+        if (damage > 0 && arpgShieldActive &&
+            ARPGAffixes.Has(arpgArmor[2], ARPGAffixes.ARCANE_SHIELD))
+        {
+            let mana = FindInventory("Mana1");
+            if (mana != null && mana.Amount > 0)
+            {
+                int desired = damage * ARPGBalance.SHIELD_BLOCK_PERCENT / 100;
+                int absorbed = min(desired, mana.Amount * 2);
+                int spent = (absorbed + 1) / 2;
+                TakeInventory("Mana1", spent);
+                damage -= absorbed;
+                if (mana.Amount <= 0) EndARPGShield();
+            }
+            else EndARPGShield();
+        }
+        return Super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+    }
+
+    void EndARPGShield()
+    {
+        if (!arpgShieldActive) return;
+        arpgShieldActive = false;
+        arpgShieldReadyAt = level.maptime + ARPGBalance.SHIELD_COOLDOWN_TICS;
     }
 
     override double, double TweakSpeeds(double forward, double side)

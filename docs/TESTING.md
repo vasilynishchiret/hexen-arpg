@@ -21,3 +21,7 @@ The temporary original sprites and exact replacement list are in [`asset-catalog
 ## v0.5 stage A: mobility
 
 Use `summon ARPGTestSprintBoots`, `summon ARPGTestDashBoots`, `summon ARPGTestJumpBoots` and `summon ARPGTestBoots`. Pick up with E and equip from the new ninth slot. Before equipping, Shift must never increase walking speed. Sprint boots: hold Shift while moving and verify about 50% faster movement, 2 Mana1 per second, and no passive Mana1 regeneration. Dash boots: tap Shift for less than 200 ms and release to dash; hold longer to verify no dash. Jump boots: press Space a second time in air, then try a third press and holding Space. Unequip and retry each ability. Repeat Shift tests with inventory open. Save/load equipped boots and verify their affixes remain. The temporary ground sprite is Hexen `SPED A` from the installed WAD.
+
+## v0.5 stage B: defensive bracers
+
+Use `summon ARPGTestBracers`, `summon ARPGTestShieldBracers`, and `summon ARPGTestGuardianBracers`. Ordinary bracers retain 3% protection; special bracers have their ability instead. Hold RMB (the game's configurable AltFire binding) with shield bracers: the blue screen frame indicates active protection. Compare incoming damage with and without the shield, check Mana1 falls by roughly one per two blocked HP, and confirm it ends on release, after two seconds, or when Mana1 empties. It cannot restart for eight seconds, including after swapping bracers. Guardian must ignore exactly one hit, then permit hits for 20 seconds. Save/load and swap bracers during cooldown.

@@ -103,6 +103,17 @@ class ARPGAffixes : Object
                 id == SPRINT ? ARPGBalance.SPRINT_MANA_PER_SEC : 0);
         }
     }
+
+    static void RollBracers(out ARPGWeaponData item)
+    {
+        int roll = random[ARPGBracerAffix](0, 99);
+        if (roll < 30)
+            Add(item, ARCANE_SHIELD, CAT_BRACERS, ARPGBalance.SHIELD_BLOCK_PERCENT,
+                ARPGBalance.SHIELD_BASE_TICS + random[ARPGShieldPower](0, 35),
+                ARPGBalance.SHIELD_COOLDOWN_TICS, 1);
+        else if (roll < 60)
+            Add(item, GUARDIAN, CAT_BRACERS, 1, 0, ARPGBalance.GUARDIAN_COOLDOWN_TICS);
+    }
 }
 
 class ARPGWeaponRules : Object

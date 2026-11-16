@@ -26,6 +26,10 @@ class ARPGBalance : Object
     const DASH_THRUST = 20;
     const SPRINT_MANA_PER_SEC = 2;
     const SPRINT_PERCENT = 150;
+    const SHIELD_BLOCK_PERCENT = 70;
+    const SHIELD_BASE_TICS = 70;
+    const SHIELD_COOLDOWN_TICS = 280;
+    const GUARDIAN_COOLDOWN_TICS = 700;
     const LOOT_COMMON_PERCENT = 80;
     const LOOT_STRONG_PERCENT = 17;
     const LOOT_EXCEPTIONAL_PERCENT = 3;

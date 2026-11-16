@@ -19,6 +19,15 @@ class ARPGInventoryHud : EventHandler
         Menu.SetMenu('ARPGInventory');
         SendNetworkEvent("arpg_inventory_state", 1);
     }
+
+    override void RenderOverlay(RenderEvent e)
+    {
+        let cleric = ARPGCleric(players[consoleplayer].mo);
+        if (cleric == null || !cleric.arpgShieldActive) return;
+        Screen.Dim(0x2277CC, 0.13, 0, 0, Screen.GetWidth(), Screen.GetHeight());
+        Screen.DrawLineFrame(0x8833CCFF, 12, 12,
+            Screen.GetWidth() - 24, Screen.GetHeight() - 24, 2);
+    }
 }
 
 class ARPGInventoryMenu : ListMenu

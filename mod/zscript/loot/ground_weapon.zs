@@ -24,6 +24,7 @@ class ARPGGroundWeapon : Actor
             loot.speed = loot.kind;
             loot.manaCost = ARPGWeaponRules.ManaCost(loot.kind);
             if (loot.kind == 14) ARPGAffixes.RollBoots(loot);
+            if (loot.kind == 12) ARPGAffixes.RollBracers(loot);
         }
         RefreshAppearance();
     }
@@ -135,7 +136,9 @@ class ARPGTestWand : ARPGGroundWeapon { override void PostBeginPlay() { Super.Po
 class ARPGTestFirestorm : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 8; loot.damage = 100; loot.manaCost = 4; RefreshAppearance(); } }
 class ARPGTestChest : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 10; loot.damage = 1; loot.manaCost = 0; RefreshAppearance(); } }
 class ARPGTestHelmet : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 11; loot.damage = 1; loot.manaCost = 0; RefreshAppearance(); } }
-class ARPGTestBracers : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 12; loot.damage = 1; loot.manaCost = 0; RefreshAppearance(); } }
+class ARPGTestBracers : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 12; loot.damage = 1; loot.manaCost = 0; loot.affixCount = 0; RefreshAppearance(); } }
+class ARPGTestShieldBracers : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 12; loot.damage = 1; loot.affixCount = 0; ARPGAffixes.Add(loot, ARPGAffixes.ARCANE_SHIELD, 12, 70, 70, 280, 1); RefreshAppearance(); } }
+class ARPGTestGuardianBracers : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 12; loot.damage = 1; loot.affixCount = 0; ARPGAffixes.Add(loot, ARPGAffixes.GUARDIAN, 12, 1, 0, 700); RefreshAppearance(); } }
 class ARPGTestRing : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 13; loot.damage = 1; loot.manaCost = 0; RefreshAppearance(); } }
 class ARPGTestBoots : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 14; loot.damage = 1; loot.manaCost = 0; loot.affixCount = 0; ARPGAffixes.RollBoots(loot); RefreshAppearance(); } }
 class ARPGTestSprintBoots : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); loot.kind = 14; loot.damage = 1; loot.affixCount = 0; ARPGAffixes.Add(loot, ARPGAffixes.SPRINT, 14, 50, 0, 0, 2); RefreshAppearance(); } }
