@@ -17,19 +17,25 @@ class ARPGGroundWeapon : Actor
         if (loot.damage == 0)
         {
             int group = random[ARPGLootType](0, 99);
-            if (group < ARPGBalance.LOOT_MELEE_PERCENT) loot.kind = random[ARPGLootMelee](0, 2);
-            else if (group < ARPGBalance.LOOT_MELEE_PERCENT + ARPGBalance.LOOT_MAGIC_PERCENT) loot.kind = random[ARPGLootMagic](4, 8);
-            else loot.kind = random[ARPGLootArmor](10, 14);
-            loot.damage = loot.kind <= 8 ? ARPGWeaponRules.RollDamage(loot.kind) : 1;
-            loot.speed = loot.kind;
-            loot.manaCost = ARPGWeaponRules.ManaCost(loot.kind);
-            if (loot.kind == 14) ARPGAffixes.RollBoots(loot);
-            if (loot.kind == 12) ARPGAffixes.RollBracers(loot);
-            if (loot.kind == 11) ARPGAffixes.RollHelmet(loot);
-            if (loot.kind == 13) ARPGAffixes.RollRing(loot);
-            if (loot.kind == 10) ARPGAffixes.RollChest(loot);
+            if (group < ARPGBalance.LOOT_MELEE_PERCENT) GenerateKind(random[ARPGLootMelee](0, 2));
+            else if (group < ARPGBalance.LOOT_MELEE_PERCENT + ARPGBalance.LOOT_MAGIC_PERCENT)
+                GenerateKind(random[ARPGLootMagic](4, 8));
+            else GenerateKind(random[ARPGLootArmor](10, 14));
         }
         RefreshAppearance();
+    }
+
+    void GenerateKind(int kind)
+    {
+        loot.kind = kind;
+        loot.damage = kind == 3 ? 65 : kind <= 8 ? ARPGWeaponRules.RollDamage(kind) : 1;
+        loot.speed = kind;
+        loot.manaCost = ARPGWeaponRules.ManaCost(kind);
+        if (kind == 14) ARPGAffixes.RollBoots(loot);
+        if (kind == 12) ARPGAffixes.RollBracers(loot);
+        if (kind == 11) ARPGAffixes.RollHelmet(loot);
+        if (kind == 13) ARPGAffixes.RollRing(loot);
+        if (kind == 10) ARPGAffixes.RollChest(loot);
     }
 
     void RefreshAppearance()

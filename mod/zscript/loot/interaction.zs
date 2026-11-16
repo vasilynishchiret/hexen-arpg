@@ -133,6 +133,9 @@ class ARPGInteraction : ARPGEquipment
                     let ground = cleric.arpgLookDrop;
                     if (cleric.StoreData(ground.loot))
                     {
+                        if (ground.special != 0)
+                            level.ExecuteSpecial(ground.special, cleric, null, false,
+                                ground.args[0], ground.args[1], ground.args[2], ground.args[3], ground.args[4]);
                         ground.Destroy();
                         cleric.arpgLookDrop = null;
                     }
