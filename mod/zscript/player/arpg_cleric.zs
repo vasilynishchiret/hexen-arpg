@@ -36,6 +36,8 @@ class ARPGCleric : ClericPlayer
     int arpgAuraTicks;
     int arpgVampRemainder;
     bool arpgInventoryOpen;
+    Array<String> arpgReinforcementMaps;
+    Array<int> arpgReinforcementTotals;
     int arpgSelectedItem;
     int arpgEquipTarget;
 

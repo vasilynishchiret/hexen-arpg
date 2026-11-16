@@ -59,4 +59,26 @@ class ARPGBalance : Object
     const MACE_ATTACK_TICS = 22;
     const LIGHTNING_ATTACK_TICS = 36;
     const LOOT_INTERACT_RANGE = 96;
+    // Independent ARPG reinforcements. All time values are 35-tic seconds.
+    const REINF_FIRST_DELAY_TICS = 2100;
+    const REINF_MIN_INTERVAL_TICS = 1050;
+    const REINF_MAX_INTERVAL_TICS = 2100;
+    const REINF_MAX_LIVE = 6;
+    const REINF_MAX_PER_MAP = 12;
+    const REINF_AFRIT_PERCENT = 40;
+    const REINF_GROUP_MIN = 1;
+    const REINF_GROUP_MAX = 2;
+    const REINF_MIN_RADIUS = 192;
+    const REINF_MAX_RADIUS = 384;
+    const REINF_POSITION_TRIES = 24;
+    const REINF_MAX_FLOOR_DELTA = 48;
+    const REINF_AFRIT_HEIGHT = 64;
+
+    static Class<Actor> ReinforcementNormal(int choice)
+    {
+        // Only ordinary enemies; no bosses or script-specific monsters.
+        if (choice == 0) return 'ARPGReinfEttin';
+        if (choice == 1) return 'ARPGReinfCentaur';
+        return 'ARPGReinfDemon';
+    }
 }

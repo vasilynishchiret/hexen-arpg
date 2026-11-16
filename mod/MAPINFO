@@ -1,5 +1,5 @@
 GameInfo
 {
     PlayerClasses = "FighterPlayer", "ARPGCleric", "MagePlayer"
-    AddEventHandlers = "ARPGMana", "ARPGKillRewards", "ARPGRingEffects", "ARPGHud", "ARPGInteraction", "ARPGLootPrompt", "ARPGInventoryHud", "ARPGMapConversion"
+    AddEventHandlers = "ARPGMana", "ARPGKillRewards", "ARPGRingEffects", "ARPGHud", "ARPGInteraction", "ARPGLootPrompt", "ARPGInventoryHud", "ARPGMapConversion", "ARPGReinforcements"
 }
