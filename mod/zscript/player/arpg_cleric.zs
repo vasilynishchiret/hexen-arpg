@@ -16,6 +16,7 @@ class ARPGCleric : ClericPlayer
     bool arpgShiftWasDown;
     bool arpgJumpWasDown;
     bool arpgDoubleJumpUsed;
+    bool arpgWasOnGround;
     bool arpgSprintActive;
     int arpgSprintManaTicks;
     int arpgDashReadyAt;
@@ -69,7 +70,8 @@ class ARPGCleric : ClericPlayer
         int rings = 0;
         if (arpgArmor[3].damage > 0) rings += 5;
         if (arpgArmor[4].damage > 0) rings += 5;
-        return Super.GetMaxHealth(withupgrades) + ARPGBalance.HP_PER_LEVEL * max(0, arpgLevel - 1) + rings;
+        int chestHP = arpgArmor[0].damage > 0 ? arpgArmor[0].statHP : 0;
+        return Super.GetMaxHealth(withupgrades) + ARPGBalance.HP_PER_LEVEL * max(0, arpgLevel - 1) + rings + chestHP;
     }
 
     int FirstFreeBagSlot()
@@ -213,9 +215,10 @@ class ARPGCleric : ClericPlayer
                 int desired = damage * ARPGBalance.SHIELD_BLOCK_PERCENT / 100;
                 int absorbed = min(desired, mana.Amount * 2);
                 int spent = (absorbed + 1) / 2;
+                bool depleted = spent >= mana.Amount;
                 TakeInventory("Mana1", spent);
                 damage -= absorbed;
-                if (mana.Amount <= 0) EndARPGShield();
+                if (depleted) EndARPGShield();
             }
             else EndARPGShield();
         }
@@ -277,6 +280,24 @@ class ARPGCleric : ClericPlayer
         {
             health = GetMaxHealth();
             if (player != null) player.health = health;
+        }
+    }
+
+    void SyncARPGManaCapacity()
+    {
+        let mana1 = Ammo(FindInventory("Mana1"));
+        let mana2 = Ammo(FindInventory("Mana2"));
+        int bonus1 = arpgArmor[0].damage > 0 ? arpgArmor[0].statMana1 : 0;
+        int bonus2 = arpgArmor[0].damage > 0 ? arpgArmor[0].statMana2 : 0;
+        if (mana1 != null)
+        {
+            mana1.MaxAmount = ARPGBalance.BASE_MANA_MAX + bonus1;
+            mana1.Amount = min(mana1.Amount, mana1.MaxAmount);
+        }
+        if (mana2 != null)
+        {
+            mana2.MaxAmount = ARPGBalance.BASE_MANA_MAX + bonus2;
+            mana2.Amount = min(mana2.Amount, mana2.MaxAmount);
         }
     }
 

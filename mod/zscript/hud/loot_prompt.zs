@@ -30,10 +30,27 @@ class ARPGLootPrompt : EventHandler
         if (foundKind >= 10)
         {
             Screen.DrawText(SmallFont, Font.CR_GOLD, 8, 32,
-                String.Format("FOUND: %s  [E] PICK UP", ARPGWeaponRules.TypeName(foundKind)));
+                String.Format("FOUND: %s / %s  [E] PICK UP", ARPGWeaponRules.TypeName(foundKind),
+                    ARPGWeaponRules.CategoryName(foundKind)));
             Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 42,
                 foundKind == 14 ? String.Format("Mobility abilities: %d", found.loot.affixCount) :
-                foundKind == 13 ? "+5 max HP" : String.Format("Protection: %d%%", foundKind == 10 ? 10 : foundKind == 11 ? 5 : 3));
+                foundKind == 13 ? "+5 max HP" : foundKind == 12 && found.loot.affixCount > 0 ?
+                "Special defense" : String.Format("Protection: %d%%",
+                    foundKind == 10 ? 10 + found.loot.statDR : foundKind == 11 ? 5 : 3));
+            if (foundKind == 10)
+            {
+                Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 52,
+                    String.Format("HP +%d  DR +%d%%  Mana1 +%d  Mana2 +%d  Regen +%d%%",
+                        found.loot.statHP, found.loot.statDR, found.loot.statMana1,
+                        found.loot.statMana2, found.loot.statRegen));
+            }
+            for (int i = 0; i < found.loot.affixCount; i++)
+            {
+                Screen.DrawText(SmallFont, Font.CR_GREEN, 8, 52 + i * 20,
+                    ARPGAffixes.Description(found.loot.affix[i]));
+                String terms = ARPGAffixes.Terms(found.loot.affix[i]);
+                if (terms.IsNotEmpty()) Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 62 + i * 20, terms);
+            }
             return;
         }
         if (cleric.arpgComparedWeapon == null) return;

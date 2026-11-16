@@ -17,11 +17,14 @@ struct ARPGWeaponData
     int manaCost;
     int affixCount;
     ARPGGameplayAffix affix[4];
+    int statCount;
+    ARPGGameplayAffix statAffix[4];
     int statHP;
     int statDR;
     int statMana1;
     int statMana2;
     int statRegen;
+    int statTier;
     int damageType; // reserved for elemental weapon affixes
 }
 
@@ -42,13 +45,14 @@ class ARPGAffixes : Object
     const VAMPIRISM = 9;
     const DAMAGE_AURA = 10;
 
-    static void Copy(out ARPGWeaponData dest, ARPGWeaponData src)
+    clearscope static void Copy(out ARPGWeaponData dest, ARPGWeaponData src)
     {
         dest.kind = src.kind;
         dest.damage = src.damage;
         dest.speed = src.speed;
         dest.manaCost = src.manaCost;
         dest.affixCount = src.affixCount;
+        dest.statCount = src.statCount;
         for (int i = 0; i < 4; i++)
         {
             dest.affix[i].id = src.affix[i].id;
@@ -58,12 +62,20 @@ class ARPGAffixes : Object
             dest.affix[i].duration = src.affix[i].duration;
             dest.affix[i].cooldown = src.affix[i].cooldown;
             dest.affix[i].manaCost = src.affix[i].manaCost;
+            dest.statAffix[i].id = src.statAffix[i].id;
+            dest.statAffix[i].category = src.statAffix[i].category;
+            dest.statAffix[i].effect = src.statAffix[i].effect;
+            dest.statAffix[i].power = src.statAffix[i].power;
+            dest.statAffix[i].duration = src.statAffix[i].duration;
+            dest.statAffix[i].cooldown = src.statAffix[i].cooldown;
+            dest.statAffix[i].manaCost = src.statAffix[i].manaCost;
         }
         dest.statHP = src.statHP;
         dest.statDR = src.statDR;
         dest.statMana1 = src.statMana1;
         dest.statMana2 = src.statMana2;
         dest.statRegen = src.statRegen;
+        dest.statTier = src.statTier;
         dest.damageType = src.damageType;
     }
 
@@ -81,6 +93,35 @@ class ARPGAffixes : Object
         for (int i = 0; i < item.affixCount; i++)
             if (item.affix[i].id == id) return item.affix[i].power;
         return 0;
+    }
+
+    clearscope static String Description(ARPGGameplayAffix a)
+    {
+        if (a.id == SPRINT) return String.Format("Sprint +%d%% [hold Shift]", a.power);
+        if (a.id == DASH) return "Dash [tap Shift <200ms]";
+        if (a.id == DOUBLE_JUMP) return "Double Jump [Space in air]";
+        if (a.id == ARCANE_SHIELD) return String.Format("Arcane Shield %d%% [RMB]", a.power);
+        if (a.id == GUARDIAN) return "Guardian: ignore one hit";
+        if (a.id == INVISIBILITY) return "Invisibility [F]";
+        if (a.id == ENEMY_DETECTION) return "Enemy Detection [V]";
+        if (a.id == GREEN_REGEN) return "Mana2 +1 every 12s";
+        if (a.id == VAMPIRISM) return String.Format("Vampirism %d.%d%%", a.power / 100, a.power % 100 / 10);
+        if (a.id == DAMAGE_AURA) return String.Format("Damage Aura %d/s, r96", a.power);
+        return "Unknown affix";
+    }
+
+    clearscope static String Terms(ARPGGameplayAffix a)
+    {
+        if (a.id == SPRINT) return String.Format("%d Mana1/sec", a.manaCost);
+        if (a.id == DASH) return String.Format("Cooldown %ds", a.cooldown / 35);
+        if (a.id == DOUBLE_JUMP) return "One extra jump per landing";
+        if (a.id == ARCANE_SHIELD) return String.Format("%d.%ds | CD %ds | 1 Mana1/2 HP",
+            a.duration / 35, a.duration * 10 / 35 % 10, a.cooldown / 35);
+        if (a.id == GUARDIAN) return String.Format("Cooldown %ds", a.cooldown / 35);
+        if (a.id == INVISIBILITY || a.id == ENEMY_DETECTION)
+            return String.Format("%ds | CD %ds%s", a.duration / 35,
+                a.cooldown / 35, a.id == ENEMY_DETECTION ? " | r640" : "");
+        return "";
     }
 
     static void Add(out ARPGWeaponData item, int id, int category, int power = 0,
@@ -141,10 +182,46 @@ class ARPGAffixes : Object
             id == VAMPIRISM ? random[ARPGVampPower](300, 600) :
             id == DAMAGE_AURA ? ARPGBalance.AURA_DAMAGE_PER_RING : 1);
     }
+
+    static void RollChest(out ARPGWeaponData item)
+    {
+        int roll = random[ARPGChestTier](0, 99);
+        int tier = roll < 80 ? 0 : roll < 97 ? 1 : 2;
+        int count = tier + 1 + random[ARPGChestCount](0, 1);
+        int used = 0;
+        item.statTier = tier + 1;
+        for (int i = 0; i < count; i++)
+        {
+            int kind;
+            do { kind = random[ARPGChestStat](0, 4); }
+            while ((used & (1 << kind)) != 0);
+            used |= 1 << kind;
+            if (kind == 0) item.statHP = 8 + tier * 8 + random[ARPGChestHP](0, 6);
+            if (kind == 1) item.statDR = 3 + tier * 2 + random[ARPGChestDR](0, 2);
+            if (kind == 2) item.statMana1 = 10 + tier * 10 + random[ARPGChestMana1](0, 5);
+            if (kind == 3) item.statMana2 = 10 + tier * 10 + random[ARPGChestMana2](0, 5);
+            if (kind == 4) item.statRegen = 10 + tier * 10 + random[ARPGChestRegen](0, 5);
+            int at = item.statCount++;
+            item.statAffix[at].id = 100 + kind;
+            item.statAffix[at].category = 10;
+            item.statAffix[at].effect = 100 + kind;
+            item.statAffix[at].power = kind == 0 ? item.statHP : kind == 1 ? item.statDR :
+                kind == 2 ? item.statMana1 : kind == 3 ? item.statMana2 : item.statRegen;
+        }
+    }
 }
 
 class ARPGWeaponRules : Object
 {
+    clearscope static String CategoryName(int kind)
+    {
+        if (kind == 10) return "Chest Armor";
+        if (kind == 11) return "Helmet";
+        if (kind == 12) return "Bracers";
+        if (kind == 13) return "Ring";
+        if (kind == 14) return "Boots";
+        return "Weapon";
+    }
     clearscope static string TypeName(int kind)
     {
         if (kind == 1) return "Axe";

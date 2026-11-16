@@ -1,4 +1,4 @@
-# HEXEN-ARPG v0.3: manual verification in UZDoom 5.0.3
+# HEXEN-ARPG v0.5: manual verification in UZDoom 5.0.3
 
 Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1` and start a **new** Cleric game. Script loading can be checked from the terminal with `& 'C:\Games\UZDoom\uzdoom.exe' -iwad 'C:\Games\UZDoom\HEXEN.WAD' -file '.\mod' -noautoload -nosound -stdout +quit`; `script parsing took ...` without `Script error` proves compilation only. `+quit` may still leave a graphics window in this environment.
 
@@ -33,3 +33,7 @@ Use `summon ARPGTestInvisibilityHelmet`, `summon ARPGTestDetectionHelmet`, and `
 ## v0.5 stage D: passive rings
 
 Use `summon ARPGTestGreenRing`, `summon ARPGTestVampRing`, and `summon ARPGTestAuraRing`; equip in Ring 1 and Ring 2, singly and in pairs. Green regeneration grants one Mana2 per ring every 12 seconds, up to native maximum. Vampirism test ring heals 5% of actual monster HP damage; two such rings cap at 10%, and HP never exceeds maximum. Check overkill on a nearly dead Ettin and repeated small hits. Aura deals two damage per second per ring within 96 units, with sight check; verify it does not affect allies or players. An aura kill must still award XP and five Mana2. Remove each ring and verify its effect stops immediately, then save/load both ring slots.
+
+## v0.5 stage E: quantitative armor and UI
+
+Use `summon ARPGTestChest` repeatedly. Each new Chest Armor has one to four distinct bonuses chosen from HP, damage reduction, Mana1 maximum, Mana2 maximum, and Mana1 regeneration. Equip and swap two chests, then remove them; maximum health and mana should reflect only the equipped chest, with no accumulated bonus. Check the 45% total protection cap alongside Helmet and ordinary Bracers. Hover each test item on the ground and in the bag, then select each equipment slot: name, category, stats, abilities, activation, mana, duration and cooldown should be legible. Check the lower-right HUD cooldowns and compare cooldown before and after swapping items. Save/load with every category equipped and recheck all three weapon slots, XP and Mana1/Mana2. `summon ARPGTestSword`, `ARPGTestLightning`, `ARPGTestBoots`, `ARPGTestShieldBracers`, `ARPGTestDetectionHelmet`, and `ARPGTestVampRing` provide a compact regression set.

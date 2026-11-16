@@ -12,6 +12,7 @@ class ARPGBalance : Object
     const GREEN_MANA_PER_KILL = 5;
     const START_MANA1 = 30;
     const START_MANA2 = 30;
+    const BASE_MANA_MAX = 200;
     const MACE_DAMAGE_MULTIPLIER = 2;
     const SWORD_DAMAGE = 70;
     const SWORD_MANA_COST = 3;

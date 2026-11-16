@@ -38,6 +38,43 @@ class ARPGInventoryHud : EventHandler
                 Screen.DrawText(SmallFont, Font.CR_RED, x, 50 + i * 10,
                     String.Format("%+d deg   %d units", cleric.arpgDetectAngle[i], cleric.arpgDetectDistance[i]));
         }
+        int x = Screen.GetWidth() - 170;
+        int y = Screen.GetHeight() - 78;
+        if (ARPGAffixes.Has(cleric.arpgBoots, ARPGAffixes.DASH))
+        {
+            Screen.DrawText(SmallFont, Font.CR_GOLD, x, y,
+                String.Format("Dash: %s", level.maptime >= cleric.arpgDashReadyAt ? "ready" :
+                    String.Format("%ds", (cleric.arpgDashReadyAt - level.maptime + 34) / 35)));
+            y += 12;
+        }
+        if (ARPGAffixes.Has(cleric.arpgArmor[2], ARPGAffixes.ARCANE_SHIELD))
+        {
+            Screen.DrawText(SmallFont, Font.CR_GOLD, x, y,
+                String.Format("Shield: %s", cleric.arpgShieldActive ? "active" :
+                    level.maptime >= cleric.arpgShieldReadyAt ? "ready" :
+                    String.Format("%ds", (cleric.arpgShieldReadyAt - level.maptime + 34) / 35)));
+            y += 12;
+        }
+        if (ARPGAffixes.Has(cleric.arpgArmor[2], ARPGAffixes.GUARDIAN))
+        {
+            Screen.DrawText(SmallFont, Font.CR_GOLD, x, y,
+                String.Format("Guardian: %s", level.maptime >= cleric.arpgGuardianReadyAt ? "ready" :
+                    String.Format("%ds", (cleric.arpgGuardianReadyAt - level.maptime + 34) / 35)));
+            y += 12;
+        }
+        if (ARPGAffixes.Has(cleric.arpgArmor[1], ARPGAffixes.INVISIBILITY))
+        {
+            Screen.DrawText(SmallFont, Font.CR_GOLD, x, y,
+                String.Format("Invisible: %s", level.maptime < cleric.arpgInvisEndAt ? "active" :
+                    level.maptime >= cleric.arpgInvisReadyAt ? "ready" :
+                    String.Format("%ds", (cleric.arpgInvisReadyAt - level.maptime + 34) / 35)));
+            y += 12;
+        }
+        if (ARPGAffixes.Has(cleric.arpgArmor[1], ARPGAffixes.ENEMY_DETECTION))
+            Screen.DrawText(SmallFont, Font.CR_GOLD, x, y,
+                String.Format("Detection: %s", level.maptime < cleric.arpgDetectEndAt ? "active" :
+                    level.maptime >= cleric.arpgDetectReadyAt ? "ready" :
+                    String.Format("%ds", (cleric.arpgDetectReadyAt - level.maptime + 34) / 35)));
     }
 }
 
@@ -65,6 +102,36 @@ class ARPGInventoryMenu : ListMenu
     {
         Screen.DrawText(SmallFont, color, x, y, label,
             DTA_VIRTUALWIDTH, 640, DTA_VIRTUALHEIGHT, 400);
+    }
+
+    void DrawDetails(ARPGWeaponData data)
+    {
+        if (data.damage <= 0) return;
+        int kind = data.kind;
+        DrawLine(Font.CR_GOLD, 20, 264, String.Format("%s / %s",
+            ARPGWeaponRules.TypeName(kind), ARPGWeaponRules.CategoryName(kind)));
+        if (kind < 10)
+            DrawLine(Font.CR_GRAY, 20, 284, String.Format("Power %d  Mana %d %s", data.damage,
+                kind == 4 ? ARPGWeaponRules.ManaCost(4) : data.manaCost, ARPGWeaponRules.ManaName(kind)));
+        else if (kind == 10)
+        {
+            DrawLine(Font.CR_GRAY, 20, 284, String.Format("HP +%d  Damage reduction %d%%", data.statHP, 10 + data.statDR));
+            DrawLine(Font.CR_GRAY, 20, 302, String.Format("Max Mana1 +%d  Mana2 +%d", data.statMana1, data.statMana2));
+            DrawLine(Font.CR_GRAY, 20, 320, String.Format("Mana1 regen +%d%%", data.statRegen));
+        }
+        else if (kind == 11) DrawLine(Font.CR_GRAY, 20, 284, "Protection 5%");
+        else if (kind == 12) DrawLine(Font.CR_GRAY, 20, 284,
+            data.affixCount > 0 ? "Special defense" : "Protection 3%");
+        else if (kind == 13) DrawLine(Font.CR_GRAY, 20, 284, "Max HP +5");
+        DrawLine(Font.CR_GOLD, 330, 264, "GAMEPLAY AFFIXES");
+        if (data.affixCount == 0) DrawLine(Font.CR_GRAY, 330, 284, "None");
+        for (int i = 0; i < data.affixCount; i++)
+        {
+            int y = 282 + i * 25;
+            DrawLine(Font.CR_GREEN, 330, y, ARPGAffixes.Description(data.affix[i]));
+            String terms = ARPGAffixes.Terms(data.affix[i]);
+            if (terms.IsNotEmpty()) DrawLine(Font.CR_GRAY, 330, y + 11, terms);
+        }
     }
 
     int Hit(int mx, int my)
@@ -215,20 +282,19 @@ class ARPGInventoryMenu : ListMenu
                 String.Format("%s%s: %s", index == selected ? ">" : " ", ARPGInventoryHud.SlotName(slot),
                     kind >= 0 ? ARPGWeaponRules.TypeName(kind) : "(empty)"));
         }
-        int item = hovered >= 0 && hovered < 20 ? hovered : selected;
-        if (item >= 0 && item < 20 && cleric.arpgBag[item].damage > 0)
+        int item = hovered >= 0 ? hovered : selected;
+        ARPGWeaponData detail;
+        if (item >= 0 && item < 20) ARPGAffixes.Copy(detail, cleric.arpgBag[item]);
+        else if (item >= 20 && item < 23)
         {
-            int kind = cleric.arpgBag[item].kind;
+            let weapon = ARPGEquippedWeapon(cleric.FindInventory(String.Format("ARPGSlot%d", item - 19)));
+            if (weapon != null) ARPGAffixes.Copy(detail, weapon.loot);
+        }
+        else if (item >= 23 && item < 28) ARPGAffixes.Copy(detail, cleric.arpgArmor[item - 23]);
+        else if (item == 28) ARPGAffixes.Copy(detail, cleric.arpgBoots);
+        if (item >= 0 && item < 20 && detail.damage > 0)
+        {
             int target = Target(cleric, item);
-            DrawLine(Font.CR_GOLD, 20, 280, ARPGWeaponRules.TypeName(kind));
-            if (kind < 10)
-                DrawLine(Font.CR_GRAY, 20, 300, String.Format("Power %d  Mana %d %s", cleric.arpgBag[item].damage,
-                    kind == 4 ? ARPGWeaponRules.ManaCost(4) : cleric.arpgBag[item].manaCost, ARPGWeaponRules.ManaName(kind)));
-            else if (kind == 14)
-                DrawLine(Font.CR_GRAY, 20, 300, String.Format("Mobility abilities: %d", cleric.arpgBag[item].affixCount));
-            else
-                DrawLine(Font.CR_GRAY, 20, 300, kind == 13 ? "+5 max HP" :
-                    String.Format("Protection %d%%", kind == 10 ? 10 : kind == 11 ? 5 : 3));
             if (target > 0)
             {
                 String comparison = "Empty slot";
@@ -242,10 +308,11 @@ class ARPGInventoryMenu : ListMenu
                     comparison = "Replacing Boots";
                 else if (target <= 8 && cleric.arpgArmor[target - 4].damage > 0)
                     comparison = String.Format("Replacing %s", ARPGWeaponRules.TypeName(cleric.arpgArmor[target - 4].kind));
-                DrawLine(Font.CR_GREEN, 20, 320, String.Format("Target %s: %s", ARPGInventoryHud.SlotName(target), comparison));
+                DrawLine(Font.CR_GREEN, 20, 248, String.Format("Target %s: %s", ARPGInventoryHud.SlotName(target), comparison));
             }
         }
-        DrawLine(Font.CR_GRAY, 20, 365, "Click select  Double/right click/Enter equip  P drop  WASD/arrows move  ALT/Esc close");
+        DrawDetails(detail);
+        DrawLine(Font.CR_GRAY, 20, 380, "Click select  Double/right click/Enter equip  P drop  WASD/arrows move  ALT/Esc close");
         // This custom menu has no ListMenu items. The inherited drawer would
         // show UZDoom's back button, whose click is consumed by our item picker.
     }

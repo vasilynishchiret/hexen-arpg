@@ -7,12 +7,14 @@ class ARPGMana : EventHandler
             let cleric = ARPGCleric(players[i].mo);
             if (cleric == null || cleric.health <= 0) continue;
             cleric.MigrateHealthLimit();
+            cleric.SyncARPGManaCapacity();
             if (cleric.arpgAttackCooldown > 0) cleric.arpgAttackCooldown--;
             bool running = (players[i].cmd.buttons & BT_RUN) != 0;
             bool moving = players[i].cmd.forwardmove != 0 || players[i].cmd.sidemove != 0;
             bool jump = (players[i].cmd.buttons & BT_JUMP) != 0;
             if (players[i].onground) cleric.arpgDoubleJumpUsed = false;
             if (jump && !cleric.arpgJumpWasDown && !players[i].onground &&
+                !cleric.arpgWasOnGround &&
                 !cleric.arpgDoubleJumpUsed && !cleric.arpgInventoryOpen &&
                 ARPGAffixes.Has(cleric.arpgBoots, ARPGAffixes.DOUBLE_JUMP))
             {
@@ -20,6 +22,7 @@ class ARPGMana : EventHandler
                 cleric.arpgDoubleJumpUsed = true;
             }
             cleric.arpgJumpWasDown = jump;
+            cleric.arpgWasOnGround = players[i].onground;
 
             bool shieldHeld = (players[i].cmd.buttons & BT_ALTATTACK) != 0;
             if (cleric.arpgShieldActive &&
@@ -84,7 +87,9 @@ class ARPGMana : EventHandler
             }
             if (cleric.arpgSprintActive) continue;
             cleric.arpgManaTicks++;
-            if (cleric.arpgManaTicks >= ARPGBalance.BLUE_REGEN_TICS)
+            int regenBonus = cleric.arpgArmor[0].damage > 0 ? cleric.arpgArmor[0].statRegen : 0;
+            int regenTics = max(1, ARPGBalance.BLUE_REGEN_TICS * 100 / (100 + regenBonus));
+            if (cleric.arpgManaTicks >= regenTics)
             {
                 cleric.arpgManaTicks = 0;
                 cleric.GiveInventory("Mana1", 1);
