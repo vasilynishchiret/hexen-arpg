@@ -31,6 +31,9 @@ class ARPGCleric : ClericPlayer
     int arpgDetectCount;
     int arpgDetectAngle[8];
     int arpgDetectDistance[8];
+    int arpgGreenTicks;
+    int arpgAuraTicks;
+    int arpgVampRemainder;
     bool arpgInventoryOpen;
     int arpgSelectedItem;
     int arpgEquipTarget;

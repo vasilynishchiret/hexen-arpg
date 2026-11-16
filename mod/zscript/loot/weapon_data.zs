@@ -75,6 +75,14 @@ class ARPGAffixes : Object
         return false;
     }
 
+    clearscope static int Power(ARPGWeaponData item, int id)
+    {
+        if (item.damage <= 0) return 0;
+        for (int i = 0; i < item.affixCount; i++)
+            if (item.affix[i].id == id) return item.affix[i].power;
+        return 0;
+    }
+
     static void Add(out ARPGWeaponData item, int id, int category, int power = 0,
         int duration = 0, int cooldown = 0, int manaCost = 0)
     {
@@ -124,6 +132,14 @@ class ARPGAffixes : Object
         else if (roll < 60)
             Add(item, ENEMY_DETECTION, CAT_HELMET, ARPGBalance.DETECT_RADIUS,
                 ARPGBalance.DETECT_TICS, ARPGBalance.DETECT_COOLDOWN_TICS);
+    }
+
+    static void RollRing(out ARPGWeaponData item)
+    {
+        int id = random[ARPGRingAffix](GREEN_REGEN, DAMAGE_AURA);
+        Add(item, id, CAT_RING,
+            id == VAMPIRISM ? random[ARPGVampPower](300, 600) :
+            id == DAMAGE_AURA ? ARPGBalance.AURA_DAMAGE_PER_RING : 1);
     }
 }
 

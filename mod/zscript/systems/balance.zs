@@ -35,6 +35,11 @@ class ARPGBalance : Object
     const DETECT_TICS = 175;
     const DETECT_COOLDOWN_TICS = 700;
     const DETECT_RADIUS = 640;
+    const GREEN_RING_TICS = 420;
+    const AURA_TICS = 35;
+    const AURA_RADIUS = 96;
+    const AURA_DAMAGE_PER_RING = 2;
+    const VAMP_MAX_BASIS_POINTS = 1000;
     const LOOT_COMMON_PERCENT = 80;
     const LOOT_STRONG_PERCENT = 17;
     const LOOT_EXCEPTIONAL_PERCENT = 3;
