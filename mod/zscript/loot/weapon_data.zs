@@ -77,7 +77,7 @@ class ARPGWeaponRules : Object
     clearscope static int ManaCost(int kind)
     {
         if (kind == 3) return 0;
-        if (kind == 4) return 5;
+        if (kind == 4) return 25;
         if (kind == 5) return 3;
         if (kind == 6) return 1;
         if (kind == 7) return 0;

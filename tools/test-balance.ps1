@@ -8,6 +8,8 @@ $regen = Get-Content (Join-Path $root 'mod/zscript/mana/regeneration.zs') -Raw -
 $cleric = Get-Content (Join-Path $root 'mod/zscript/player/arpg_cleric.zs') -Raw -Encoding UTF8
 $textures = Get-Content (Join-Path $root 'mod/TEXTURES') -Raw -Encoding UTF8
 $ground = Get-Content (Join-Path $root 'mod/zscript/loot/ground_weapon.zs') -Raw -Encoding UTF8
+$ettin = Get-Content (Join-Path $root 'mod/zscript/ettin.zs') -Raw -Encoding UTF8
+$inventory = Get-Content (Join-Path $root 'mod/zscript/hud/inventory.zs') -Raw -Encoding UTF8
 
 function Assert([bool] $condition, [string] $message) {
     if (-not $condition) { throw $message }
@@ -53,7 +55,14 @@ $oneIn = Const 'LOOT_ONE_IN'
 $common = Const 'LOOT_COMMON_PERCENT'
 $strong = Const 'LOOT_STRONG_PERCENT'
 $exceptional = Const 'LOOT_EXCEPTIONAL_PERCENT'
-Assert ($oneIn -eq 15) 'Drop chance is not 1/15'
+Assert ($oneIn -eq 10) 'Drop chance is not 1/10'
+Assert ($rules.Contains('if (kind == 4) return 25;')) 'Lightning cost is not 25 Mana2'
+Assert ($weapons.Contains('weapon.EffectiveManaCost()') -and $weapons.Contains('weapon.HasMana()')) 'Lightning spend/availability mismatch'
+Assert (([regex]::Matches($weapons, 'A_ARPGLightningAttack;')).Count -eq 1) 'Lightning must spend once per fire sequence'
+Assert ($weapons.Contains('MLNG AAAAA 1 Bright A_WeaponReady') -and $weapons.Contains('MLNG BBBBBB 1 Bright A_WeaponReady') -and $weapons.Contains('MLNG CCCCC 1 Bright A_WeaponReady')) 'Lightning ready cycle is static'
+Assert ((Const 'ETTIN_MELEE_RANGE') -eq 88 -and (Const 'ETTIN_MELEE_HALF_ANGLE') -eq 35) 'Ettin reach or cone changed'
+Assert ($ettin.Contains('CheckSight(target)') -and $ettin.Contains('deltaangle(angle, AngleTo(target))') -and $ettin.Contains('ETTN G 8 A_ARPGMaceHit')) 'Ettin strike guards missing'
+Assert ($inventory.Contains('override bool OnInputEvent(InputEvent ev)') -and $inventory.Contains('InputEvent.Key_LAlt') -and $inventory.Contains('InputEvent.Type_KeyDown')) 'Menu Alt key handler missing'
 $melee = Const 'LOOT_MELEE_PERCENT'
 $magic = Const 'LOOT_MAGIC_PERCENT'
 $armor = Const 'LOOT_ARMOR_PERCENT'

@@ -125,8 +125,7 @@ class ARPGInventoryMenu : ListMenu
         if (ev.Type == UIEvent.Type_KeyDown || ev.Type == UIEvent.Type_KeyRepeat)
         {
             int key = ev.KeyChar;
-            if (key == UIEvent.Key_Escape || ev.IsAlt || ev.KeyString == "ALT" ||
-                ev.KeyString == "LALT" || ev.KeyString == "RALT") return MenuEvent(MKEY_Back, false);
+            if (key == UIEvent.Key_Escape) return MenuEvent(MKEY_Back, false);
             if (key == UIEvent.Key_Up || key == 87 || key == 119) { Navigate(0); return true; }
             if (key == UIEvent.Key_Down || key == 83 || key == 115) { Navigate(1); return true; }
             if (key == UIEvent.Key_Left || key == 65 || key == 97) { Navigate(2); return true; }
@@ -139,6 +138,14 @@ class ARPGInventoryMenu : ListMenu
             }
         }
         return Super.OnUIEvent(ev);
+    }
+
+    override bool OnInputEvent(InputEvent ev)
+    {
+        // Modifier keys are delivered as raw input rather than GUI KeyChar events.
+        if (ev.Type == InputEvent.Type_KeyDown && ev.KeyScan == InputEvent.Key_LAlt)
+            return MenuEvent(MKEY_Back, false);
+        return Super.OnInputEvent(ev);
     }
 
     override bool MenuEvent(int mkey, bool fromcontroller)
@@ -159,7 +166,7 @@ class ARPGInventoryMenu : ListMenu
     override void Drawer()
     {
         let cleric = Cleric();
-        if (cleric == null) { Super.Drawer(); return; }
+        if (cleric == null) return;
         DrawLine(Font.CR_GOLD, 20, 30, "INVENTORY 20 SLOTS");
         DrawLine(Font.CR_GOLD, 400, 30, "EQUIPMENT");
         for (int i = 0; i < 20; i++)
@@ -193,7 +200,7 @@ class ARPGInventoryMenu : ListMenu
             DrawLine(Font.CR_GOLD, 20, 280, ARPGWeaponRules.TypeName(kind));
             if (kind < 10)
                 DrawLine(Font.CR_GRAY, 20, 300, String.Format("Power %d  Mana %d %s", cleric.arpgBag[item].damage,
-                    cleric.arpgBag[item].manaCost, ARPGWeaponRules.ManaName(kind)));
+                    kind == 4 ? ARPGWeaponRules.ManaCost(4) : cleric.arpgBag[item].manaCost, ARPGWeaponRules.ManaName(kind)));
             else
                 DrawLine(Font.CR_GRAY, 20, 300, kind == 13 ? "+5 max HP" :
                     String.Format("Protection %d%%", kind == 10 ? 10 : kind == 11 ? 5 : 3));
@@ -212,6 +219,7 @@ class ARPGInventoryMenu : ListMenu
             }
         }
         DrawLine(Font.CR_GRAY, 20, 365, "Click select  Double/right click/Enter equip  P drop  WASD/arrows move  ALT/Esc close");
-        Super.Drawer();
+        // This custom menu has no ListMenu items. The inherited drawer would
+        // show UZDoom's back button, whose click is consumed by our item picker.
     }
 }

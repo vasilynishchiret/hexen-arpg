@@ -17,7 +17,19 @@ class ARPGEquippedWeapon : CWeapMace
         if (loot.kind == 3 || loot.kind == 7 || loot.manaCost <= 0) return true;
         if (Owner == null) return false;
         let mana = Owner.FindInventory(loot.kind == 4 || loot.kind == 8 ? "Mana2" : "Mana1");
-        return mana != null && mana.Amount >= loot.manaCost;
+        return mana != null && mana.Amount >= EffectiveManaCost();
+    }
+
+    int EffectiveManaCost() const
+    {
+        // Old save games may still contain a Lightning item with the former cost.
+        return loot.kind == 4 ? ARPGWeaponRules.ManaCost(4) : loot.manaCost;
+    }
+
+    void SyncSpritePosition()
+    {
+        // MWeapLightning uses +20; the inherited Cleric mace uses -8.
+        YAdjust = loot.kind == 4 ? 20 : -8;
     }
 
     override void ModifyDamage(int damage, Name damageType, out int newdamage,
@@ -30,6 +42,7 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetUpState()
     {
+        SyncSpritePosition();
         if (loot.kind < 0) return FindState('EmptySelect');
         if (loot.kind == 5) return FindState('FrostSelect');
         if (loot.kind == 6) return FindState('StaffSelect');
@@ -58,6 +71,7 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetReadyState()
     {
+        SyncSpritePosition();
         if (loot.kind < 0) return FindState('EmptyReady');
         if (loot.kind == 5) return FindState('FrostReady');
         if (loot.kind == 6) return FindState('StaffReady');
@@ -72,6 +86,7 @@ class ARPGEquippedWeapon : CWeapMace
 
     override State GetAtkState(bool hold)
     {
+        SyncSpritePosition();
         if (loot.kind < 0) return FindState('EmptyReady');
         let cleric = ARPGCleric(Owner);
         if (cleric != null && cleric.arpgAttackCooldown > 0) return GetReadyState();
@@ -116,7 +131,7 @@ class ARPGEquippedWeapon : CWeapMace
         if (player == null) return;
         let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
         if (weapon == null || !weapon.HasMana()) return;
-        player.mo.TakeInventory("Mana2", weapon.loot.manaCost);
+        player.mo.TakeInventory("Mana2", weapon.EffectiveManaCost());
         LightningFloor floorArc = LightningFloor(SpawnPlayerMissile("LightningFloor"));
         LightningCeiling ceilingArc = LightningCeiling(SpawnPlayerMissile("LightningCeiling"));
         if (floorArc != null)
@@ -291,7 +306,12 @@ class ARPGEquippedWeapon : CWeapMace
         MLNG A 1 Bright A_Lower;
         Loop;
     LightningReady:
+        MLNG AAAAA 1 Bright A_WeaponReady;
         MLNG A 1 Bright A_WeaponReady;
+        MLNG BBBBBB 1 Bright A_WeaponReady;
+        MLNG CCCCC 1 Bright A_WeaponReady;
+        MLNG C 1 Bright A_WeaponReady;
+        MLNG BBBBBB 1 Bright A_WeaponReady;
         Loop;
     LightningFire:
         MLNG D 3 Bright A_ARPGBeginAttack;
@@ -301,7 +321,9 @@ class ARPGEquippedWeapon : CWeapMace
         MLNG HI 3 Bright;
         MLNG I 6 Bright Offset(0, 199);
         MLNG C 2 Bright Offset(0, 55);
-        MLNG B 8 Bright Offset(0, 40);
+        MLNG B 2 Bright Offset(0, 50);
+        MLNG B 2 Bright Offset(0, 45);
+        MLNG B 2 Bright Offset(0, 40);
         Goto LightningReady;
     FrostSelect:
         CONE A 1 A_Raise;
@@ -401,6 +423,6 @@ class ARPGSlot3 : ARPGEquippedWeapon
     {
         Super.PostBeginPlay();
         equipmentSlot = 3;
-        if (loot.damage == 0) { loot.kind = 4; loot.damage = 100; loot.speed = 0; loot.manaCost = 5; }
+        if (loot.damage == 0) { loot.kind = 4; loot.damage = 100; loot.speed = 0; loot.manaCost = ARPGWeaponRules.ManaCost(4); }
     }
 }

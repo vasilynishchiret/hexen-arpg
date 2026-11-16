@@ -15,7 +15,9 @@ class ARPGBalance : Object
     const MACE_DAMAGE_MULTIPLIER = 2;
     const SWORD_DAMAGE = 70;
     const SWORD_MANA_COST = 3;
-    const LOOT_ONE_IN = 15;
+    const LOOT_ONE_IN = 10;
+    const ETTIN_MELEE_RANGE = 88;
+    const ETTIN_MELEE_HALF_ANGLE = 35;
     const LOOT_MELEE_PERCENT = 40;
     const LOOT_MAGIC_PERCENT = 35;
     const LOOT_ARMOR_PERCENT = 25;

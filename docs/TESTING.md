@@ -11,3 +11,9 @@ Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1`
 7. Start separate Fighter and Mage games. Their original weapons, health and movement should remain intact. The inventory menu is for Cleric; I holds strafe for all classes.
 
 The temporary original sprites and exact replacement list are in [`asset-catalog.md`](asset-catalog.md). The original `HEXEN.WAD` is needed at runtime and is never part of this repository.
+
+## v0.4 focused checks
+
+1. Open inventory with ALT; keep ALT held for a second (it must stay open). Release and press ALT again to close; repeat. Open and close with ESC, then move with WASD and look with the mouse. Open the standard ESC menu and verify its red back button still works. The ARPG inventory should have no red back button. Retest single/right/double clicks, arrows, Enter and P drop.
+2. Select slot 3 Lightning. In Ready, the hands should cycle A/B/C. During one attack, watch D/E/F/G/H/I and the C/B return. The lower edge should be visible at the normal resting position. One attack spends 25 Mana2 (formerly 5); with less than 25, it must not create arcs. Hold fire and verify each arc costs 25 once. Re-equip an old saved Lightning item and repeat.
+3. Spawn an Ettin in open space. At about 88 map units of melee reach it should begin a 12-tic windup and hit only on G. Side-step outside its 70-degree front sector or retreat before G to avoid damage. Put a wall between player and Ettin to verify no damage through it. Compare damage with the old 2–16 range. Check XP +10, Mana2 +5, inventory slots and save/load once more.

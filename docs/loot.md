@@ -1,6 +1,6 @@
 # Loot and equipment v0.3
 
-An eligible Cleric kill has one shared 1/15 chance to create **one** ground item. Conditional on a drop, 40% is Sword/Axe/Hammer, 35% is Lightning/Frost/Serpent Staff/Sapphire Wand/Firestorm, and 25% is Chest Armor/Helmet/Bracers/Ring. Each group selects uniformly from its types. XP and +5 Mana2 are awarded independently of the drop roll.
+An eligible Cleric kill has one shared 1/10 chance to create **one** ground item. Conditional on a drop, 40% is Sword/Axe/Hammer, 35% is Lightning/Frost/Serpent Staff/Sapphire Wand/Firestorm, and 25% is Chest Armor/Helmet/Bracers/Ring. Each group selects uniformly from its types. XP and +5 Mana2 are awarded independently of the drop roll.
 
 Sword, Axe and Hammer preserve their existing damage roll: 80% common (0.65–1.10), 17% strong (1.15–1.80), 3% exceptional (2.00–3.50), rounded to whole damage. Magic uses the same roll against a base of 100, so its stored value is a spell power percentage (65–350%) applied to outgoing damage while that weapon is ready. These rolls are stored per instance in the ground actor, bag slot and equipped weapon. Magic keeps the original Hexen effects and their variable base damage. Armor and rings use `damage=1` only as a presence marker.
 
