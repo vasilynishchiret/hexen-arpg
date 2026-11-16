@@ -24,6 +24,13 @@ class ARPGCleric : ClericPlayer
     int arpgShieldEndAt;
     int arpgShieldReadyAt;
     int arpgGuardianReadyAt;
+    int arpgInvisEndAt;
+    int arpgInvisReadyAt;
+    int arpgDetectEndAt;
+    int arpgDetectReadyAt;
+    int arpgDetectCount;
+    int arpgDetectAngle[8];
+    int arpgDetectDistance[8];
     bool arpgInventoryOpen;
     int arpgSelectedItem;
     int arpgEquipTarget;
@@ -217,6 +224,29 @@ class ARPGCleric : ClericPlayer
         if (!arpgShieldActive) return;
         arpgShieldActive = false;
         arpgShieldReadyAt = level.maptime + ARPGBalance.SHIELD_COOLDOWN_TICS;
+    }
+
+    void ActivateARPGInvisibility()
+    {
+        if (!ARPGAffixes.Has(arpgArmor[1], ARPGAffixes.INVISIBILITY) ||
+            level.maptime < arpgInvisReadyAt || arpgInventoryOpen) return;
+        GiveInventory("ARPGStealthPower", 1);
+        arpgInvisEndAt = level.maptime + ARPGBalance.INVIS_TICS;
+        arpgInvisReadyAt = arpgInvisEndAt + ARPGBalance.INVIS_COOLDOWN_TICS;
+        // Break existing pursuit as well as applying native Shadow targeting.
+        let it = ThinkerIterator.Create("Actor");
+        Actor enemy;
+        while ((enemy = Actor(it.Next())) != null)
+            if (enemy.bIsMonster && !enemy.bFriendly && enemy.target == self)
+                enemy.target = null;
+    }
+
+    void ActivateARPGDetection()
+    {
+        if (!ARPGAffixes.Has(arpgArmor[1], ARPGAffixes.ENEMY_DETECTION) ||
+            level.maptime < arpgDetectReadyAt || arpgInventoryOpen) return;
+        arpgDetectEndAt = level.maptime + ARPGBalance.DETECT_TICS;
+        arpgDetectReadyAt = arpgDetectEndAt + ARPGBalance.DETECT_COOLDOWN_TICS;
     }
 
     override double, double TweakSpeeds(double forward, double side)

@@ -23,10 +23,21 @@ class ARPGInventoryHud : EventHandler
     override void RenderOverlay(RenderEvent e)
     {
         let cleric = ARPGCleric(players[consoleplayer].mo);
-        if (cleric == null || !cleric.arpgShieldActive) return;
-        Screen.Dim(0x2277CC, 0.13, 0, 0, Screen.GetWidth(), Screen.GetHeight());
-        Screen.DrawLineFrame(0x8833CCFF, 12, 12,
-            Screen.GetWidth() - 24, Screen.GetHeight() - 24, 2);
+        if (cleric == null) return;
+        if (cleric.arpgShieldActive)
+        {
+            Screen.Dim(0x2277CC, 0.13, 0, 0, Screen.GetWidth(), Screen.GetHeight());
+            Screen.DrawLineFrame(0x8833CCFF, 12, 12,
+                Screen.GetWidth() - 24, Screen.GetHeight() - 24, 2);
+        }
+        if (cleric.arpgDetectCount > 0 && level.maptime < cleric.arpgDetectEndAt)
+        {
+            int x = Screen.GetWidth() - 170;
+            Screen.DrawText(SmallFont, Font.CR_GOLD, x, 38, "ENEMY DETECTION");
+            for (int i = 0; i < cleric.arpgDetectCount; i++)
+                Screen.DrawText(SmallFont, Font.CR_RED, x, 50 + i * 10,
+                    String.Format("%+d deg   %d units", cleric.arpgDetectAngle[i], cleric.arpgDetectDistance[i]));
+        }
     }
 }
 

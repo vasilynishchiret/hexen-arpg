@@ -18,6 +18,8 @@ class ARPGInteraction : ARPGEquipment
     {
         let cleric = ARPGCleric(players[e.Player].mo);
         if (cleric == null || cleric.health <= 0) return;
+        if (e.Name == "arpg_invisibility") { cleric.ActivateARPGInvisibility(); return; }
+        if (e.Name == "arpg_detection") { cleric.ActivateARPGDetection(); return; }
         if (e.Name == "arpg_inventory_state")
         {
             cleric.arpgInventoryOpen = e.Args[0] != 0;
@@ -95,6 +97,34 @@ class ARPGInteraction : ARPGEquipment
             bool down = (players[i].cmd.buttons & BT_USE) != 0;
             if (cleric != null)
             {
+                if (!ARPGAffixes.Has(cleric.arpgArmor[1], ARPGAffixes.INVISIBILITY) &&
+                    cleric.FindInventory("ARPGStealthPower") != null)
+                    cleric.TakeInventory("ARPGStealthPower", 1);
+                if (!ARPGAffixes.Has(cleric.arpgArmor[1], ARPGAffixes.ENEMY_DETECTION))
+                    cleric.arpgDetectEndAt = 0;
+                cleric.arpgDetectCount = 0;
+                if (level.maptime < cleric.arpgDetectEndAt)
+                {
+                    let enemies = ThinkerIterator.Create("Actor");
+                    Actor enemy;
+                    while ((enemy = Actor(enemies.Next())) != null)
+                    {
+                        if (!enemy.bIsMonster || enemy.bFriendly || enemy.health <= 0) continue;
+                        int distance = int(cleric.Distance2D(enemy));
+                        if (distance > ARPGBalance.DETECT_RADIUS) continue;
+                        int at = cleric.arpgDetectCount;
+                        while (at > 0 && distance < cleric.arpgDetectDistance[at - 1]) at--;
+                        if (at >= 8) continue;
+                        if (cleric.arpgDetectCount < 8) cleric.arpgDetectCount++;
+                        for (int j = cleric.arpgDetectCount - 1; j > at; j--)
+                        {
+                            cleric.arpgDetectDistance[j] = cleric.arpgDetectDistance[j - 1];
+                            cleric.arpgDetectAngle[j] = cleric.arpgDetectAngle[j - 1];
+                        }
+                        cleric.arpgDetectDistance[at] = distance;
+                        cleric.arpgDetectAngle[at] = int(Actor.deltaangle(cleric.Angle, cleric.AngleTo(enemy)));
+                    }
+                }
                 cleric.arpgActiveSlot = ActiveSlot(cleric);
                 cleric.arpgComparedWeapon = SlotWeapon(cleric, cleric.arpgActiveSlot);
                 cleric.arpgLookDrop = FindTarget(cleric);

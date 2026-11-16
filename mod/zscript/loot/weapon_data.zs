@@ -114,6 +114,17 @@ class ARPGAffixes : Object
         else if (roll < 60)
             Add(item, GUARDIAN, CAT_BRACERS, 1, 0, ARPGBalance.GUARDIAN_COOLDOWN_TICS);
     }
+
+    static void RollHelmet(out ARPGWeaponData item)
+    {
+        int roll = random[ARPGHelmetAffix](0, 99);
+        if (roll < 30)
+            Add(item, INVISIBILITY, CAT_HELMET, 1,
+                ARPGBalance.INVIS_TICS, ARPGBalance.INVIS_COOLDOWN_TICS);
+        else if (roll < 60)
+            Add(item, ENEMY_DETECTION, CAT_HELMET, ARPGBalance.DETECT_RADIUS,
+                ARPGBalance.DETECT_TICS, ARPGBalance.DETECT_COOLDOWN_TICS);
+    }
 }
 
 class ARPGWeaponRules : Object
