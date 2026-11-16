@@ -7,10 +7,7 @@ class ARPGInteraction : ARPGEquipment
         if (index < 0 || index >= 20 || cleric.arpgBag[index].damage <= 0) return;
         let dropped = ARPGGroundWeapon(Actor.Spawn("ARPGGroundWeapon", cleric.Pos));
         if (dropped == null) return;
-        dropped.loot.kind = cleric.arpgBag[index].kind;
-        dropped.loot.damage = cleric.arpgBag[index].damage;
-        dropped.loot.speed = cleric.arpgBag[index].speed;
-        dropped.loot.manaCost = cleric.arpgBag[index].manaCost;
+        ARPGAffixes.Copy(dropped.loot, cleric.arpgBag[index]);
         dropped.RefreshAppearance();
         dropped.pickupBlockOwner = cleric;
         dropped.pickupBlockUntil = level.maptime + 35;
@@ -49,8 +46,8 @@ class ARPGInteraction : ARPGEquipment
         else if (!cleric.arpgInventoryOpen) return;
         else if (e.Name == "arpg_prev") cleric.arpgSelectedItem = (cleric.arpgSelectedItem + 19) % 20;
         else if (e.Name == "arpg_next") cleric.arpgSelectedItem = (cleric.arpgSelectedItem + 1) % 20;
-        else if (e.Name == "arpg_target_prev") cleric.arpgEquipTarget = cleric.arpgEquipTarget <= 1 ? 8 : cleric.arpgEquipTarget - 1;
-        else if (e.Name == "arpg_target_next") cleric.arpgEquipTarget = cleric.arpgEquipTarget >= 8 ? 1 : cleric.arpgEquipTarget + 1;
+        else if (e.Name == "arpg_target_prev") cleric.arpgEquipTarget = cleric.arpgEquipTarget <= 1 ? 9 : cleric.arpgEquipTarget - 1;
+        else if (e.Name == "arpg_target_next") cleric.arpgEquipTarget = cleric.arpgEquipTarget >= 9 ? 1 : cleric.arpgEquipTarget + 1;
         else if (e.Name == "arpg_equip")
         {
             if (!cleric.EquipBagItem(cleric.arpgSelectedItem, cleric.arpgEquipTarget))
@@ -104,7 +101,7 @@ class ARPGInteraction : ARPGEquipment
                 if (down && useWasDown[i] == 0 && cleric.arpgLookDrop != null)
                 {
                     let ground = cleric.arpgLookDrop;
-                    if (cleric.StoreItem(ground.loot.kind, ground.loot.damage, ground.loot.speed, ground.loot.manaCost))
+                    if (cleric.StoreData(ground.loot))
                     {
                         ground.Destroy();
                         cleric.arpgLookDrop = null;

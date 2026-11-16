@@ -27,24 +27,15 @@ class ARPGEquipment : EventHandler
         if (weapon == null || ground.loot.damage <= 0) return false;
 
         ARPGWeaponData old;
-        old.kind = weapon.loot.kind;
-        old.damage = weapon.loot.damage;
-        old.speed = weapon.loot.speed;
-        old.manaCost = weapon.loot.manaCost;
+        ARPGAffixes.Copy(old, weapon.loot);
         let dropped = ARPGGroundWeapon(Actor.Spawn("ARPGGroundWeapon", ground.Pos));
         if (dropped == null) return false;
-        dropped.loot.kind = old.kind;
-        dropped.loot.damage = old.damage;
-        dropped.loot.speed = old.speed;
-        dropped.loot.manaCost = old.manaCost;
+        ARPGAffixes.Copy(dropped.loot, old);
         dropped.RefreshAppearance();
         dropped.pickupBlockOwner = cleric;
         dropped.pickupBlockUntil = level.maptime + 35;
 
-        weapon.loot.kind = ground.loot.kind;
-        weapon.loot.damage = ground.loot.damage;
-        weapon.loot.speed = ground.loot.speed;
-        weapon.loot.manaCost = ground.loot.manaCost;
+        ARPGAffixes.Copy(weapon.loot, ground.loot);
         weapon.SetTag(ARPGWeaponRules.TypeName(weapon.loot.kind));
         ground.Destroy();
         cleric.arpgLookDrop = null;

@@ -7,7 +7,8 @@ class ARPGInventoryHud : EventHandler
         if (slot == 5) return "Helmet";
         if (slot == 6) return "Bracers";
         if (slot == 7) return "Ring 1";
-        return "Ring 2";
+        if (slot == 8) return "Ring 2";
+        return "Boots";
     }
 
     override void InterfaceProcess(ConsoleEvent e)
@@ -53,7 +54,7 @@ class ARPGInventoryMenu : ListMenu
         if (y < 60 || y >= 260) return -1;
         if (x >= 20 && x < 195) return (y - 60) / 20;
         if (x >= 200 && x < 375) return 10 + (y - 60) / 20;
-        if (x >= 400 && x < 620 && y < 220) return 20 + (y - 60) / 20;
+        if (x >= 400 && x < 620 && y < 240) return 20 + (y - 60) / 20;
         return -1;
     }
 
@@ -70,6 +71,7 @@ class ARPGInventoryMenu : ListMenu
             if (cleric.arpgArmor[4].damage <= 0) return 8;
             return preferredRing;
         }
+        if (kind == 14) return 9;
         if (kind < 0 || kind >= 10) return 0;
         for (int slot = 1; slot <= 3; slot++)
         {
@@ -85,7 +87,7 @@ class ARPGInventoryMenu : ListMenu
         if (cleric == null) return;
         if (selected >= 0 && selected < 20 && cleric.arpgBag[selected].damage > 0)
             EventHandler.SendNetworkEvent("arpg_auto_equip", selected, preferredRing);
-        else if (selected >= 20 && selected < 28)
+        else if (selected >= 20 && selected < 29)
             EventHandler.SendNetworkEvent("arpg_slot_unequip", selected - 19);
     }
 
@@ -95,10 +97,10 @@ class ARPGInventoryMenu : ListMenu
         int column = selected < 10 ? 0 : selected < 20 ? 1 : 2;
         int row = selected < 10 ? selected : selected < 20 ? selected - 10 : selected - 20;
         if (key == 0) row = max(0, row - 1);
-        if (key == 1) row = min(column == 2 ? 7 : 9, row + 1);
+        if (key == 1) row = min(column == 2 ? 8 : 9, row + 1);
         if (key == 2) column = max(0, column - 1);
         if (key == 3) column = min(2, column + 1);
-        if (column == 2) row = min(7, row);
+        if (column == 2) row = min(8, row);
         selected = column == 0 ? row : column == 1 ? row + 10 : row + 20;
         if (selected == 26 || selected == 27) preferredRing = selected - 19;
     }
@@ -177,7 +179,7 @@ class ARPGInventoryMenu : ListMenu
             String title = cleric.arpgBag[i].damage > 0 ? ARPGWeaponRules.TypeName(cleric.arpgBag[i].kind) : "(empty)";
             DrawLine(color, x, y, String.Format("%s%02d %s", i == selected ? ">" : " ", i + 1, title));
         }
-        for (int slot = 1; slot <= 8; slot++)
+        for (int slot = 1; slot <= 9; slot++)
         {
             int kind = -1;
             if (slot <= 3)
@@ -185,7 +187,8 @@ class ARPGInventoryMenu : ListMenu
                 let weapon = ARPGEquippedWeapon(cleric.FindInventory(String.Format("ARPGSlot%d", slot)));
                 if (weapon != null && weapon.loot.damage > 0) kind = weapon.loot.kind;
             }
-            else if (cleric.arpgArmor[slot - 4].damage > 0) kind = cleric.arpgArmor[slot - 4].kind;
+            else if (slot == 9 && cleric.arpgBoots.damage > 0) kind = 14;
+            else if (slot <= 8 && cleric.arpgArmor[slot - 4].damage > 0) kind = cleric.arpgArmor[slot - 4].kind;
             int index = slot + 19;
             int color = index == selected ? Font.CR_GREEN : index == hovered ? Font.CR_GOLD : Font.CR_GRAY;
             DrawLine(color, 400, 60 + (slot - 1) * 20,
@@ -201,6 +204,8 @@ class ARPGInventoryMenu : ListMenu
             if (kind < 10)
                 DrawLine(Font.CR_GRAY, 20, 300, String.Format("Power %d  Mana %d %s", cleric.arpgBag[item].damage,
                     kind == 4 ? ARPGWeaponRules.ManaCost(4) : cleric.arpgBag[item].manaCost, ARPGWeaponRules.ManaName(kind)));
+            else if (kind == 14)
+                DrawLine(Font.CR_GRAY, 20, 300, String.Format("Mobility abilities: %d", cleric.arpgBag[item].affixCount));
             else
                 DrawLine(Font.CR_GRAY, 20, 300, kind == 13 ? "+5 max HP" :
                     String.Format("Protection %d%%", kind == 10 ? 10 : kind == 11 ? 5 : 3));
@@ -213,7 +218,9 @@ class ARPGInventoryMenu : ListMenu
                     if (weapon != null && weapon.loot.damage > 0)
                         comparison = String.Format("Replacing %s, power %d", ARPGWeaponRules.TypeName(weapon.loot.kind), weapon.loot.damage);
                 }
-                else if (cleric.arpgArmor[target - 4].damage > 0)
+                else if (target == 9 && cleric.arpgBoots.damage > 0)
+                    comparison = "Replacing Boots";
+                else if (target <= 8 && cleric.arpgArmor[target - 4].damage > 0)
                     comparison = String.Format("Replacing %s", ARPGWeaponRules.TypeName(cleric.arpgArmor[target - 4].kind));
                 DrawLine(Font.CR_GREEN, 20, 320, String.Format("Target %s: %s", ARPGInventoryHud.SlotName(target), comparison));
             }

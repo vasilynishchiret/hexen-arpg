@@ -32,6 +32,7 @@ class ARPGLootPrompt : EventHandler
             Screen.DrawText(SmallFont, Font.CR_GOLD, 8, 32,
                 String.Format("FOUND: %s  [E] PICK UP", ARPGWeaponRules.TypeName(foundKind)));
             Screen.DrawText(SmallFont, Font.CR_GRAY, 8, 42,
+                foundKind == 14 ? String.Format("Mobility abilities: %d", found.loot.affixCount) :
                 foundKind == 13 ? "+5 max HP" : String.Format("Protection: %d%%", foundKind == 10 ? 10 : foundKind == 11 ? 5 : 3));
             return;
         }

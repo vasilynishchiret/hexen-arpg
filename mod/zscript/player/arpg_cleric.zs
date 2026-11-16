@@ -11,6 +11,14 @@ class ARPGCleric : ClericPlayer
     int arpgActiveSlot;
     ARPGWeaponData arpgBag[20];
     ARPGWeaponData arpgArmor[5];
+    ARPGWeaponData arpgBoots;
+    int arpgShiftTicks;
+    bool arpgShiftWasDown;
+    bool arpgJumpWasDown;
+    bool arpgDoubleJumpUsed;
+    bool arpgSprintActive;
+    int arpgSprintManaTicks;
+    int arpgDashReadyAt;
     bool arpgInventoryOpen;
     int arpgSelectedItem;
     int arpgEquipTarget;
@@ -66,6 +74,14 @@ class ARPGCleric : ClericPlayer
         return true;
     }
 
+    bool StoreData(ARPGWeaponData item)
+    {
+        int slot = FirstFreeBagSlot();
+        if (slot < 0) return false;
+        ARPGAffixes.Copy(arpgBag[slot], item);
+        return true;
+    }
+
     int AutoEquipTarget(int bagSlot, int preferredRing)
     {
         if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage <= 0) return 0;
@@ -79,6 +95,7 @@ class ARPGCleric : ClericPlayer
             if (arpgArmor[4].damage <= 0) return 8;
             return preferredRing == 8 ? 8 : 7;
         }
+        if (kind == 14) return 9;
         if (kind < 0 || kind >= 10) return 0;
         for (int slot = 1; slot <= 3; slot++)
         {
@@ -92,38 +109,32 @@ class ARPGCleric : ClericPlayer
     {
         if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage == 0) return false;
         int kind = arpgBag[bagSlot].kind;
-        int damage = arpgBag[bagSlot].damage;
-        int speed = arpgBag[bagSlot].speed;
-        int manaCost = arpgBag[bagSlot].manaCost;
+        ARPGWeaponData item;
+        ARPGAffixes.Copy(item, arpgBag[bagSlot]);
         if (kind < 10)
         {
             if (equipSlot < 1 || equipSlot > 3) return false;
             ARPGEquippedWeapon weapon = ARPGEquippedWeapon(FindInventory(String.Format("ARPGSlot%d", equipSlot)));
             if (weapon == null) return false;
-            arpgBag[bagSlot].kind = weapon.loot.kind;
-            arpgBag[bagSlot].damage = weapon.loot.damage;
-            arpgBag[bagSlot].speed = weapon.loot.speed;
-            arpgBag[bagSlot].manaCost = weapon.loot.manaCost;
-            weapon.loot.kind = kind;
-            weapon.loot.damage = damage;
-            weapon.loot.speed = speed;
-            weapon.loot.manaCost = manaCost;
+            ARPGAffixes.Copy(arpgBag[bagSlot], weapon.loot);
+            ARPGAffixes.Copy(weapon.loot, item);
             weapon.SetTag(ARPGWeaponRules.TypeName(kind));
             if (player != null && player.ReadyWeapon == weapon)
                 player.SetPsprite(PSP_WEAPON, weapon.GetReadyState());
             return true;
         }
+        if (kind == 14)
+        {
+            if (equipSlot != 9) return false;
+            ARPGAffixes.Copy(arpgBag[bagSlot], arpgBoots);
+            ARPGAffixes.Copy(arpgBoots, item);
+            return true;
+        }
         int armorSlot = equipSlot - 4;
         if (armorSlot < 0 || armorSlot > 4) return false;
         if (kind != (armorSlot >= 3 ? 13 : armorSlot + 10)) return false;
-        arpgBag[bagSlot].kind = arpgArmor[armorSlot].kind;
-        arpgBag[bagSlot].damage = arpgArmor[armorSlot].damage;
-        arpgBag[bagSlot].speed = arpgArmor[armorSlot].speed;
-        arpgBag[bagSlot].manaCost = arpgArmor[armorSlot].manaCost;
-        arpgArmor[armorSlot].kind = kind;
-        arpgArmor[armorSlot].damage = damage;
-        arpgArmor[armorSlot].speed = speed;
-        arpgArmor[armorSlot].manaCost = manaCost;
+        ARPGAffixes.Copy(arpgBag[bagSlot], arpgArmor[armorSlot]);
+        ARPGAffixes.Copy(arpgArmor[armorSlot], item);
         if (health > GetMaxHealth()) health = GetMaxHealth();
         if (player != null) player.health = health;
         return true;
@@ -132,11 +143,19 @@ class ARPGCleric : ClericPlayer
     bool UnequipItem(int equipSlot)
     {
         if (FirstFreeBagSlot() < 0) return false;
+        if (equipSlot == 9)
+        {
+            if (arpgBoots.damage <= 0 || !StoreData(arpgBoots)) return false;
+            ARPGWeaponData empty;
+            ARPGAffixes.Copy(arpgBoots, empty);
+            arpgSprintActive = false;
+            return true;
+        }
         if (equipSlot >= 1 && equipSlot <= 3)
         {
             ARPGEquippedWeapon weapon = ARPGEquippedWeapon(FindInventory(String.Format("ARPGSlot%d", equipSlot)));
             if (weapon == null || weapon.loot.damage == 0) return false;
-            if (!StoreItem(weapon.loot.kind, weapon.loot.damage, weapon.loot.speed, weapon.loot.manaCost)) return false;
+            if (!StoreData(weapon.loot)) return false;
             weapon.loot.damage = 0;
             weapon.loot.kind = -1;
             weapon.SetTag("Empty weapon slot");
@@ -146,8 +165,9 @@ class ARPGCleric : ClericPlayer
         }
         int armorSlot = equipSlot - 4;
         if (armorSlot < 0 || armorSlot > 4 || arpgArmor[armorSlot].damage == 0) return false;
-        if (!StoreItem(arpgArmor[armorSlot].kind, arpgArmor[armorSlot].damage, arpgArmor[armorSlot].speed, arpgArmor[armorSlot].manaCost)) return false;
-        arpgArmor[armorSlot].damage = 0;
+        if (!StoreData(arpgArmor[armorSlot])) return false;
+        ARPGWeaponData empty;
+        ARPGAffixes.Copy(arpgArmor[armorSlot], empty);
         health = min(health, GetMaxHealth());
         if (player != null) player.health = health;
         return true;
@@ -157,6 +177,23 @@ class ARPGCleric : ClericPlayer
     {
         if (arpgAttackCooldown > 0 && player != null && player.ReadyWeapon is "ARPGEquippedWeapon") return;
         Super.FireWeapon(stat);
+    }
+
+    override double, double TweakSpeeds(double forward, double side)
+    {
+        // Clamp native run input before applying the ordinary walking multipliers.
+        forward = clamp(forward, -gameinfo.normforwardmove[0] * 256,
+            gameinfo.normforwardmove[0] * 256);
+        side = clamp(side, -gameinfo.normsidemove[0] * 256,
+            gameinfo.normsidemove[0] * 256);
+        double fm, sm;
+        [fm, sm] = Super.TweakSpeeds(forward, side);
+        if (arpgSprintActive)
+        {
+            fm *= double(ARPGBalance.SPRINT_PERCENT) / 100;
+            sm *= double(ARPGBalance.SPRINT_PERCENT) / 100;
+        }
+        return fm, sm;
     }
 
     void MigrateHealthLimit()

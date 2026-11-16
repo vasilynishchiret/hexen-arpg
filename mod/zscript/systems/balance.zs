@@ -21,6 +21,11 @@ class ARPGBalance : Object
     const LOOT_MELEE_PERCENT = 40;
     const LOOT_MAGIC_PERCENT = 35;
     const LOOT_ARMOR_PERCENT = 25;
+    const DASH_HOLD_TICS = 7; // 200 ms at 35 tics/s
+    const DASH_COOLDOWN_TICS = 35;
+    const DASH_THRUST = 20;
+    const SPRINT_MANA_PER_SEC = 2;
+    const SPRINT_PERCENT = 150;
     const LOOT_COMMON_PERCENT = 80;
     const LOOT_STRONG_PERCENT = 17;
     const LOOT_EXCEPTIONAL_PERCENT = 3;
