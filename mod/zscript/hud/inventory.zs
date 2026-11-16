@@ -112,7 +112,7 @@ class ARPGInventoryMenu : ListMenu
             ARPGWeaponRules.TypeName(kind), ARPGWeaponRules.CategoryName(kind)));
         if (kind < 10)
             DrawLine(Font.CR_GRAY, 20, 284, String.Format("Power %d  Mana %d %s", data.damage,
-                kind == 4 ? ARPGWeaponRules.ManaCost(4) : data.manaCost, ARPGWeaponRules.ManaName(kind)));
+                ARPGWeaponRules.StoredManaCost(data), ARPGWeaponRules.ManaName(kind)));
         else if (kind == 10)
         {
             DrawLine(Font.CR_GRAY, 20, 284, String.Format("HP +%d  Damage reduction %d%%", data.statHP, 10 + data.statDR));

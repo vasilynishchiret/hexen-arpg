@@ -76,8 +76,8 @@ class ARPGLootPrompt : EventHandler
         }
         if (foundTics < currentTics) speedColor = Font.CR_GREEN;
         if (foundTics > currentTics) speedColor = Font.CR_RED;
-        if (found.loot.manaCost < equipped.loot.manaCost) costColor = Font.CR_GREEN;
-        if (found.loot.manaCost > equipped.loot.manaCost) costColor = Font.CR_RED;
+        if (ARPGWeaponRules.StoredManaCost(found.loot) < equipped.EffectiveManaCost()) costColor = Font.CR_GREEN;
+        if (ARPGWeaponRules.StoredManaCost(found.loot) > equipped.EffectiveManaCost()) costColor = Font.CR_RED;
 
         int left = 8;
         int right = 204;
@@ -89,8 +89,8 @@ class ARPGLootPrompt : EventHandler
         Screen.DrawText(SmallFont, damageColor, right, 52, String.Format("Damage: %s", DamageText(foundKind, found.loot.damage)));
         Screen.DrawText(SmallFont, Font.CR_GRAY, left, 62, String.Format("Speed: %s", RateText(currentKind)));
         Screen.DrawText(SmallFont, speedColor, right, 62, String.Format("Speed: %s", RateText(foundKind)));
-        Screen.DrawText(SmallFont, Font.CR_GRAY, left, 72, String.Format("Mana: %d %s", equipped.loot.manaCost, ARPGWeaponRules.ManaName(currentKind)));
-        Screen.DrawText(SmallFont, costColor, right, 72, String.Format("Mana: %d %s", found.loot.manaCost, ARPGWeaponRules.ManaName(foundKind)));
+        Screen.DrawText(SmallFont, Font.CR_GRAY, left, 72, String.Format("Mana: %d %s", equipped.EffectiveManaCost(), ARPGWeaponRules.ManaName(currentKind)));
+        Screen.DrawText(SmallFont, costColor, right, 72, String.Format("Mana: %d %s", ARPGWeaponRules.StoredManaCost(found.loot), ARPGWeaponRules.ManaName(foundKind)));
         Screen.DrawText(SmallFont, Font.CR_GRAY, left, 82, String.Format("DPS: %s", DPSText(currentKind, equipped.loot.damage)));
         Screen.DrawText(SmallFont, dpsColor, right, 82, String.Format("DPS: %s", DPSText(foundKind, found.loot.damage)));
     }

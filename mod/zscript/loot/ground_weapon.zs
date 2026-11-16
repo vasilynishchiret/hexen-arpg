@@ -30,7 +30,8 @@ class ARPGGroundWeapon : Actor
         loot.kind = kind;
         loot.damage = kind == 3 ? 65 : kind <= 8 ? ARPGWeaponRules.RollDamage(kind) : 1;
         loot.speed = kind;
-        loot.manaCost = ARPGWeaponRules.ManaCost(kind);
+        loot.manaCost = ARPGWeaponRules.ItemManaCost(kind, loot.damage);
+        loot.manaVersion = 1;
         if (kind == 14) ARPGAffixes.RollBoots(loot);
         if (kind == 12) ARPGAffixes.RollBracers(loot);
         if (kind == 11) ARPGAffixes.RollHelmet(loot);
@@ -64,6 +65,7 @@ class ARPGGroundWeapon : Actor
         loot.damage = damage;
         loot.speed = speed;
         loot.manaCost = manaCost;
+        loot.manaVersion = 1;
     }
 
     States
@@ -131,28 +133,30 @@ class ARPGTestAxe : ARPGGroundWeapon
     override void PostBeginPlay()
     {
         Super.PostBeginPlay();
-        InitTestItem(1, 85, 1, 4);
+        InitTestItem(1, 85, 1, ARPGWeaponRules.ItemManaCost(1, 85));
         RefreshAppearance();
     }
 }
+class ARPGTestAxe100 : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(1, 100, 1, ARPGWeaponRules.ItemManaCost(1, 100)); RefreshAppearance(); } }
+class ARPGTestAxe200 : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(1, 200, 1, ARPGWeaponRules.ItemManaCost(1, 200)); RefreshAppearance(); } }
 
 class ARPGTestHammer : ARPGGroundWeapon
 {
     override void PostBeginPlay()
     {
         Super.PostBeginPlay();
-        InitTestItem(2, 115, 2, 6);
+        InitTestItem(2, 115, 2, ARPGWeaponRules.ItemManaCost(2, 115));
         RefreshAppearance();
     }
 }
 
 class ARPGTestMace : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(3, 65, 0, 0); RefreshAppearance(); } }
 
-class ARPGTestLightning : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(4, 100, 0, ARPGWeaponRules.ManaCost(4)); RefreshAppearance(); } }
-class ARPGTestFrost : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(5, 100, 0, 3); RefreshAppearance(); } }
-class ARPGTestStaff : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(6, 100, 0, 1); RefreshAppearance(); } }
-class ARPGTestWand : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(7, 100, 0, 0); RefreshAppearance(); } }
-class ARPGTestFirestorm : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(8, 100, 0, 4); RefreshAppearance(); } }
+class ARPGTestLightning : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(4, 100, 0, ARPGWeaponRules.ItemManaCost(4, 100)); RefreshAppearance(); } }
+class ARPGTestFrost : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(5, 100, 0, ARPGWeaponRules.ItemManaCost(5, 100)); RefreshAppearance(); } }
+class ARPGTestStaff : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(6, 100, 0, ARPGWeaponRules.ItemManaCost(6, 100)); RefreshAppearance(); } }
+class ARPGTestWand : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(7, 100, 0, ARPGWeaponRules.ItemManaCost(7, 100)); RefreshAppearance(); } }
+class ARPGTestFirestorm : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(8, 100, 0, ARPGWeaponRules.ItemManaCost(8, 100)); RefreshAppearance(); } }
 class ARPGTestChest : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(10, 1, 0, 0); ARPGAffixes.RollChest(loot); RefreshAppearance(); } }
 class ARPGTestHelmet : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(11, 1, 0, 0); RefreshAppearance(); } }
 class ARPGTestInvisibilityHelmet : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(11, 1, 0, 0); ARPGAffixes.Add(loot, ARPGAffixes.INVISIBILITY, 11, 1, 105, 875); RefreshAppearance(); } }

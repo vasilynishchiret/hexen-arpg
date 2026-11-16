@@ -50,4 +50,9 @@ Start a new Cleric game with `arpg_convert_map_loot 1`. On MAP01, inspect a plac
 
 ## v0.6 reinforcements
 
+
 Start a Cleric game with `arpg_reinforcements 1`. After the first minute, inspect `netevent arpg_reinforce_status`: attempts should be scheduled every 30–60 seconds. On a wide, visible room use `netevent arpg_reinforce_test` several times; no more than six additional enemies may be alive, and the per-map total stops at 12. On a long sample of successful spawns, about 40% should be FireDemon/Afrit with the original teleport smoke. Test near walls, doors, other actors, narrow rooms and low ceilings; unsuccessful attempts must not put enemies in geometry. Kill a reinforcement and check XP, +5 Mana2 and ordinary loot. Save/load and revisit the hub map; totals must persist. With inventory or pause menu open, no new attempts should occur. Check that map ACS events and the original kill counter remain unaffected. Turn `arpg_reinforcements 0` to disable only the ARPG arrivals, then test Fighter/Mage. See [`reinforcements.md`](reinforcements.md).
+
+## v0.7 teleport FX and mana
+
+In a wide room run `netevent arpg_reinforce_test` until a reinforcement appears. Watch the animated smoke disappear within five seconds while the monster remains active, then try another spawn. Save and load during smoke. Test `summon ARPGTestAxe100` and `summon ARPGTestAxe200`: the inventory should show 5 and 16 Mana1; compare actual Mana1 before and after one hit. `summon ARPGTestStaff`, `summon ARPGTestWand`, `summon ARPGTestLightning`, and `summon ARPGTestFirestorm` show 8/1 Mana1 and 25/4 Mana2 at 100% potency. Hold attack, check each cycle is charged once, verify attack stops when mana is insufficient, and compare inventory and ground tooltip. Repeat after save/load and with exceptional rolled items. See [`mana-economy.md`](mana-economy.md).

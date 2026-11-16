@@ -14,7 +14,7 @@ class ARPGEquippedWeapon : CWeapMace
 
     bool HasMana() const
     {
-        if (loot.kind == 3 || loot.kind == 7 || loot.manaCost <= 0) return true;
+        if (loot.kind == 3) return true;
         if (Owner == null) return false;
         let mana = Owner.FindInventory(loot.kind == 4 || loot.kind == 8 ? "Mana2" : "Mana1");
         return mana != null && mana.Amount >= EffectiveManaCost();
@@ -22,8 +22,7 @@ class ARPGEquippedWeapon : CWeapMace
 
     int EffectiveManaCost() const
     {
-        // Old save games may still contain a Lightning item with the former cost.
-        return loot.kind == 4 ? ARPGWeaponRules.ManaCost(4) : loot.manaCost;
+        return ARPGWeaponRules.StoredManaCost(loot);
     }
 
     void SyncSpritePosition()
@@ -121,7 +120,7 @@ class ARPGEquippedWeapon : CWeapMace
         let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
         if (weapon == null || !weapon.HasMana()) return;
         if (weapon.loot.kind != 3)
-            player.mo.TakeInventory("Mana1", weapon.loot.manaCost);
+            player.mo.TakeInventory("Mana1", weapon.EffectiveManaCost());
         int damage = weapon.loot.kind == 3 ? random[ARPGMaceDamage](50, 80) : weapon.loot.damage;
         if (weapon.loot.kind == 0)
             A_CustomPunch(damage, true, 0, "ARPGSwordPuff", 2 * DEFMELEERANGE);
@@ -159,7 +158,7 @@ class ARPGEquippedWeapon : CWeapMace
         if (player == null) return;
         let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
         if (weapon == null || !weapon.HasMana()) return;
-        player.mo.TakeInventory("Mana1", weapon.loot.manaCost);
+        player.mo.TakeInventory("Mana1", weapon.EffectiveManaCost());
         A_StartSound("MageShardsFire", CHAN_WEAPON);
         FTranslatedLineTarget hit;
         bool found = false;
@@ -192,7 +191,7 @@ class ARPGEquippedWeapon : CWeapMace
         if (player == null) return;
         let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
         if (weapon == null || !weapon.HasMana()) return;
-        player.mo.TakeInventory("Mana1", weapon.loot.manaCost);
+        player.mo.TakeInventory("Mana1", weapon.EffectiveManaCost());
         Actor left = SpawnPlayerMissile("CStaffMissile", angle - 3.0);
         Actor right = SpawnPlayerMissile("CStaffMissile", angle + 3.0);
         if (left != null) left.WeaveIndexXY = 32;
@@ -202,7 +201,11 @@ class ARPGEquippedWeapon : CWeapMace
 
     action void A_ARPGWandAttack()
     {
-        if (player != null) A_FireProjectile("MageWandMissile");
+        if (player == null) return;
+        let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
+        if (weapon == null || !weapon.HasMana()) return;
+        player.mo.TakeInventory("Mana1", weapon.EffectiveManaCost());
+        A_FireProjectile("MageWandMissile");
     }
 
     action void A_ARPGFirestormAttack()
@@ -210,7 +213,7 @@ class ARPGEquippedWeapon : CWeapMace
         if (player == null) return;
         let weapon = ARPGEquippedWeapon(player.ReadyWeapon);
         if (weapon == null || !weapon.HasMana()) return;
-        player.mo.TakeInventory("Mana2", weapon.loot.manaCost);
+        player.mo.TakeInventory("Mana2", weapon.EffectiveManaCost());
         SpawnPlayerMissile("CFlameMissile");
         A_StartSound("ClericFlameFire", CHAN_WEAPON);
     }
@@ -457,7 +460,7 @@ class ARPGSlot2 : ARPGEquippedWeapon
     {
         Super.PostBeginPlay();
         equipmentSlot = 2;
-        if (loot.damage == 0) { loot.kind = 0; loot.damage = ARPGBalance.SWORD_DAMAGE; loot.speed = 0; loot.manaCost = ARPGBalance.SWORD_MANA_COST; }
+        if (loot.damage == 0) { loot.kind = 0; loot.damage = ARPGBalance.SWORD_DAMAGE; loot.speed = 0; loot.manaCost = ARPGWeaponRules.ItemManaCost(0, loot.damage); loot.manaVersion = 1; }
     }
 }
 
@@ -468,6 +471,6 @@ class ARPGSlot3 : ARPGEquippedWeapon
     {
         Super.PostBeginPlay();
         equipmentSlot = 3;
-        if (loot.damage == 0) { loot.kind = 4; loot.damage = 100; loot.speed = 0; loot.manaCost = ARPGWeaponRules.ManaCost(4); }
+        if (loot.damage == 0) { loot.kind = 4; loot.damage = 100; loot.speed = 0; loot.manaCost = ARPGWeaponRules.ItemManaCost(4, loot.damage); loot.manaVersion = 1; }
     }
 }

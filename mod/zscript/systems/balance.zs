@@ -16,6 +16,12 @@ class ARPGBalance : Object
     const MACE_DAMAGE_MULTIPLIER = 2;
     const SWORD_DAMAGE = 70;
     const SWORD_MANA_COST = 3;
+    const MANA_POWER_EXPONENT = 1.585;
+    const RANGED_MANA_MULTIPLIER = 3;
+    // Reference melee damage and cadence for a 5-Mana1 / 100-damage axe.
+    const MANA_REFERENCE_DAMAGE = 85;
+    const MANA_REFERENCE_TICS = 30;
+    const MANA_REFERENCE_COST = 4;
     const LOOT_ONE_IN = 10;
     const ETTIN_MELEE_RANGE = 88;
     const ETTIN_MELEE_HALF_ANGLE = 35;

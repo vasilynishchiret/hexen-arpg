@@ -15,6 +15,7 @@ struct ARPGWeaponData
     int damage;
     int speed;      // 0 fast, 1 medium, 2 slow
     int manaCost;
+    int manaVersion; // 0: pre-v0.7 save, 1: generated nonlinear price
     int affixCount;
     ARPGGameplayAffix affix[4];
     int statCount;
@@ -51,6 +52,7 @@ class ARPGAffixes : Object
         dest.damage = src.damage;
         dest.speed = src.speed;
         dest.manaCost = src.manaCost;
+        dest.manaVersion = src.manaVersion;
         dest.affixCount = src.affixCount;
         dest.statCount = src.statCount;
         for (int i = 0; i < 4; i++)
@@ -302,11 +304,59 @@ class ARPGWeaponRules : Object
         return 3;
     }
 
+    // Price is rolled once per item. Expected hits are fixed balancing values,
+    // never the actual number of monsters hit by a particular shot.
+    clearscope static int ExpectedRangedDamage(int kind)
+    {
+        if (kind == 5) return 100; // one Frost hit; extra shards are situational
+        if (kind == 6) return 45;  // two Serpent Staff missiles
+        if (kind == 7) return 18;  // Wand ripper's expected contact time
+        return 100;
+    }
+
+    clearscope static int ItemManaCost(int kind, int damage)
+    {
+        int base = ManaCost(kind);
+        if (kind == 3 || kind >= 9 || damage <= 0) return base;
+        double factor;
+        double price;
+        if (kind >= 4 && kind <= 8 && kind != 5 && kind != 6 && kind != 7)
+        {
+            // Mana2 spell bases already include their original role and the
+            // earlier Lightning x5 change (25). Do not multiply either again.
+            factor = double(damage) / 100.;
+            price = base * exp(log(factor) * ARPGBalance.MANA_POWER_EXPONENT);
+        }
+        else if (kind >= 5 && kind <= 7)
+        {
+            int tics = AttackTics(kind);
+            factor = double(ExpectedRangedDamage(kind) * damage * ARPGBalance.MANA_REFERENCE_TICS) /
+                (100. * ARPGBalance.MANA_REFERENCE_DAMAGE * tics);
+            price = ARPGBalance.MANA_REFERENCE_COST *
+                exp(log(factor) * ARPGBalance.MANA_POWER_EXPONENT) *
+                tics / ARPGBalance.MANA_REFERENCE_TICS * ARPGBalance.RANGED_MANA_MULTIPLIER;
+        }
+        else
+        {
+            // Melee base prices already differ by their fixed attack cadence.
+            // Individual damage rolls scale relative to that weapon's own DPS.
+            factor = double(damage) / BaseDamage(kind);
+            price = base * exp(log(factor) * ARPGBalance.MANA_POWER_EXPONENT);
+        }
+        return max(1, int(price + 0.5));
+    }
+
+    clearscope static int StoredManaCost(ARPGWeaponData data)
+    {
+        if (data.manaVersion == 0 && data.damage > 0)
+            return ItemManaCost(data.kind, data.damage);
+        return data.manaCost;
+    }
+
     clearscope static string ManaName(int kind)
     {
         if (kind == 3) return "No mana";
         if (kind == 4 || kind == 8) return "Mana2";
-        if (kind == 7) return "No mana";
         return "Mana1";
     }
 }
