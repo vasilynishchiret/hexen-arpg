@@ -194,6 +194,10 @@ class ARPGInventoryMenu : ListMenu
 
     override bool OnUIEvent(UIEvent ev)
     {
+        if (ev.Type == UIEvent.Type_WheelUp) { Navigate(0); return true; }
+        if (ev.Type == UIEvent.Type_WheelDown) { Navigate(1); return true; }
+        if (ev.Type == UIEvent.Type_MButtonDown || ev.Type == UIEvent.Type_MButtonUp ||
+            ev.Type == UIEvent.Type_MButtonClick) return true;
         if (ev.Type == UIEvent.Type_MouseMove)
         {
             hovered = Hit(ev.MouseX, ev.MouseY);
