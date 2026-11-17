@@ -298,7 +298,7 @@ class ARPGWeaponRules : Object
         if (kind == 5) return 3;
         if (kind == 6) return 1;
         if (kind == 7) return 0;
-        if (kind == 8) return 4;
+        if (kind == 8) return 8;
         if (kind == 1) return 4;
         if (kind == 2) return 6;
         return 3;
@@ -348,7 +348,7 @@ class ARPGWeaponRules : Object
 
     clearscope static int StoredManaCost(ARPGWeaponData data)
     {
-        if (data.manaVersion == 0 && data.damage > 0)
+        if ((data.manaVersion == 0 || data.kind == 8) && data.damage > 0)
             return ItemManaCost(data.kind, data.damage);
         return data.manaCost;
     }
