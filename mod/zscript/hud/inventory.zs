@@ -85,6 +85,9 @@ class ARPGInventoryMenu : ListMenu
     int preferredRing;
     int lastClickItem;
     int lastClickTime;
+    int gemColor;
+    int upgradeTarget;
+    int upgradeCount;
 
     override void Init(Menu parent, ListMenuDescriptor desc)
     {
@@ -94,6 +97,8 @@ class ARPGInventoryMenu : ListMenu
         preferredRing = 7;
         lastClickItem = -1;
         lastClickTime = -100;
+        upgradeTarget = -1;
+        upgradeCount = 1;
     }
 
     ARPGCleric Cleric() { return ARPGCleric(players[consoleplayer].mo); }
@@ -108,21 +113,32 @@ class ARPGInventoryMenu : ListMenu
     {
         if (data.damage <= 0) return;
         int kind = data.kind;
+        if (kind == 15 || kind == 16)
+        {
+            DrawLine(Font.CR_GOLD, 20, 264, String.Format("%s x%d", ARPGWeaponRules.TypeName(kind), data.damage));
+            DrawLine(Font.CR_GRAY, 20, 284, "Select equipment to preview, then press Enter");
+            return;
+        }
         DrawLine(Font.CR_GOLD, 20, 264, String.Format("%s / %s",
             ARPGWeaponRules.TypeName(kind), ARPGWeaponRules.CategoryName(kind)));
         if (kind < 10)
-            DrawLine(Font.CR_GRAY, 20, 284, String.Format("Power %d  Mana %d %s", data.damage,
+            DrawLine(Font.CR_GRAY, 20, 284, String.Format("Base %d  Power %d  Mana %d %s", ARPGUpgradeRules.OriginalPower(data), data.damage,
                 ARPGWeaponRules.StoredManaCost(data), ARPGWeaponRules.ManaName(kind)));
         else if (kind == 10)
         {
-            DrawLine(Font.CR_GRAY, 20, 284, String.Format("HP +%d  Damage reduction %d%%", data.statHP, 10 + data.statDR));
+            DrawLine(Font.CR_GRAY, 20, 284, String.Format("HP +%d (+%d)  DR %d.%d%%", data.statHP, data.blueUpgrades,
+                ARPGUpgradeRules.ReductionTenths(data) / 10, ARPGUpgradeRules.ReductionTenths(data) % 10));
             DrawLine(Font.CR_GRAY, 20, 302, String.Format("Max Mana1 +%d  Mana2 +%d", data.statMana1, data.statMana2));
             DrawLine(Font.CR_GRAY, 20, 320, String.Format("Mana1 regen +%d%%", data.statRegen));
         }
-        else if (kind == 11) DrawLine(Font.CR_GRAY, 20, 284, "Protection 5%");
+        else if (kind == 11) DrawLine(Font.CR_GRAY, 20, 284, String.Format("HP +%d  Protection %d.%d%%",
+            data.blueUpgrades, ARPGUpgradeRules.ReductionTenths(data) / 10, ARPGUpgradeRules.ReductionTenths(data) % 10));
         else if (kind == 12) DrawLine(Font.CR_GRAY, 20, 284,
             data.affixCount > 0 ? "Special defense" : "Protection 3%");
-        else if (kind == 13) DrawLine(Font.CR_GRAY, 20, 284, "Max HP +5");
+        else if (kind == 13) DrawLine(Font.CR_GRAY, 20, 284, String.Format("Max HP +5  Mana1 +%d  Regen +%d%%",
+            data.blueUpgrades, data.greenUpgrades));
+        DrawLine(Font.CR_GOLD, 20, 340, String.Format("Upgrades: %d/100  Blue %d  Green %d",
+            ARPGUpgradeRules.Total(data), data.blueUpgrades, data.greenUpgrades));
         DrawLine(Font.CR_GOLD, 330, 264, "GAMEPLAY AFFIXES");
         if (data.affixCount == 0) DrawLine(Font.CR_GRAY, 330, 284, "None");
         for (int i = 0; i < data.affixCount; i++)
@@ -178,6 +194,12 @@ class ARPGInventoryMenu : ListMenu
             EventHandler.SendNetworkEvent("arpg_slot_unequip", selected - 19);
     }
 
+    void ConfirmUpgrade()
+    {
+        if (gemColor == 0 || upgradeTarget < 0) return;
+        EventHandler.SendNetworkEvent("arpg_upgrade", upgradeTarget, gemColor, upgradeCount);
+    }
+
     void Navigate(int key)
     {
         if (selected < 0) { selected = 0; return; }
@@ -207,6 +229,21 @@ class ARPGInventoryMenu : ListMenu
         {
             int item = Hit(ev.MouseX, ev.MouseY);
             if (item < 0) { selected = -1; lastClickItem = -1; return true; }
+            let cleric = Cleric();
+            if (cleric != null && item < 20 && cleric.arpgBag[item].damage > 0 &&
+                (cleric.arpgBag[item].kind == 15 || cleric.arpgBag[item].kind == 16))
+            {
+                gemColor = cleric.arpgBag[item].kind == 15 ? 1 : 2;
+                upgradeTarget = -1;
+                selected = item;
+                return true;
+            }
+            if (gemColor != 0)
+            {
+                upgradeTarget = item;
+                selected = item;
+                return true;
+            }
             if (item == 26 || item == 27) preferredRing = item - 19;
             bool twice = item == lastClickItem && MenuTime() - lastClickTime <= 12;
             selected = item;
@@ -223,8 +260,15 @@ class ARPGInventoryMenu : ListMenu
             if (key == UIEvent.Key_Down || key == 83 || key == 115) { Navigate(1); return true; }
             if (key == UIEvent.Key_Left || key == 65 || key == 97) { Navigate(2); return true; }
             if (key == UIEvent.Key_Right || key == 68 || key == 100) { Navigate(3); return true; }
-            if (key == UIEvent.Key_Return) { EquipSelected(); return true; }
-            if ((key == 80 || key == 112) && selected >= 0 && selected < 20)
+            if (key == UIEvent.Key_Return)
+            {
+                if (gemColor != 0) ConfirmUpgrade(); else EquipSelected();
+                return true;
+            }
+            if (gemColor != 0 && key == 49) { upgradeCount = 1; return true; }
+            if (gemColor != 0 && key == 48) { upgradeCount = 10; return true; }
+            if (gemColor != 0 && (key == 77 || key == 109)) { upgradeCount = 100; return true; }
+            if ((key == 80 || key == 112) && gemColor == 0 && selected >= 0 && selected < 20)
             {
                 EventHandler.SendNetworkEvent("arpg_slot_drop", selected);
                 return true;
@@ -252,7 +296,7 @@ class ARPGInventoryMenu : ListMenu
         if (mkey == MKEY_Down) { Navigate(1); return true; }
         if (mkey == MKEY_Left) { Navigate(2); return true; }
         if (mkey == MKEY_Right) { Navigate(3); return true; }
-        if (mkey == MKEY_Enter) { EquipSelected(); return true; }
+        if (mkey == MKEY_Enter) { if (gemColor != 0) ConfirmUpgrade(); else EquipSelected(); return true; }
         return Super.MenuEvent(mkey, fromcontroller);
     }
 
@@ -268,7 +312,15 @@ class ARPGInventoryMenu : ListMenu
             int y = 60 + (i % 10) * 20;
             int color = i == selected ? Font.CR_GREEN : i == hovered ? Font.CR_GOLD : Font.CR_GRAY;
             String title = cleric.arpgBag[i].damage > 0 ? ARPGWeaponRules.TypeName(cleric.arpgBag[i].kind) : "(empty)";
+            if (cleric.arpgBag[i].kind >= 15 && cleric.arpgBag[i].damage > 0)
+                title = String.Format("%s x%d", title, cleric.arpgBag[i].damage);
             DrawLine(color, x, y, String.Format("%s%02d %s", i == selected ? ">" : " ", i + 1, title));
+            if (cleric.arpgBag[i].kind == 15 || cleric.arpgBag[i].kind == 16)
+            {
+                let icon = TexMan.CheckForTexture(cleric.arpgBag[i].kind == 15 ? "MAN1I0" : "MAN2G0", TexMan.Type_MiscPatch);
+                if (icon.IsValid()) Screen.DrawTexture(icon, true, x + 155, y,
+                    DTA_VirtualWidth, 640, DTA_VirtualHeight, 400, DTA_DestWidth, 12, DTA_DestHeight, 12);
+            }
         }
         for (int slot = 1; slot <= 9; slot++)
         {
@@ -286,7 +338,8 @@ class ARPGInventoryMenu : ListMenu
                 String.Format("%s%s: %s", index == selected ? ">" : " ", ARPGInventoryHud.SlotName(slot),
                     kind >= 0 ? ARPGWeaponRules.TypeName(kind) : "(empty)"));
         }
-        int item = hovered >= 0 ? hovered : selected;
+        int item = gemColor != 0 && upgradeTarget >= 0 ? upgradeTarget :
+            hovered >= 0 ? hovered : selected;
         ARPGWeaponData detail;
         if (item >= 0 && item < 20) ARPGAffixes.Copy(detail, cleric.arpgBag[item]);
         else if (item >= 20 && item < 23)
@@ -316,7 +369,32 @@ class ARPGInventoryMenu : ListMenu
             }
         }
         DrawDetails(detail);
-        DrawLine(Font.CR_GRAY, 20, 380, "Click select  Double/right click/Enter equip  P drop  WASD/arrows move  ALT/Esc close");
+        if (gemColor != 0)
+        {
+            if (upgradeTarget >= 0)
+            {
+                ARPGWeaponData preview;
+                ARPGAffixes.Copy(preview, detail);
+                int gemSlot = cleric.GemSlot(gemColor == 1 ? 15 : 16);
+                int available = gemSlot >= 0 ? cleric.arpgBag[gemSlot].damage : 0;
+                int count = ARPGUpgradeRules.Apply(preview, gemColor, min(upgradeCount, available));
+                String change = "This item cannot be upgraded";
+                if (count > 0 && preview.kind < 10)
+                    change = String.Format("Preview: %d gems, power %d -> %d, mana %d -> %d", count,
+                        detail.damage, preview.damage, ARPGWeaponRules.StoredManaCost(detail),
+                        ARPGWeaponRules.StoredManaCost(preview));
+                else if (count > 0 && preview.kind == 13)
+                    change = String.Format("Preview: %d gems, Mana1 +%d, regen +%d%%", count,
+                        preview.blueUpgrades, preview.greenUpgrades);
+                else if (count > 0)
+                    change = String.Format("Preview: %d gems, HP +%d, DR %d.%d%%", count,
+                        preview.blueUpgrades, ARPGUpgradeRules.ReductionTenths(preview) / 10,
+                        ARPGUpgradeRules.ReductionTenths(preview) % 10);
+                DrawLine(Font.CR_GREEN, 20, 360, change);
+            }
+            DrawLine(Font.CR_GRAY, 20, 380, "Gem selected: click item, 1/0/M quantity, Enter apply, ALT/Esc close");
+        }
+        else DrawLine(Font.CR_GRAY, 20, 380, "Click select  Double/right click/Enter equip  P drop  WASD/arrows move  ALT/Esc close");
         // This custom menu has no ListMenu items. The inherited drawer would
         // show UZDoom's back button, whose click is consumed by our item picker.
     }

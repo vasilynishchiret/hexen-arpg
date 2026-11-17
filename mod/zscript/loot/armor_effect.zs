@@ -15,11 +15,11 @@ class ARPGArmorEffect : Inventory
             for (int i = 0; i < 5; i++)
                 if (nativeArmor.Slots[i] > 0) return;
         }
-        int reduction = 0;
-        if (cleric.arpgArmor[0].damage > 0) reduction += 10 + cleric.arpgArmor[0].statDR;
-        if (cleric.arpgArmor[1].damage > 0) reduction += 5;
-        if (cleric.arpgArmor[2].damage > 0 && cleric.arpgArmor[2].affixCount == 0) reduction += 3;
-        reduction = min(reduction, 45);
-        newdamage = max(1, (damage * (100 - reduction) + 99) / 100);
+        int reduction = 0; // tenths of a percentage point
+        for (int i = 0; i < 3; i++)
+            if (cleric.arpgArmor[i].damage > 0)
+                reduction += ARPGUpgradeRules.ReductionTenths(cleric.arpgArmor[i]);
+        reduction = min(reduction, 450);
+        newdamage = max(1, (damage * (1000 - reduction) + 999) / 1000);
     }
 }

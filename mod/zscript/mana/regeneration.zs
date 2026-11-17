@@ -86,12 +86,14 @@ class ARPGMana : EventHandler
                 cleric.arpgShiftWasDown = running;
             }
             if (cleric.arpgSprintActive) continue;
-            cleric.arpgManaTicks++;
             int regenBonus = cleric.arpgArmor[0].damage > 0 ? cleric.arpgArmor[0].statRegen : 0;
-            int regenTics = max(1, ARPGBalance.BLUE_REGEN_TICS * 100 / (100 + regenBonus));
-            if (cleric.arpgManaTicks >= regenTics)
+            for (int ring = 3; ring <= 4; ring++)
+                if (cleric.arpgArmor[ring].damage > 0)
+                    regenBonus += cleric.arpgArmor[ring].greenUpgrades;
+            cleric.arpgManaTicks += 100 + regenBonus;
+            if (cleric.arpgManaTicks >= ARPGBalance.BLUE_REGEN_TICS * 100)
             {
-                cleric.arpgManaTicks = 0;
+                cleric.arpgManaTicks -= ARPGBalance.BLUE_REGEN_TICS * 100;
                 cleric.GiveInventory("Mana1", 1);
             }
         }

@@ -121,7 +121,9 @@ class ARPGEquippedWeapon : CWeapMace
         if (weapon == null || !weapon.HasMana()) return;
         if (weapon.loot.kind != 3)
             player.mo.TakeInventory("Mana1", weapon.EffectiveManaCost());
-        int damage = weapon.loot.kind == 3 ? random[ARPGMaceDamage](50, 80) : weapon.loot.damage;
+        int damage = weapon.loot.kind == 3 ?
+            random[ARPGMaceDamage](50, 80) + weapon.loot.damage - ARPGUpgradeRules.OriginalPower(weapon.loot) :
+            weapon.loot.damage;
         if (weapon.loot.kind == 0)
             A_CustomPunch(damage, true, 0, "ARPGSwordPuff", 2 * DEFMELEERANGE);
         else if (weapon.loot.kind == 1)

@@ -1,4 +1,4 @@
-# HEXEN-ARPG v0.5: manual verification in UZDoom 5.0.3
+﻿# HEXEN-ARPG v0.5: manual verification in UZDoom 5.0.3
 
 Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1` and start a **new** Cleric game. Script loading can be checked from the terminal with `& 'C:\Games\UZDoom\uzdoom.exe' -iwad 'C:\Games\UZDoom\HEXEN.WAD' -file '.\mod' -noautoload -nosound -stdout +quit`; `script parsing took ...` without `Script error` proves compilation only. `+quit` may still leave a graphics window in this environment.
 
@@ -57,4 +57,8 @@ Start a Cleric game with `arpg_reinforcements 1`. After the first minute, inspec
 
 Launch through `tools/launch.ps1`, enter a Cleric game, and check that wheel up/down moves the selected consumable, Mouse3 uses it, and 1/2/3 still select the three weapon slots. The middle button previously carried `+zoom` in the dedicated profile; the launch binding replaces only that key. Open ARPG inventory with Alt: wheel changes its selection, middle click does not use an item, and Escape closes it. Open the ordinary Escape menu and check normal wheel behavior. Brackets remain as optional native inventory selection keys.
 
-In a wide room run `netevent arpg_reinforce_test` until a reinforcement appears. Watch the animated smoke disappear within five seconds while the monster remains active, then try another spawn. Save and load during smoke. Test `summon ARPGTestAxe100` and `summon ARPGTestAxe200`: the inventory should show 5 and 16 Mana1; compare actual Mana1 before and after one hit. `summon ARPGTestStaff`, `summon ARPGTestWand`, `summon ARPGTestLightning`, and `summon ARPGTestFirestorm` show 8/1 Mana1 and 25/4 Mana2 at 100% potency. Hold attack, check each cycle is charged once, verify attack stops when mana is insufficient, and compare inventory and ground tooltip. Repeat after save/load and with exceptional rolled items. See [`mana-economy.md`](mana-economy.md).
+In a wide room run `netevent arpg_reinforce_test` until a reinforcement appears. Watch the animated smoke disappear within five seconds while the monster remains active, then try another spawn. Save and load during smoke. Test `summon ARPGTestAxe100` and `summon ARPGTestAxe200`: the inventory should show 5 and 16 Mana1; compare actual Mana1 before and after one hit. `summon ARPGTestStaff`, `summon ARPGTestWand`, `summon ARPGTestLightning`, and `summon ARPGTestFirestorm` show 8/1 Mana1 and 25/8 Mana2 at 100% potency. Hold attack, check each cycle is charged once, verify attack stops when mana is insufficient, and compare inventory and ground tooltip. Repeat after save/load and with exceptional rolled items. See [`mana-economy.md`](mana-economy.md).
+
+## Equipment gems v0.8
+
+See [gems.md](gems.md) for pickup, stack, upgrade, drop, save/load and HUD checks. Run `netevent arpg_gems_test` and `summon ARPGTestUpgradedAxe` for the 100-upgrade cap. Check Firestorm at 8 Mana2 and Lightning at 25 Mana2 in both normal and fullscreen HUD modes.
