@@ -72,7 +72,9 @@ class ARPGCleric : ClericPlayer
         int rings = 0;
         if (arpgArmor[3].damage > 0) rings += 5;
         if (arpgArmor[4].damage > 0) rings += 5;
-        int chestHP = arpgArmor[0].damage > 0 ? arpgArmor[0].statHP : 0;
+        int chestHP = arpgArmor[0].damage > 0 ? arpgArmor[0].statHP + arpgArmor[0].blueUpgrades : 0;
+        if (arpgArmor[1].damage > 0) chestHP += arpgArmor[1].blueUpgrades;
+        if (arpgArmor[2].damage > 0) chestHP += arpgArmor[2].blueUpgrades;
         return Super.GetMaxHealth(withupgrades) + ARPGBalance.HP_PER_LEVEL * max(0, arpgLevel - 1) + rings + chestHP;
     }
 
@@ -80,6 +82,81 @@ class ARPGCleric : ClericPlayer
     {
         for (int i = 0; i < 20; i++) if (arpgBag[i].damage == 0) return i;
         return -1;
+    }
+
+    clearscope int GemSlot(int kind)
+    {
+        for (int i = 0; i < 20; i++)
+            if (arpgBag[i].kind == kind && arpgBag[i].damage > 0) return i;
+        return -1;
+    }
+
+    bool AddGems(int blue, int green)
+    {
+        int needed = (blue > 0 && GemSlot(15) < 0 ? 1 : 0) +
+            (green > 0 && GemSlot(16) < 0 ? 1 : 0);
+        int free = 0;
+        for (int i = 0; i < 20; i++) if (arpgBag[i].damage <= 0) free++;
+        if (free < needed) return false;
+        if (blue > 0)
+        {
+            int slot = GemSlot(15);
+            if (slot < 0) { slot = FirstFreeBagSlot(); arpgBag[slot].kind = 15; }
+            arpgBag[slot].damage += blue;
+        }
+        if (green > 0)
+        {
+            int slot = GemSlot(16);
+            if (slot < 0) { slot = FirstFreeBagSlot(); arpgBag[slot].kind = 16; }
+            arpgBag[slot].damage += green;
+        }
+        return true;
+    }
+
+    int UpgradeAt(int target, int color, int count)
+    {
+        if (color < 1 || color > 2 || target < 0 || target >= 29) return 0;
+        int gemSlot = GemSlot(color == 1 ? 15 : 16);
+        if (gemSlot < 0) return 0;
+        ARPGWeaponData item;
+        ARPGEquippedWeapon weapon;
+        if (target < 20) ARPGAffixes.Copy(item, arpgBag[target]);
+        else if (target < 23)
+        {
+            weapon = ARPGEquippedWeapon(FindInventory(String.Format("ARPGSlot%d", target - 19)));
+            if (weapon == null) return 0;
+            ARPGAffixes.Copy(item, weapon.loot);
+        }
+        else if (target < 28) ARPGAffixes.Copy(item, arpgArmor[target - 23]);
+        else ARPGAffixes.Copy(item, arpgBoots);
+        if (!ARPGUpgradeRules.CanUpgrade(item, color)) return 0;
+        int available = arpgBag[gemSlot].damage;
+        int quantity = min(min(count, available), 100 - ARPGUpgradeRules.Total(item));
+        if (color == 2 && target >= 23 && target <= 25)
+        {
+            int effective = 0;
+            for (int i = 0; i < 3; i++)
+                if (arpgArmor[i].damage > 0)
+                    effective += ARPGUpgradeRules.ReductionTenths(arpgArmor[i]);
+            if (effective >= 450) return 0;
+            quantity = min(quantity, (450 - effective + 2) / 3);
+        }
+        int applied = ARPGUpgradeRules.Apply(item, color, quantity);
+        if (applied <= 0) return 0;
+        arpgBag[gemSlot].damage -= applied;
+        if (arpgBag[gemSlot].damage <= 0)
+        {
+            ARPGWeaponData empty;
+            ARPGAffixes.Copy(arpgBag[gemSlot], empty);
+        }
+        if (target < 20) ARPGAffixes.Copy(arpgBag[target], item);
+        else if (target < 23) ARPGAffixes.Copy(weapon.loot, item);
+        else if (target < 28) ARPGAffixes.Copy(arpgArmor[target - 23], item);
+        else ARPGAffixes.Copy(arpgBoots, item);
+        health = min(health, GetMaxHealth());
+        if (player != null) player.health = health;
+        SyncARPGManaCapacity();
+        return applied;
     }
 
     bool StoreItem(int kind, int damage, int speed, int manaCost)
@@ -103,7 +180,7 @@ class ARPGCleric : ClericPlayer
 
     int AutoEquipTarget(int bagSlot, int preferredRing)
     {
-        if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage <= 0) return 0;
+        if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage <= 0 || arpgBag[bagSlot].kind >= 15) return 0;
         int kind = arpgBag[bagSlot].kind;
         if (kind == 10) return 4;
         if (kind == 11) return 5;
@@ -126,7 +203,7 @@ class ARPGCleric : ClericPlayer
 
     bool EquipBagItem(int bagSlot, int equipSlot)
     {
-        if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage == 0) return false;
+        if (bagSlot < 0 || bagSlot >= 20 || arpgBag[bagSlot].damage == 0 || arpgBag[bagSlot].kind >= 15) return false;
         int kind = arpgBag[bagSlot].kind;
         ARPGWeaponData item;
         ARPGAffixes.Copy(item, arpgBag[bagSlot]);
@@ -290,6 +367,8 @@ class ARPGCleric : ClericPlayer
         let mana1 = Ammo(FindInventory("Mana1"));
         let mana2 = Ammo(FindInventory("Mana2"));
         int bonus1 = arpgArmor[0].damage > 0 ? arpgArmor[0].statMana1 : 0;
+        for (int i = 3; i <= 4; i++)
+            if (arpgArmor[i].damage > 0) bonus1 += arpgArmor[i].blueUpgrades;
         int bonus2 = arpgArmor[0].damage > 0 ? arpgArmor[0].statMana2 : 0;
         if (mana1 != null)
         {

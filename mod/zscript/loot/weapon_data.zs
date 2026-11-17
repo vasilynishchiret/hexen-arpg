@@ -27,6 +27,9 @@ struct ARPGWeaponData
     int statRegen;
     int statTier;
     int damageType; // reserved for elemental weapon affixes
+    int baseDamage; // original rolled power before gems
+    int blueUpgrades;
+    int greenUpgrades;
 }
 
 class ARPGAffixes : Object
@@ -79,6 +82,9 @@ class ARPGAffixes : Object
         dest.statRegen = src.statRegen;
         dest.statTier = src.statTier;
         dest.damageType = src.damageType;
+        dest.baseDamage = src.baseDamage;
+        dest.blueUpgrades = src.blueUpgrades;
+        dest.greenUpgrades = src.greenUpgrades;
     }
 
     clearscope static bool Has(ARPGWeaponData item, int id)
@@ -239,6 +245,8 @@ class ARPGWeaponRules : Object
         if (kind == 12) return "Bracers";
         if (kind == 13) return "Ring";
         if (kind == 14) return "Boots of Speed";
+        if (kind == 15) return "Blue Gem";
+        if (kind == 16) return "Green Gem";
         return "Sword";
     }
 
@@ -358,5 +366,59 @@ class ARPGWeaponRules : Object
         if (kind == 3) return "No mana";
         if (kind == 4 || kind == 8) return "Mana2";
         return "Mana1";
+    }
+}
+
+class ARPGUpgradeRules : Object
+{
+    clearscope static int OriginalPower(ARPGWeaponData item)
+    {
+        return item.baseDamage > 0 ? item.baseDamage : item.damage;
+    }
+
+    clearscope static int Total(ARPGWeaponData item)
+    {
+        return item.blueUpgrades + item.greenUpgrades;
+    }
+
+    clearscope static int Damage(ARPGWeaponData item)
+    {
+        int original = OriginalPower(item);
+        return original + item.blueUpgrades + (original * item.greenUpgrades + 50) / 100;
+    }
+
+    clearscope static int ReductionTenths(ARPGWeaponData item)
+    {
+        int base = item.kind == 10 ? 100 + item.statDR * 10 :
+            item.kind == 11 ? 50 : item.kind == 12 && item.affixCount == 0 ? 30 : 0;
+        return base + item.greenUpgrades * 3;
+    }
+
+    clearscope static bool CanUpgrade(ARPGWeaponData item, int color)
+    {
+        if (item.damage <= 0 || item.kind >= 14 || Total(item) >= 100) return false;
+        if (item.kind == 12 && item.affixCount > 0 && color == 2) return false;
+        if (item.kind >= 10 && item.kind <= 12 && color == 2 &&
+            ReductionTenths(item) >= 450) return false;
+        return true;
+    }
+
+    clearscope static int Apply(out ARPGWeaponData item, int color, int count)
+    {
+        int applied = 0;
+        while (applied < count && CanUpgrade(item, color))
+        {
+            if (item.baseDamage <= 0) item.baseDamage = item.damage;
+            if (color == 1) item.blueUpgrades++;
+            else item.greenUpgrades++;
+            applied++;
+        }
+        if (applied > 0 && item.kind < 10)
+        {
+            item.damage = Damage(item);
+            item.manaCost = ARPGWeaponRules.ItemManaCost(item.kind, item.damage);
+            item.manaVersion = 1;
+        }
+        return applied;
     }
 }

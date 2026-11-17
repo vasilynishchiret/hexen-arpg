@@ -29,6 +29,7 @@ class ARPGGroundWeapon : Actor
     {
         loot.kind = kind;
         loot.damage = kind == 3 ? 65 : kind <= 8 ? ARPGWeaponRules.RollDamage(kind) : 1;
+        loot.baseDamage = loot.damage;
         loot.speed = kind;
         loot.manaCost = ARPGWeaponRules.ItemManaCost(kind, loot.damage);
         loot.manaVersion = 1;
@@ -63,6 +64,7 @@ class ARPGGroundWeapon : Actor
         ARPGAffixes.Copy(loot, empty);
         loot.kind = kind;
         loot.damage = damage;
+        loot.baseDamage = damage;
         loot.speed = speed;
         loot.manaCost = manaCost;
         loot.manaVersion = 1;
@@ -139,6 +141,17 @@ class ARPGTestAxe : ARPGGroundWeapon
 }
 class ARPGTestAxe100 : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(1, 100, 1, ARPGWeaponRules.ItemManaCost(1, 100)); RefreshAppearance(); } }
 class ARPGTestAxe200 : ARPGGroundWeapon { override void PostBeginPlay() { Super.PostBeginPlay(); InitTestItem(1, 200, 1, ARPGWeaponRules.ItemManaCost(1, 200)); RefreshAppearance(); } }
+class ARPGTestUpgradedAxe : ARPGGroundWeapon
+{
+    override void PostBeginPlay()
+    {
+        Super.PostBeginPlay();
+        InitTestItem(1, 100, 1, ARPGWeaponRules.ItemManaCost(1, 100));
+        ARPGUpgradeRules.Apply(loot, 1, 50);
+        ARPGUpgradeRules.Apply(loot, 2, 50);
+        RefreshAppearance();
+    }
+}
 
 class ARPGTestHammer : ARPGGroundWeapon
 {

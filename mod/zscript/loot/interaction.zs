@@ -4,7 +4,8 @@ class ARPGInteraction : ARPGEquipment
 
     void DropBagItem(ARPGCleric cleric, int index)
     {
-        if (index < 0 || index >= 20 || cleric.arpgBag[index].damage <= 0) return;
+        if (index < 0 || index >= 20 || cleric.arpgBag[index].damage <= 0 ||
+            cleric.arpgBag[index].kind >= 15) return;
         let dropped = ARPGGroundWeapon(Actor.Spawn("ARPGGroundWeapon", cleric.Pos));
         if (dropped == null) return;
         ARPGAffixes.Copy(dropped.loot, cleric.arpgBag[index]);
@@ -18,8 +19,22 @@ class ARPGInteraction : ARPGEquipment
     {
         let cleric = ARPGCleric(players[e.Player].mo);
         if (cleric == null || cleric.health <= 0) return;
+        if (e.Name == "arpg_gems_test")
+        {
+            cleric.A_PrintBold(cleric.AddGems(100, 100) ? "Added 100 gems of each color" :
+                "Not enough bag slots for both gem stacks", 2.0);
+            return;
+        }
         if (e.Name == "arpg_invisibility") { cleric.ActivateARPGInvisibility(); return; }
         if (e.Name == "arpg_detection") { cleric.ActivateARPGDetection(); return; }
+        if (e.Name == "arpg_upgrade")
+        {
+            if (!cleric.arpgInventoryOpen) return;
+            int applied = cleric.UpgradeAt(e.Args[0], e.Args[1], e.Args[2]);
+            cleric.A_PrintBold(applied > 0 ? String.Format("Applied %d gems", applied) :
+                "Cannot upgrade: no gems, full item, or no useful bonus", 2.0);
+            return;
+        }
         if (e.Name == "arpg_inventory_state")
         {
             cleric.arpgInventoryOpen = e.Args[0] != 0;
