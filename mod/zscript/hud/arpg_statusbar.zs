@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** hexen_sbar.zs
 **
 **
@@ -300,4 +300,3 @@ class ARPGStatusBar : BaseStatusBar
 		}
 	}
 }
-

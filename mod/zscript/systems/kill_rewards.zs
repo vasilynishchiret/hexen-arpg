@@ -43,5 +43,8 @@ class ARPGKillRewards : ARPGLootGeneration
         cleric.AddXP(xp);
         cleric.GiveInventory("Mana2", ARPGBalance.GREEN_MANA_PER_KILL);
         TryDrop(e.Thing);
+        if (random[ARPGGemDropChance](0, 9) == 0)
+            Actor.Spawn(random[ARPGGemDropColor](0, 1) == 0 ?
+                'ARPGBlueGemPickup' : 'ARPGGreenGemPickup', e.Thing.Pos);
     }
 }
