@@ -2,6 +2,8 @@
 
 This is a release checklist based on the files in `feature/independent-weapon-slots` as inspected on 2026-11-20. It records evidence and unresolved rights; it does **not** grant a license on behalf of any contributor. The author expressly declined to grant GPL-3.0-or-later rights for the project's original code and PNGs at this stage. Do not publish the draft release until the blockers below are resolved.
 
+**Existing exposure:** A publicly accessible repository/PR branch can itself distribute source copies under GPLv3's definition of “convey”; keeping the GitHub Release in draft is not a complete cure for the current rights conflict. The project owner should resolve the copied status bar promptly, or restrict access to the affected branch/repository while replacing it. This audit does not change repository visibility or remove the working file.
+
 ## UZDoom-derived status bar and the combined mod
 
 `mod/zscript/hud/arpg_statusbar.zs` is an adaptation of UZDoom's `zscript/ui/statusbar/hexen_sbar.zs` (also present in the locally installed UZDoom data archive). A line diff against that source shows only 14 added and 5 removed lines; this is substantially copied code, not an independent implementation. Its original copyright holders and `SPDX-License-Identifier: GPL-3.0-or-later` header are retained. A dated HEXEN-ARPG modification notice has been added. UZDoom identifies its code as GPLv3 or later. [GPLv3](../LICENSES/GPL-3.0.txt) is included verbatim.
