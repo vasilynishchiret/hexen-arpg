@@ -13,6 +13,9 @@
 **
 ** SPDX-License-Identifier: GPL-3.0-or-later
 **
+** Modified for HEXEN-ARPG by Vasily Nishchiret, 2026-11-17.
+** Retained upstream notices; see LICENSES/GPL-3.0.txt and docs/licensing-audit.md.
+**
 **---------------------------------------------------------------------------
 **
 */

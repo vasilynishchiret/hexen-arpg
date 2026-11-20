@@ -1,6 +1,6 @@
 # Publication rights review
 
-This is a provenance checklist, not a grant of rights. Git history identifies the committer, but does not establish the original creator or license of every image or code fragment. No license is assigned to the entire repository.
+This is a provenance checklist, not a grant of rights. Git history identifies the committer, but does not establish the original creator or license of every image or code fragment. See [licensing audit](licensing-audit.md) for the GPL obligations of the combined mod. No license grant for the project's other original contributions is inferred from this checklist.
 
 ## Assets requiring human review before public distribution
 
@@ -13,6 +13,6 @@ This is a provenance checklist, not a grant of rights. Git history identifies th
 
 No `HEXEN.WAD`, original game map archive, UZDoom executable, third-party map archive, or sound file is tracked. The ZScript deliberately refers to sprite and sound names supplied by the user's own Hexen IWAD and the installed UZDoom. This does not copy those binary resources into the mod.
 
-`mod/zscript/hud/arpg_statusbar.zs` is adapted from UZDoom's `hexen_sbar.zs`, retaining the upstream copyright and `SPDX-License-Identifier: GPL-3.0-or-later` header. The corresponding GPLv3 text is included at `LICENSES/GPL-3.0.txt`. [UZDoom identifies its code as GPLv3 or later](https://github.com/UZDoom/UZDoom). This notice applies to the adapted file; it does not assign a license to all other repository files. Review the combined distribution obligations before a public release. Other game code is committed under the project author's identity, but commit authorship alone is not a complete provenance record.
+`mod/zscript/hud/arpg_statusbar.zs` is adapted from UZDoom's `hexen_sbar.zs`, retaining the upstream copyright and `SPDX-License-Identifier: GPL-3.0-or-later` header. It now also carries a modification notice. The corresponding GPLv3 text is included at `LICENSES/GPL-3.0.txt`. [UZDoom identifies its code as GPLv3 or later](https://github.com/UZDoom/UZDoom). Because this status bar is included by `mod/zscript.txt` and used by `mod/MAPINFO`, the mod should be treated as a combined work for release planning. Merely keeping a GPL notice on this file does not clear the other code and integrated assets for distribution; see the [licensing audit](licensing-audit.md). Other game code is committed under the project author's identity, but commit authorship alone is not a complete provenance record.
 
-Before a public release or PR merge, complete gameplay checks and the remaining code-provenance review. The excluded sky textures and map drafts should not be added until their rights and contents are assessed separately.
+Before a public release or PR merge, complete gameplay checks, the remaining code-provenance review, and the combined-work licensing steps. The excluded sky textures and map drafts should not be added until their rights and contents are assessed separately.
