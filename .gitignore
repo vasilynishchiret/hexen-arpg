@@ -13,6 +13,9 @@
 Thumbs.db
 .DS_Store
 build/
+custom-maps/
+maps/
+mod/assets/textures/sky/
 dist/
 temp/
 tmp/

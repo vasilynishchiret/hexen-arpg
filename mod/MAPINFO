@@ -1,4 +1,6 @@
 GameInfo
 {
-    PlayerClasses = "ARPGFighterPlayer", "ClericPlayer", "MagePlayer"
+    PlayerClasses = "FighterPlayer", "ARPGCleric", "MagePlayer"
+    StatusBarClass = "ARPGStatusBar"
+    AddEventHandlers = "ARPGMana", "ARPGKillRewards", "ARPGRingEffects", "ARPGHud", "ARPGInteraction", "ARPGLootPrompt", "ARPGInventoryHud", "ARPGMapConversion", "ARPGReinforcements", "ARPGGemWorld"
 }
