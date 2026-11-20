@@ -1,62 +1,62 @@
-# HEXEN-ARPG
+# HEXEN-ARPG (alpha)
 
-Минимальный ARPG-прототип для оригинального Hexen на UZDoom 5.0.3. Движок и `HEXEN.WAD` не изменяются и не входят в Git.
+[Русский](README.ru.md)
 
-## Инвентарь и экипировка v0.3
+HEXEN-ARPG is a free, unofficial ARPG mod for the original *Hexen: Beyond Heretic*. It adds loot, equipment, randomized weapon power, abilities, gems, and character levels to the Cleric. The original campaign remains the default game. Fighter and Mage remain selectable but do not have the ARPG systems.
 
-Выберите **Cleric**. В инвентаре 20 отдельных ячеек, рядом восемь слотов: три оружейных, Chest Armor, Helmet, Bracers и два независимых кольца. Наведитесь на предмет и нажмите **E**: он попадёт в свободную ячейку. При полном инвентаре предмет останется на земле. **ALT** открывает и закрывает инвентарь, **I** удерживает `strafe`. В меню один клик выделяет предмет, двойной или правый клик экипирует его; наведите курсор для сравнения. **WASD** или стрелки перемещают выделение, **Enter** экипирует предмет или снимает выбранную экипировку, **P** выбрасывает выбранный предмет, **Esc/ALT** закрывает меню. Оружие занимает первый свободный слот, а если все заняты, заменяет активный. Кольца занимают сначала Ring 1, затем Ring 2; при заполнении обоих заменяется последнее выбранное кольцо (по умолчанию Ring 1). Обмен с занятым слотом происходит в той же ячейке рюкзака.
+## Requirements and installation
 
-## Оружейные слоты
+- Windows, [UZDoom](https://github.com/UZDoom/UZDoom) (developed against 5.0.3), and your own legally obtained original `HEXEN.WAD`.
+- Download or clone this repository. Keep its `mod` and `tools` folders beside `Play.bat`.
+- Do not copy `HEXEN.WAD` or UZDoom into a redistributed mod package. You may keep your own copies locally.
 
-Выберите **Cleric**. Его класс `ARPGCleric` начинает с 50/50 HP и получает:
+Double-click **`Play.bat`**. The launcher looks beside the project, beside UZDoom, on `PATH`, and in common Windows, Steam, and GOG locations. If it cannot find UZDoom or `HEXEN.WAD`, select the file in the Windows dialog. Missing files produce an error. The game opens its normal menu; start a new game and choose **Cleric**. `Play.bat` does not load a custom map.
 
-- **1 — булаву**: 50–80 урона за удар, без маны.
-- **2 — заряженный меч**: 70 урона, 3 Mana1 за взмах, в том числе промах.
-- **3 — книгу молний**: Arc of Death, 25 Mana2 за атаку.
-
-Каждый слот хранит свой экземпляр оружия и может принять любой тип оружия. Нажмите 1/2/3 и наведитесь на предмет: появятся две колонки сравнения с экипированным оружием. Нажмите E для подбора в инвентарь, затем U для установки в выбранный слот. Внешний вид в руках соответствует типу. Подробности: [docs/loot.md](docs/loot.md).
-
-Cleric начинает с 30 единиц Mana1 и Mana2. Mana1 восстанавливается на 1 единицу каждые 35 игровых тиков стоя или при ходьбе; во время фактического бега с движением таймер регенерации приостановлен. Mana2 не восстанавливается сама: за убийство монстра игрок получает 5 единиц, не превышая стандартного максимума. Обычные игровые предметы маны продолжают работать.
-
-Каждое убийство Ettin приносит 10 XP. Для остальных монстров временная награда равна `clamp(максимальное HP / 15, 5, 100)` XP. Уровень начинается с 1, первый порог — 100 XP, каждый следующий порог примерно на 35% выше. Каждый новый уровень добавляет 5 к максимальному HP и текущему HP. Уровень и XP показаны в верхнем левом углу; при повышении появляется короткое сообщение. Прогрессия хранится в классе игрока и сохраняется при переходе между картами хаба.
-
-Оригинальные Fighter и Mage остаются доступными без новых способностей. Прежняя модификация перчаток Fighter сохранена в первом коммите Git, но исключена из этой версии мода.
-
-## Лут
-
-Дополнительные подкрепления ARPG появляются попытками через 30–60 секунд после первой минуты, с ограничением количества и безопасной проверкой места. 40% выбора — Afrit (`FireDemon`). Настройка и диагностика: [docs/reinforcements.md](docs/reinforcements.md).
-
-Оригинальная броня и обычные подбираемые виды оружия на картах Hexen конвертируются в ARPG-предметы; сюжетные части оружия и ключи сохраняются. Параметр `arpg_convert_map_loot` позволяет отключить конвертацию для Fighter/Mage или несовместимой карты. Подробности: [docs/map-conversion.md](docs/map-conversion.md).
-
-За убийство враждебного монстра Cleric с вероятностью 1/10 выпадает один предмет: 40% Sword/Axe/Hammer, 35% магическое оружие, 25% броня, шлем, наручи, кольцо или сапоги. Для оружия индивидуальная сила выбирается при создании: 80% обычных множителей, 17% усиленных, 3% исключительных. Магия использует оригинальные эффекты UZDoom и индивидуальный множитель силы. Подробности и проверка: [docs/loot.md](docs/loot.md). Каталог спрайтов и PNG: [docs/asset-catalog.md](docs/asset-catalog.md).
-
-## Аффиксы и мобильность v0.5
-
-Девятый слот экипировки — Boots. Без сапог Shift не ускоряет клирика. Сапоги дают от одной до трёх способностей: Sprint (удерживать Shift), Dash (коротко нажать и отпустить Shift) и Double Jump (повторно нажать Space в воздухе). Наручи могут давать Arcane Shield (удерживать RMB/AltFire) или Guardian. Шлемы могут давать Invisibility (F, переназначаемая клавиша) или Enemy Detection (V). Кольца дают пассивные эффекты регенерации Mana2, вампиризма и ауры урона. Chest Armor получает от одного до четырёх количественных бонусов. Сведения о предмете показаны при наведении и в инвентаре; доступность активных способностей показана на HUD. Подробные настройки и проверка: [docs/TESTING.md](docs/TESTING.md).
-
-## Запуск
-
-В отдельном профиле запуска колесо мыши выбирает расходуемые предметы
-(`MWheelUp` = `invprev`, `MWheelDown` = `invnext`), средняя кнопка применяет
-выбранный предмет (`Mouse3` = `invuse`). Оружие переключается клавишами 1/2/3;
-квадратные скобки по-прежнему выбирают предметы. В графическом инвентаре колесо
-перемещает выделение, а средний клик ничего не расходует. Подробности новой
-экономики: [docs/mana-economy.md](docs/mana-economy.md).
-
-Для проверки на стороннем уровне укажите `-MapWad` и при необходимости `-StartMap` в `tools/launch.ps1`. Примеры и ограничения: [docs/custom-maps.md](docs/custom-maps.md).
-
-В PowerShell из корня репозитория:
+For command-line use:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1 -UZDoom "D:\Games\UZDoom\uzdoom.exe" -IWAD "D:\Games\Hexen\HEXEN.WAD"
 ```
 
-Скрипт запуска использует отдельный профиль настроек `%LOCALAPPDATA%\HEXEN-ARPG\uzdoom.ini` и назначает **ALT** для инвентаря и **I** для `strafe` только в этом профиле. Остальные настройки UZDoom не изменяются; привязки, заданные внутри инвентаря, не затрагивают управление вне меню.
+Other arguments are passed to UZDoom. The default settings profile is `%LOCALAPPDATA%\HEXEN-ARPG\uzdoom.ini`; the launcher executes `tools/controls.cfg` there. An explicit engine `-config` argument selects the profile you provide. The launcher does not edit an existing global UZDoom or Hexen configuration.
 
-По умолчанию используются `C:\Games\UZDoom\uzdoom.exe` и `C:\Games\UZDoom\HEXEN.WAD`. Пути можно переопределить аргументами `-UZDoom` и `-IWAD`; остальные аргументы передаются UZDoom.
+## Implemented in this alpha
 
-В VS Code откройте папку `hexen-arpg`, затем запустите задачу **Run Hexen ARPG**.
+### Controls and interface
 
-Подробная ручная проверка: [docs/TESTING.md](docs/TESTING.md). Замена кадров оружия: [docs/weapon-assets.md](docs/weapon-assets.md).
+`1`, `2`, `3` select three independent weapon slots; each can hold a different weapon, and an empty slot cannot attack. `Alt` opens the 20-cell inventory. Aim at ground loot and press `E` to pick it up; full inventory leaves it on the ground. In the inventory, single-click selects, double-click or right-click equips, and hovering shows item comparisons. `WASD`/arrows navigate, `Enter` equips or removes, `P` drops, and `Esc`/`Alt` closes. `U` equips a selected item into the selected weapon slot. The mouse wheel selects Hexen consumables and middle mouse uses one; `[` and `]` also select consumables. `I` is strafe in the separate profile.
 
-Проверка баланса без запуска игры: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\test-balance.ps1`.
+### Combat, loot, and character growth
+
+The Cleric has two **combat mana** pools. Mana1 regenerates over time, except while sprinting; Mana2 gains 5 on an eligible monster kill and can also regenerate from a ring affix. Weapon mana costs depend on the weapon and its rolled power. World mana pickups become **upgrade gems**, separate from combat mana; a combined pickup gives one of each.
+
+Eligible kills award XP and independently roll for equipment and a gem. There is a 10% equipment roll and a separate 10% gem roll. Equipment includes melee and magic weapons, chest armor, helmets, bracers, two independent rings, and boots. Existing map armor and ordinary weapon pickups are converted to ARPG loot for the Cleric; quest items and weapon pieces remain. Item power is rolled per instance. Melee and magic weapon rolls use common (80%), strong (17%), and exceptional (3%) ranges. Chest armor has one to four random stat bonuses across three tiers. These are current roll tiers, not a complete item rarity system with named legendary items.
+
+Equipment affixes include sprint, dash, and double jump on boots; Arcane Shield or Guardian on some bracers; invisibility (`F`) or enemy detection (`V`) on some helmets; and Mana2 regeneration, vampirism, or damage aura on rings. Chest armor can improve health, damage reduction, mana capacity, and Mana1 regeneration. Abilities appear only when the relevant item is equipped. The HUD shows level, XP, mana, equipped abilities, and loot information.
+
+Cleric starts at level 1. Eligible kills grant XP; the first level threshold is 100 XP, later thresholds rise by 35%, and each level adds 5 maximum and current HP. Bounded monster reinforcements may appear over time on supported maps.
+
+### Gem upgrades
+
+Blue and green gems stack in the inventory. Select a gem stack, then an item in the bag or equipment; the menu previews the change. Press `1`, `0`, or `M` for 1, 10, or the maximum number, then `Enter` to apply. Each item has a combined 100-gem limit. On weapons, gems increase power and the mana cost is recalculated. On chest armor, helmets, and ordinary bracers, blue adds maximum HP and green adds protection up to the armor cap. On rings, blue adds maximum Mana1 and green improves Mana1 regeneration. Boots cannot be upgraded. See [gem details](docs/gems.md).
+
+## Custom maps
+
+Drag a Hexen-compatible `.wad`, `.pk3`, or `.pk7` onto **`Play-Custom-Map.bat`**. Double-clicking that file without an argument opens a Windows file picker. A map may need an explicit internal level name such as `MAP01`; the archive filename is not necessarily its map name. From a terminal:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1 -MapWad "D:\Maps\example.wad" -StartMap MAP01
+```
+
+You can also pass the internal map name as the second argument to `Play-Custom-Map.bat`. Without `-StartMap`, the map's own menu and transitions decide what starts; loading a WAD does **not** necessarily add an episode to New Game. Use a map editor or inspect `MAPINFO`/`ZMAPINFO` to find the level name. Maps built for other games, or maps that replace player classes and game code, may conflict. Keep a map archive available when loading its save. No third-party map is included. See [custom map notes](docs/custom-maps.md).
+
+## Alpha limits and roadmap
+
+This is an alpha focused on the Cleric. Balance, custom-map compatibility, save/load across hubs, and all equipment interactions still need broader playtesting. Weapon elemental damage types are reserved in data but do not affect attacks. There is no full procedural dungeon system or complete character skill tree.
+
+Future areas of work, with no promised dates: broader weapon progression, more magic, more affixes, expanded monster variety and behavior, procedural dungeons, and deeper character development. These are **plans**, not features of this build.
+
+## Rights and project status
+
+This is an unofficial fan modification and is not affiliated with or endorsed by the owners of *Hexen*. UZDoom, the original game, and their resources are separate dependencies. This repository must not contain `HEXEN.WAD`, original maps, UZDoom binaries, or third-party WADs without permission. See [asset review](docs/asset-review.md) before redistribution. No repository-wide license is asserted while code and art provenance are being reviewed.
