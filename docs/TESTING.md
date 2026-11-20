@@ -62,3 +62,5 @@ In a wide room run `netevent arpg_reinforce_test` until a reinforcement appears.
 ## Equipment gems v0.8
 
 See [gems.md](gems.md) for pickup, stack, upgrade, drop, save/load and HUD checks. Run `netevent arpg_gems_test` and `summon ARPGTestUpgradedAxe` for the 100-upgrade cap. Check Firestorm at 8 Mana2 and Lightning at 25 Mana2 in both normal and fullscreen HUD modes.
+
+Before release, follow the [MAP01 gem conversion regression](gem-respawn-regression.md), including the save/load, hub, Fighter/Mage and custom WAD checks.
