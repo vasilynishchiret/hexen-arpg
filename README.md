@@ -59,4 +59,4 @@ Future areas of work, with no promised dates: broader weapon progression, more m
 
 ## Rights and project status
 
-This is an unofficial fan modification and is not affiliated with or endorsed by the owners of *Hexen*. UZDoom, the original game, and their resources are separate dependencies. This repository must not contain `HEXEN.WAD`, original maps, UZDoom binaries, or third-party WADs without permission. See [asset review](docs/asset-review.md) before redistribution. No repository-wide license is asserted while code and art provenance are being reviewed.
+This is an unofficial fan modification and is not affiliated with or endorsed by the owners of *Hexen*. UZDoom, the original game, and their resources are separate dependencies. This repository must not contain `HEXEN.WAD`, original maps, UZDoom binaries, or third-party WADs without permission. See [asset review](docs/asset-review.md) before redistribution. The adapted status-bar source retains its UZDoom GPL-3.0-or-later notice and the [GPLv3 text](LICENSES/GPL-3.0.txt) is included for that file. No repository-wide license is asserted while the remaining code and art provenance are being reviewed.
