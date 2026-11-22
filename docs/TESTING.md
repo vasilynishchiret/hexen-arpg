@@ -1,6 +1,6 @@
-﻿# HEXEN-ARPG v0.5: manual verification in UZDoom 5.0.3
+﻿# HEXEN-ARPG alpha: manual verification in UZDoom 5.0.3
 
-Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1` and start a **new** Cleric game. Script loading can be checked from the terminal with `& 'C:\Games\UZDoom\uzdoom.exe' -iwad 'C:\Games\UZDoom\HEXEN.WAD' -file '.\mod' -noautoload -nosound -stdout +quit`; `script parsing took ...` without `Script error` proves compilation only. `+quit` may still leave a graphics window in this environment.
+Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1` and start a **new** Cleric game. For a script-loading check, pass `-UZDoom` and `-IWAD` with the locations of your own installed files and add `+quit`. A `script parsing took ...` line without `Script error` proves compilation only; `+quit` may still leave a graphics window in some environments.
 
 1. Verify 50/50 HP, level 1, Mace/Sword/Lightning in slots 1/2/3. Kill an Ettin: +10 XP and +5 Mana2. Check Mana1 regeneration and weapon attacks as in the previous playable backup.
 2. Run each console command: `summon ARPGTestSword`, `ARPGTestAxe`, `ARPGTestHammer`, `ARPGTestMace`, `ARPGTestLightning`, `ARPGTestFrost`, `ARPGTestStaff`, `ARPGTestWand`, `ARPGTestFirestorm`, `ARPGTestChest`, `ARPGTestHelmet`, `ARPGTestBracers`, `ARPGTestRing`. Also try `summon ARPGGroundWeapon` for a random item. Every type should have its own ground image.
