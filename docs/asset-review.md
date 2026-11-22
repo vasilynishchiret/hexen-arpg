@@ -1,6 +1,6 @@
 # Publication rights review
 
-This is a provenance checklist, not a grant of rights. Git history identifies the committer, but does not establish the original creator or license of every image or code fragment. See [licensing audit](licensing-audit.md) for the GPL obligations of the combined mod. No license grant for the project's other original contributions is inferred from this checklist.
+This is a provenance checklist, not a grant of rights. Git history identifies the committer, but does not establish the original creator or license of every image or code fragment. See [licensing audit](licensing-audit.md) and [rights notice](../RIGHTS.md). No license grant for the project's original contributions is inferred from this checklist.
 
 ## Assets requiring human review before public distribution
 
@@ -13,6 +13,6 @@ This is a provenance checklist, not a grant of rights. Git history identifies th
 
 No `HEXEN.WAD`, original game map archive, UZDoom executable, third-party map archive, or sound file is tracked. The ZScript deliberately refers to sprite and sound names supplied by the user's own Hexen IWAD and the installed UZDoom. This does not copy those binary resources into the mod.
 
-`mod/zscript/hud/arpg_statusbar.zs` is adapted from UZDoom's `hexen_sbar.zs`, retaining the upstream copyright and `SPDX-License-Identifier: GPL-3.0-or-later` header. It now also carries a modification notice. The corresponding GPLv3 text is included at `LICENSES/GPL-3.0.txt`. [UZDoom identifies its code as GPLv3 or later](https://github.com/UZDoom/UZDoom). Because this status bar is included by `mod/zscript.txt` and used by `mod/MAPINFO`, the mod should be treated as a combined work for release planning. Merely keeping a GPL notice on this file does not clear the other code and integrated assets for distribution; see the [licensing audit](licensing-audit.md). Other game code is committed under the project author's identity, but commit authorship alone is not a complete provenance record.
+The former `mod/zscript/hud/arpg_statusbar.zs` was adapted from UZDoom's GPL-3.0-or-later `hexen_sbar.zs`. It was removed from this branch, along with its include and `StatusBarClass` override. The installed engine now supplies its own Hexen status bar at runtime; that engine source is not part of the mod package. The copied file remains in earlier Git history and the existing draft release ZIP, so neither is a cleared distribution artifact. See the [licensing audit](licensing-audit.md).
 
-Before a public release or PR merge, complete gameplay checks, the remaining code-provenance review, and the combined-work licensing steps. The excluded sky textures and map drafts should not be added until their rights and contents are assessed separately.
+Before a public release or PR merge, complete the remaining gameplay checks, code-provenance review, and explicit rights terms for original code and art. The excluded sky textures and map drafts should not be added until their rights and contents are assessed separately.
