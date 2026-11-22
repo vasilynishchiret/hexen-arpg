@@ -1,0 +1,2 @@
+server bool arpg_convert_map_loot = true;
+server bool arpg_reinforcements = true;
