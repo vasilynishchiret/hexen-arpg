@@ -1,68 +1,70 @@
-# HEXEN-ARPG (alpha)
+# HEXEN-ARPG
 
 [Русский](README.ru.md)
 
-HEXEN-ARPG is a free, unofficial ARPG mod for the original *Hexen: Beyond Heretic*. It adds loot, equipment, randomized weapon power, abilities, gems, and character levels to the Cleric. The original campaign remains the default game. Fighter and Mage remain selectable but do not have the ARPG systems.
+Return to the original *Hexen: Beyond Heretic* campaign with loot, equipment, and character growth. HEXEN-ARPG is a free, unofficial alpha mod for UZDoom. Choose **Cleric** to play with the ARPG systems; Fighter and Mage are still available in their usual Hexen form.
 
-## Requirements and installation
+## Quick Start
 
-- Windows, [UZDoom](https://github.com/UZDoom/UZDoom) (developed against 5.0.3), and your own legally obtained original `HEXEN.WAD`.
-- Download or clone this repository. Keep its `mod` and `tools` folders beside `Play.bat`.
-- Do not copy `HEXEN.WAD` or UZDoom into a redistributed mod package. You may keep your own copies locally.
+1. [Download UZDoom](https://github.com/UZDoom/UZDoom/releases) for Windows.
+2. Have your own legally obtained copy of the original **`HEXEN.WAD`**. The game and engine are not included in this mod.
+3. [Download HEXEN-ARPG v0.1.0-alpha](https://github.com/vasilynishchiret/hexen-arpg/releases/download/v0.1.0-alpha/HEXEN-ARPG-v0.1.0-alpha.zip) and extract the ZIP to a folder.
+4. Double-click **`Play.bat`**. If UZDoom or `HEXEN.WAD` is not found, choose its location in the file dialog.
+5. Start a new game and choose **Cleric**. `Play.bat` starts the original Hexen campaign with the mod enabled.
 
-Double-click **`Play.bat`**. The launcher looks beside the project, beside UZDoom, on `PATH`, and in common Windows, Steam, and GOG locations. If it cannot find UZDoom or `HEXEN.WAD`, select the file in the Windows dialog. Missing files produce an error. The game opens its normal menu; start a new game and choose **Cleric**. `Play.bat` does not load a custom map.
+Tested on Windows with UZDoom 5.0.3. This is an early alpha, so bugs and balance issues may still occur.
 
-For command-line use:
+## What you can play now
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1 -UZDoom "D:\Games\UZDoom\uzdoom.exe" -IWAD "D:\Games\Hexen\HEXEN.WAD"
-```
+- **Three independent weapon slots:** equip different weapons and switch with `1`, `2`, and `3`.
+- **Loot and equipment:** find melee and magic weapons, armor, helmets, bracers, two rings, and boots. Items can roll different power and stat bonuses.
+- **Affixes and abilities:** equipment can grant sprint, dash, double jump, shields, invisibility, enemy detection, Mana2 regeneration, vampirism, or a damage aura. An ability works only while its item is equipped.
+- **Two combat mana pools:** Mana1 regenerates over time; eligible kills grant Mana2. Weapon mana costs depend on the weapon and its rolled power.
+- **Upgrade gems:** world mana pickups become blue and green gems for improving eligible items. Combined mana pickups give one of each.
+- **XP and levels:** eligible kills award XP, and levels increase the Cleric's health. The HUD shows level, XP, mana, abilities, and nearby loot.
 
-Other arguments are passed to UZDoom. The default settings profile is `%LOCALAPPDATA%\HEXEN-ARPG\uzdoom.ini`; the launcher executes `tools/controls.cfg` there. An explicit engine `-config` argument selects the profile you provide. The launcher does not edit an existing global UZDoom or Hexen configuration.
+For the current numbers and item rules, see [loot](docs/loot.md), [mana](docs/mana-economy.md), and [gems](docs/gems.md).
 
-## Implemented in this alpha
+## Controls
 
-### Controls and interface
+- `1` / `2` / `3`: select a weapon slot. An empty slot cannot attack.
+- `Alt`: open or close the 20-cell inventory. Aim at ground loot and press `E` to pick it up.
+- In the inventory: click to select; double-click or right-click to equip; hover for a comparison. Use `WASD` or arrows to navigate, `Enter` to equip or remove, `U` to place a selected weapon in the active slot, `P` to drop, and `Esc` or `Alt` to close.
+- `F` and `V`: use invisibility or enemy detection when the corresponding helmet ability is equipped. Other equipment abilities depend on the item.
+- Mouse wheel or `[` / `]`: select a Hexen consumable; middle mouse uses it.
 
-`1`, `2`, `3` select three independent weapon slots; each can hold a different weapon, and an empty slot cannot attack. `Alt` opens the 20-cell inventory. Aim at ground loot and press `E` to pick it up; full inventory leaves it on the ground. In the inventory, single-click selects, double-click or right-click equips, and hovering shows item comparisons. `WASD`/arrows navigate, `Enter` equips or removes, `P` drops, and `Esc`/`Alt` closes. `U` equips a selected item into the selected weapon slot. The mouse wheel selects Hexen consumables and middle mouse uses one; `[` and `]` also select consumables. `I` is strafe in the separate profile.
-
-### Combat, loot, and character growth
-
-The Cleric has two **combat mana** pools. Mana1 regenerates over time, except while sprinting; Mana2 gains 5 on an eligible monster kill and can also regenerate from a ring affix. Weapon mana costs depend on the weapon and its rolled power. World mana pickups become **upgrade gems**, separate from combat mana; a combined pickup gives one of each.
-
-Eligible kills award XP and independently roll for equipment and a gem. There is a 10% equipment roll and a separate 10% gem roll. Equipment includes melee and magic weapons, chest armor, helmets, bracers, two independent rings, and boots. Existing map armor and ordinary weapon pickups are converted to ARPG loot for the Cleric; quest items and weapon pieces remain. Item power is rolled per instance. Melee and magic weapon rolls use common (80%), strong (17%), and exceptional (3%) ranges. Chest armor has one to four random stat bonuses across three tiers. These are current roll tiers, not a complete item rarity system with named legendary items.
-
-Equipment affixes include sprint, dash, and double jump on boots; Arcane Shield or Guardian on some bracers; invisibility (`F`) or enemy detection (`V`) on some helmets; and Mana2 regeneration, vampirism, or damage aura on rings. Chest armor can improve health, damage reduction, mana capacity, and Mana1 regeneration. Abilities appear only when the relevant item is equipped. The HUD shows level, XP, mana, equipped abilities, and loot information.
-
-Cleric starts at level 1. Eligible kills grant XP; the first level threshold is 100 XP, later thresholds rise by 35%, and each level adds 5 maximum and current HP. Bounded monster reinforcements may appear over time on supported maps.
-
-### Gem upgrades
-
-Blue and green gems stack in the inventory. Select a gem stack, then an item in the bag or equipment; the menu previews the change. Press `1`, `0`, or `M` for 1, 10, or the maximum number, then `Enter` to apply. Each item has a combined 100-gem limit. On weapons, gems increase power and the mana cost is recalculated. On chest armor, helmets, and ordinary bracers, blue adds maximum HP and green adds protection up to the armor cap. On rings, blue adds maximum Mana1 and green improves Mana1 regeneration. Boots cannot be upgraded. See [gem details](docs/gems.md).
+To use gems, select a stack in the inventory and then an eligible item. The menu previews the result; press `1`, `0`, or `M` for 1, 10, or the maximum number of gems, then `Enter` to apply. [Gem details](docs/gems.md) explain eligible equipment and limits.
 
 ## Custom maps
 
-Drag a Hexen-compatible `.wad`, `.pk3`, or `.pk7` onto **`Play-Custom-Map.bat`**. Double-clicking that file without an argument opens a Windows file picker. A map may need an explicit internal level name such as `MAP01`; the archive filename is not necessarily its map name. From a terminal:
+Drag a **Hexen-compatible** `.wad`, `.pk3`, or `.pk7` onto **`Play-Custom-Map.bat`**. Double-clicking the launcher opens a file picker. Some maps also need their internal level name; see [Advanced usage](#advanced-usage). Custom maps may conflict if they replace game code or player classes. No third-party map is included.
+
+## Alpha limits and roadmap
+
+This alpha focuses on the Cleric. Fighter and Mage remain playable without the Cleric's ARPG systems. Compatibility with custom maps and unusual equipment or hub-save combinations may vary.
+
+Future plans, with no promised dates, include broader weapon progression, more magic and affixes, expanded monster variety, procedural dungeons, and deeper character development. These are plans, not features of this build. A future standalone game would require its own lawful game data and replacement of all protected Hexen resources and dependencies.
+
+## Advanced usage
+
+Keep `Play.bat`, `Play-Custom-Map.bat`, `mod/`, and `tools/` together in the extracted folder. The launcher can find UZDoom and `HEXEN.WAD` beside the mod or engine, on `PATH`, and in common Windows, Steam, and GOG locations. You can also give exact paths:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1 -UZDoom "D:\Games\UZDoom\uzdoom.exe" -IWAD "D:\Games\Hexen\HEXEN.WAD"
+```
+
+The launcher passes other arguments to UZDoom. It uses a separate profile at `%LOCALAPPDATA%\HEXEN-ARPG\uzdoom.ini` and applies `tools/controls.cfg`; it does not edit an existing global UZDoom or Hexen configuration. An explicit engine `-config` argument selects your own profile.
+
+For a custom map, `-MapWad` loads its archive and `-StartMap` can select an internal level name such as `MAP01`:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\launch.ps1 -MapWad "D:\Maps\example.wad" -StartMap MAP01
 ```
 
-You can also pass the internal map name as the second argument to `Play-Custom-Map.bat`. Without `-StartMap`, the map's own menu and transitions decide what starts; loading a WAD does **not** necessarily add an episode to New Game. Use a map editor or inspect `MAPINFO`/`ZMAPINFO` to find the level name. Maps built for other games, or maps that replace player classes and game code, may conflict. Keep a map archive available when loading its save. No third-party map is included. See [custom map notes](docs/custom-maps.md).
+You can also pass the internal level name as the second argument to `Play-Custom-Map.bat`. The level name is not necessarily the archive filename, and loading an archive does not necessarily add an episode to New Game. Check its `MAPINFO`/`ZMAPINFO` or map editor. Keep the map archive available for its saves. See [custom-map notes](docs/custom-maps.md).
 
-## Alpha limits and roadmap
+## Rights
 
-This is an alpha focused on the Cleric. Balance, custom-map compatibility, save/load across hubs, and all equipment interactions still need broader playtesting. The rights holder completed the [short release checklist](docs/release-checklist.md) from an extracted ZIP and reported no critical problems; this is a user-reported result, not an independent gameplay certification. Weapon elemental damage types are reserved in data but do not affect attacks. There is no full procedural dungeon system or complete character skill tree.
+HEXEN-ARPG is an unofficial fan modification and is not affiliated with or endorsed by the owners of *Hexen*. You need your own lawful copy of Hexen. The release ZIP does not include `HEXEN.WAD`, original Hexen maps, UZDoom binaries, or third-party WADs; their rights remain with their respective owners.
 
-Future areas of work, with no promised dates: broader weapon progression, more magic, more affixes, expanded monster variety and behavior, procedural dungeons, and deeper character development. These are **plans**, not features of this build.
-
-A future commercial standalone game is a separate project. It will need its own lawful game data and a complete review and replacement of protected Hexen resources and dependencies, including characters, enemies, weapons, maps, graphics, sounds, interface, and branding. Removing `HEXEN.WAD` or renaming the game alone would not accomplish that.
-
-## Rights and project status
-
-This is an unofficial fan modification and is not affiliated with or endorsed by the owners of *Hexen*. UZDoom, the original game, and their resources are separate dependencies. This repository must not contain `HEXEN.WAD`, original maps, UZDoom binaries, or third-party WADs without permission. See [asset review](docs/asset-review.md) before redistribution.
-
-Project-authored program code and scripts are licensed under [GPL-3.0-or-later](LICENSE). The eight original PNG files and original documentation have separate [Original Content terms](LICENSES/ORIGINAL-CONTENT.md); they are **not** automatically GPL-licensed. The [rights map](RIGHTS.md) identifies exact file groups, provenance, and third-party boundaries. The GPL grant does not transfer the author's copyright: Vasily Nishchiret may use and license his own code in a future commercial game, while recipients retain their GPL rights. Contributions from others require a rights review before inclusion or separate licensing. Gameplay videos and streams may be monetized under the Original Content terms, subject to third-party rights.
-
-This branch uses UZDoom's built-in Hexen status bar at runtime; the previously adapted UZDoom status-bar source is absent from the current mod but remains in Git history. The [licensing audit](docs/licensing-audit.md) records the remaining legal limits of the review and GPL compliance work for any future standalone distribution. This alpha archive includes readable mod source but does not bundle UZDoom or Hexen.
+Project-authored program code and scripts are [GPL-3.0-or-later](LICENSE). The original PNG files and project documentation have separate [Original Content terms](LICENSES/ORIGINAL-CONTENT.md); they are not automatically GPL-licensed. See [RIGHTS.md](RIGHTS.md) for the file-by-file boundary and [the asset review](docs/asset-review.md) for provenance. The GPL grant does not transfer the author's copyright. The current mod source is included in the ZIP.
