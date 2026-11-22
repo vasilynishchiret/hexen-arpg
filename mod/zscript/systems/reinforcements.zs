@@ -1,4 +1,7 @@
 // These subclasses retain the original monster AI and stats. COUNTKILL is
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // removed so random arrivals cannot change level-completion kill counters.
 class ARPGReinfAfrit : FireDemon { Default { -COUNTKILL } }
 class ARPGReinfEttin : ARPGEttin { Default { -COUNTKILL } }

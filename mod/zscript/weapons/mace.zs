@@ -1,4 +1,7 @@
 class ARPGMace : CWeapMace
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 {
     override void ModifyDamage(int damage, Name damageType, out int newdamage,
         bool passive, Actor inflictor, Actor source, int flags, double angle)

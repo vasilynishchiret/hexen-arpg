@@ -1,4 +1,7 @@
 // One inventory weapon per slot. Its loot struct is the actual equipped item;
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // changing a slot never changes a class-wide Weapon.SlotNumber.
 class ARPGEquippedWeapon : CWeapMace
 {

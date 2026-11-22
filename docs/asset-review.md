@@ -1,6 +1,6 @@
 # Publication rights review
 
-This is a provenance checklist, not a grant of rights. Git history identifies the committer, but does not establish the original creator or license of every image or code fragment. See [licensing audit](licensing-audit.md) and [rights notice](../RIGHTS.md). No license grant for the project's original contributions is inferred from this checklist.
+This is a provenance checklist, not a grant of rights. Git history identifies the committer, but does not establish the original creator or license of every image or code fragment. The grants and boundaries are in [GPL for program code](../LICENSE), [Original Content terms](../LICENSES/ORIGINAL-CONTENT.md), and the [rights notice](../RIGHTS.md). See also the [licensing audit](licensing-audit.md).
 
 ## Assets requiring human review before public distribution
 
@@ -13,6 +13,6 @@ This is a provenance checklist, not a grant of rights. Git history identifies th
 
 No `HEXEN.WAD`, original game map archive, UZDoom executable, third-party map archive, or sound file is tracked. The ZScript deliberately refers to sprite and sound names supplied by the user's own Hexen IWAD and the installed UZDoom. This does not copy those binary resources into the mod.
 
-The former `mod/zscript/hud/arpg_statusbar.zs` was adapted from UZDoom's GPL-3.0-or-later `hexen_sbar.zs`. It was removed from this branch, along with its include and `StatusBarClass` override. The installed engine now supplies its own Hexen status bar at runtime; that engine source is not part of the mod package. The copied file remains in earlier Git history. The pre-license draft release ZIP was replaced with a candidate that excludes it, but that candidate must be rebuilt with the approved rights documents. See the [licensing audit](licensing-audit.md).
+The former `mod/zscript/hud/arpg_statusbar.zs` was adapted from UZDoom's GPL-3.0-or-later `hexen_sbar.zs`. It was removed from this branch, along with its include and `StatusBarClass` override. The installed engine now supplies its own Hexen status bar at runtime; that engine source is not part of the mod package. The copied file remains in earlier Git history. The final alpha archive must exclude it. See the [licensing audit](licensing-audit.md).
 
-Before a public release or PR merge, complete the remaining gameplay checks and code-provenance review. The approved terms for original code and art are in [LICENSE](../LICENSE) and [RIGHTS.md](../RIGHTS.md). The excluded sky textures and map drafts should not be added until their rights and contents are assessed separately.
+The rights holder reported completing the extracted-ZIP gameplay checks on 2026-11-22 with no critical problem found. That report does not establish the provenance of excluded files. The sky textures and map drafts should not be added until their rights and contents are assessed separately. Check the final archive entry list against this review before publication.

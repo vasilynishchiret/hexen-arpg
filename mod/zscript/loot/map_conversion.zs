@@ -1,4 +1,7 @@
 // CheckReplacement keeps map position, TID, flags, and actor special on the
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // replacement actor. The ARPG ground item fires the special on successful E pickup.
 class ARPGMapArmorDrop : ARPGGroundWeapon
 {

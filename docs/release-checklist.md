@@ -25,6 +25,7 @@ alone do not count as a gameplay pass.
    without bound. Repeat after saving/loading. See
    [gem respawn regression](gem-respawn-regression.md).
 
-Report failures before merging PR #1 or publishing the prerelease. The
-remaining GPL/ZScript question in [licensing audit](licensing-audit.md) is a
-separate release gate.
+The rights holder reported completing these hands-on checks from the release
+ZIP on 2026-11-22, with no critical problems found. This is a user-reported
+result, not an agent-observed play-through. The final license-only package
+still needs its own archive, source, and startup checks before publication.

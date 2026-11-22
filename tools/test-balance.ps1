@@ -1,4 +1,7 @@
 $ErrorActionPreference = 'Stop'
+# Copyright (C) 2026 Vasily Nishchiret
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $balance = Get-Content (Join-Path $root 'mod/zscript/systems/balance.zs') -Raw -Encoding UTF8
 $rules = Get-Content (Join-Path $root 'mod/zscript/loot/weapon_data.zs') -Raw -Encoding UTF8

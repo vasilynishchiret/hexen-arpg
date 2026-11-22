@@ -1,4 +1,7 @@
 // Only ARPG armor uses this inventory modifier. It does not replace HexenArmor.
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 class ARPGArmorEffect : Inventory
 {
     Default { Inventory.MaxAmount 1; +INVENTORY.UNDROPPABLE }

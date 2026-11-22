@@ -1,4 +1,7 @@
 class ARPGLootPrompt : EventHandler
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 {
     clearscope static String DamageText(int kind, int damage)
     {

@@ -1,4 +1,7 @@
 class ARPGSword : CWeapMace
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 {
     ARPGWeaponData loot;
     Default

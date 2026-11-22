@@ -1,4 +1,7 @@
 // The native Shadow flag makes the player less accurate as a monster target.
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 class ARPGStealthPower : PowerInvisibility
 {
     Default

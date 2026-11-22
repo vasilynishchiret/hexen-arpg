@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // Only Ettin receives the longer mace reach. All other states are inherited.
 class ARPGEttin : Ettin replaces Ettin
 {

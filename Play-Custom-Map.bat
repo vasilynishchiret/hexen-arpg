@@ -1,4 +1,7 @@
 @echo off
+rem Copyright (C) 2026 Vasily Nishchiret
+rem SPDX-License-Identifier: GPL-3.0-or-later
+
 setlocal
 cd /d "%~dp0"
 if not "%~1"=="" (

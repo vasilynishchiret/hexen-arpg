@@ -1,4 +1,7 @@
 // Convert only world actors. Ammo created by GiveInventory has an Owner.
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 class ARPGGemPickup : Actor
 {
     int gemKind; // 1 blue, 2 green, 3 combined

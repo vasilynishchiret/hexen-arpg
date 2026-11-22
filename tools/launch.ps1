@@ -1,4 +1,7 @@
 $ErrorActionPreference = 'Stop'
+# Copyright (C) 2026 Vasily Nishchiret
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 $UZDoom = $null
 $IWAD = $null
 $MapWad = $null

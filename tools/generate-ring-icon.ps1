@@ -1,4 +1,7 @@
 $ErrorActionPreference = 'Stop'
+# Copyright (C) 2026 Vasily Nishchiret
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 Add-Type -AssemblyName System.Drawing
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $folder = Join-Path $projectRoot 'mod\patches\arpg_ring'

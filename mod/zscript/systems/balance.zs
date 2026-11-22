@@ -1,4 +1,7 @@
 class ARPGBalance : Object
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 {
     const START_XP = 100;
     const XP_GROWTH_PERCENT = 135;

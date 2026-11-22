@@ -1,4 +1,7 @@
 class ARPGRingEffects : EventHandler
+// Copyright (C) 2026 Vasily Nishchiret
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 {
     int RingCount(ARPGCleric cleric, int id)
     {
