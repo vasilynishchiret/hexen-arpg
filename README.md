@@ -53,7 +53,7 @@ You can also pass the internal map name as the second argument to `Play-Custom-M
 
 ## Alpha limits and roadmap
 
-This is an alpha focused on the Cleric. Balance, custom-map compatibility, save/load across hubs, and all equipment interactions still need broader playtesting. Weapon elemental damage types are reserved in data but do not affect attacks. There is no full procedural dungeon system or complete character skill tree.
+This is an alpha focused on the Cleric. Balance, custom-map compatibility, save/load across hubs, and all equipment interactions still need broader playtesting. Before the public prerelease, follow the [short release checklist](docs/release-checklist.md) from the extracted ZIP. Weapon elemental damage types are reserved in data but do not affect attacks. There is no full procedural dungeon system or complete character skill tree.
 
 Future areas of work, with no promised dates: broader weapon progression, more magic, more affixes, expanded monster variety and behavior, procedural dungeons, and deeper character development. These are **plans**, not features of this build.
 
