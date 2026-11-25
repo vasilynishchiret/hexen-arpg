@@ -1,0 +1,703 @@
+// Generated mappings for original placeholder geometry only.
+// Never paste Hexen sprite names or image data here.
+Sprite ARXAA0, 94, 69
+{
+    Offset -186, -111
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_a0.png", 0, 0
+}
+
+Sprite ARXAB0, 66, 188
+{
+    Offset -254, 20
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_b0.png", 0, 0
+}
+
+Sprite ARXAC0, 169, 200
+{
+    Offset -151, 20
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_c0.png", 0, 0
+}
+
+Sprite ARXAD0, 190, 155
+{
+    Offset -100, -25
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_d0.png", 0, 0
+}
+
+Sprite ARXAE0, 57, 65
+{
+    Offset -66, -115
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_e0.png", 0, 0
+}
+
+Sprite ARXAF0, 25, 20
+{
+    Offset 12, 10
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_f0.png", 0, 0
+}
+
+Sprite ARXAG0, 31, 32
+{
+    Offset 15, 16
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_g0.png", 0, 0
+}
+
+Sprite ARXAH0, 37, 43
+{
+    Offset 21, 23
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_h0.png", 0, 0
+}
+
+Sprite ARXAI0, 40, 42
+{
+    Offset 22, 22
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_i0.png", 0, 0
+}
+
+Sprite ARXAJ0, 35, 39
+{
+    Offset 19, 20
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_j0.png", 0, 0
+}
+
+Sprite ARXAK0, 28, 17
+{
+    Offset 14, 4
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_k0.png", 0, 0
+}
+
+Sprite ARXAL0, 102, 73
+{
+    Offset -182, -107
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_l0.png", 0, 0
+}
+
+Sprite ARXAM0, 102, 73
+{
+    Offset -182, -107
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_m0.png", 0, 0
+}
+
+Sprite ARXAN0, 70, 188
+{
+    Offset -250, 20
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_n0.png", 0, 0
+}
+
+Sprite ARXAO0, 173, 200
+{
+    Offset -147, 20
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_o0.png", 0, 0
+}
+
+Sprite ARXAP0, 194, 159
+{
+    Offset -96, -21
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_p0.png", 0, 0
+}
+
+Sprite ARXAQ0, 65, 69
+{
+    Offset -62, -111
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_q0.png", 0, 0
+}
+
+Sprite ARXAR0, 30, 35
+{
+    Offset 16, 19
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_r0.png", 0, 0
+}
+
+Sprite ARXAS0, 37, 43
+{
+    Offset 15, 21
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_s0.png", 0, 0
+}
+
+Sprite ARXAT0, 50, 43
+{
+    Offset 25, 24
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_t0.png", 0, 0
+}
+
+Sprite ARXAU0, 57, 46
+{
+    Offset 26, 26
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_u0.png", 0, 0
+}
+
+Sprite ARXAV0, 48, 53
+{
+    Offset 26, 26
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_v0.png", 0, 0
+}
+
+Sprite ARXAW0, 46, 49
+{
+    Offset 21, 24
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_w0.png", 0, 0
+}
+
+Sprite ARXAX0, 44, 50
+{
+    Offset 21, 24
+    Patch "assets/sprites/weapons/axe/arpg_wp_axe_x0.png", 0, 0
+}
+
+Sprite ARETA1, 61, 71
+{
+    Offset 32, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a1.png", 0, 0
+}
+
+Sprite ARETB1, 73, 72
+{
+    Offset 38, 69
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b1.png", 0, 0
+}
+
+Sprite ARETC1, 75, 69
+{
+    Offset 44, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c1.png", 0, 0
+}
+
+Sprite ARETD1, 69, 72
+{
+    Offset 36, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d1.png", 0, 0
+}
+
+Sprite ARETA2, 74, 70
+{
+    Offset 34, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a2.png", 0, 0
+}
+
+Sprite ARETB2, 77, 74
+{
+    Offset 45, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b2.png", 0, 0
+}
+
+Sprite ARETC2, 69, 69
+{
+    Offset 36, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c2.png", 0, 0
+}
+
+Sprite ARETD2, 72, 72
+{
+    Offset 40, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d2.png", 0, 0
+}
+
+Sprite ARETA3, 82, 70
+{
+    Offset 43, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a3.png", 0, 0
+}
+
+Sprite ARETB3, 61, 73
+{
+    Offset 37, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b3.png", 0, 0
+}
+
+Sprite ARETC3, 72, 69
+{
+    Offset 31, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c3.png", 0, 0
+}
+
+Sprite ARETD3, 61, 70
+{
+    Offset 37, 69
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d3.png", 0, 0
+}
+
+Sprite ARETA4, 72, 71
+{
+    Offset 36, 68
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a4.png", 0, 0
+}
+
+Sprite ARETB4, 63, 73
+{
+    Offset 33, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b4.png", 0, 0
+}
+
+Sprite ARETC4, 72, 71
+{
+    Offset 36, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c4.png", 0, 0
+}
+
+Sprite ARETD4, 63, 72
+{
+    Offset 33, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d4.png", 0, 0
+}
+
+Sprite ARETA5, 66, 70
+{
+    Offset 36, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a5.png", 0, 0
+}
+
+Sprite ARETB5, 74, 72
+{
+    Offset 39, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b5.png", 0, 0
+}
+
+Sprite ARETC5, 72, 70
+{
+    Offset 34, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c5.png", 0, 0
+}
+
+Sprite ARETD5, 76, 72
+{
+    Offset 40, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d5.png", 0, 0
+}
+
+Sprite ARETA6, 72, 71
+{
+    Offset 41, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a6.png", 0, 0
+}
+
+Sprite ARETB6, 77, 72
+{
+    Offset 32, 71
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b6.png", 0, 0
+}
+
+Sprite ARETC6, 70, 71
+{
+    Offset 40, 68
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c6.png", 0, 0
+}
+
+Sprite ARETD6, 77, 73
+{
+    Offset 36, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d6.png", 0, 0
+}
+
+Sprite ARETA7, 88, 69
+{
+    Offset 44, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a7.png", 0, 0
+}
+
+Sprite ARETB7, 65, 70
+{
+    Offset 25, 69
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b7.png", 0, 0
+}
+
+Sprite ARETC7, 66, 70
+{
+    Offset 41, 68
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c7.png", 0, 0
+}
+
+Sprite ARETD7, 65, 73
+{
+    Offset 28, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d7.png", 0, 0
+}
+
+Sprite ARETA8, 73, 69
+{
+    Offset 35, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_a8.png", 0, 0
+}
+
+Sprite ARETB8, 59, 72
+{
+    Offset 31, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_b8.png", 0, 0
+}
+
+Sprite ARETC8, 74, 70
+{
+    Offset 42, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_c8.png", 0, 0
+}
+
+Sprite ARETD8, 61, 74
+{
+    Offset 33, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_d8.png", 0, 0
+}
+
+Sprite ARETE1, 78, 86
+{
+    Offset 36, 83
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e1.png", 0, 0
+}
+
+Sprite ARETF1, 96, 82
+{
+    Offset 46, 79
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f1.png", 0, 0
+}
+
+Sprite ARETG1, 68, 66
+{
+    Offset 19, 63
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g1.png", 0, 0
+}
+
+Sprite ARETE2, 46, 86
+{
+    Offset 16, 82
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e2.png", 0, 0
+}
+
+Sprite ARETF2, 90, 79
+{
+    Offset 51, 75
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f2.png", 0, 0
+}
+
+Sprite ARETG2, 86, 70
+{
+    Offset 35, 66
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g2.png", 0, 0
+}
+
+Sprite ARETE3, 68, 89
+{
+    Offset 33, 85
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e3.png", 0, 0
+}
+
+Sprite ARETF3, 59, 76
+{
+    Offset 31, 72
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f3.png", 0, 0
+}
+
+Sprite ARETG3, 101, 71
+{
+    Offset 64, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g3.png", 0, 0
+}
+
+Sprite ARETE4, 89, 92
+{
+    Offset 48, 89
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e4.png", 0, 0
+}
+
+Sprite ARETF4, 73, 75
+{
+    Offset 50, 72
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f4.png", 0, 0
+}
+
+Sprite ARETG4, 90, 70
+{
+    Offset 59, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g4.png", 0, 0
+}
+
+Sprite ARETE5, 79, 93
+{
+    Offset 42, 91
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e5.png", 0, 0
+}
+
+Sprite ARETF5, 90, 77
+{
+    Offset 51, 74
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f5.png", 0, 0
+}
+
+Sprite ARETG5, 70, 69
+{
+    Offset 54, 65
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g5.png", 0, 0
+}
+
+Sprite ARETE6, 44, 93
+{
+    Offset 30, 91
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e6.png", 0, 0
+}
+
+Sprite ARETF6, 87, 81
+{
+    Offset 36, 78
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f6.png", 0, 0
+}
+
+Sprite ARETG6, 76, 67
+{
+    Offset 51, 63
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g6.png", 0, 0
+}
+
+Sprite ARETE7, 73, 90
+{
+    Offset 40, 88
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e7.png", 0, 0
+}
+
+Sprite ARETF7, 63, 84
+{
+    Offset 30, 81
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f7.png", 0, 0
+}
+
+Sprite ARETG7, 93, 64
+{
+    Offset 41, 61
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g7.png", 0, 0
+}
+
+Sprite ARETE8, 89, 87
+{
+    Offset 43, 85
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_e8.png", 0, 0
+}
+
+Sprite ARETF8, 70, 83
+{
+    Offset 27, 82
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_f8.png", 0, 0
+}
+
+Sprite ARETG8, 95, 62
+{
+    Offset 31, 61
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_g8.png", 0, 0
+}
+
+Sprite ARETH1, 79, 73
+{
+    Offset 47, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h1.png", 0, 0
+}
+
+Sprite ARETH2, 56, 76
+{
+    Offset 24, 72
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h2.png", 0, 0
+}
+
+Sprite ARETH3, 63, 77
+{
+    Offset 28, 73
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h3.png", 0, 0
+}
+
+Sprite ARETH4, 74, 76
+{
+    Offset 31, 73
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h4.png", 0, 0
+}
+
+Sprite ARETH5, 83, 73
+{
+    Offset 35, 71
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h5.png", 0, 0
+}
+
+Sprite ARETH6, 59, 71
+{
+    Offset 32, 69
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h6.png", 0, 0
+}
+
+Sprite ARETH7, 66, 71
+{
+    Offset 40, 69
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h7.png", 0, 0
+}
+
+Sprite ARETH8, 78, 73
+{
+    Offset 48, 71
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_h8.png", 0, 0
+}
+
+Sprite ARETI0, 79, 73
+{
+    Offset 47, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_i0.png", 0, 0
+}
+
+Sprite ARETJ0, 86, 68
+{
+    Offset 44, 65
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_j0.png", 0, 0
+}
+
+Sprite ARETK0, 81, 67
+{
+    Offset 41, 67
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_k0.png", 0, 0
+}
+
+Sprite ARETL0, 80, 48
+{
+    Offset 38, 76
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_l0.png", 0, 0
+}
+
+Sprite ARETM0, 74, 51
+{
+    Offset 34, 75
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_m0.png", 0, 0
+}
+
+Sprite ARETN0, 80, 46
+{
+    Offset 40, 62
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_n0.png", 0, 0
+}
+
+Sprite ARETO0, 83, 44
+{
+    Offset 42, 44
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_o0.png", 0, 0
+}
+
+Sprite ARETP0, 82, 57
+{
+    Offset 42, 54
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_p0.png", 0, 0
+}
+
+Sprite ARETQ0, 84, 36
+{
+    Offset 36, 32
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_q0.png", 0, 0
+}
+
+Sprite ARETR0, 79, 73
+{
+    Offset 47, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_r0.png", 0, 0
+}
+
+Sprite AREBA0, 79, 73
+{
+    Offset 52, 70
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_a0.png", 0, 0
+}
+
+Sprite AREBM0, 23, 37
+{
+    Offset 14, 20
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_m0.png", 0, 0
+}
+
+Sprite AREBB0, 76, 74
+{
+    Offset 45, 71
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_b0.png", 0, 0
+}
+
+Sprite AREBN0, 36, 24
+{
+    Offset 18, 13
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_n0.png", 0, 0
+}
+
+Sprite AREBC0, 77, 81
+{
+    Offset 39, 78
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_c0.png", 0, 0
+}
+
+Sprite AREBO0, 30, 24
+{
+    Offset 15, 10
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_o0.png", 0, 0
+}
+
+Sprite AREBD0, 93, 89
+{
+    Offset 45, 86
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_d0.png", 0, 0
+}
+
+Sprite AREBP0, 19, 30
+{
+    Offset 13, 13
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_p0.png", 0, 0
+}
+
+Sprite AREBE0, 97, 85
+{
+    Offset 51, 82
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_e0.png", 0, 0
+}
+
+Sprite AREBQ0, 21, 42
+{
+    Offset 9, 19
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_q0.png", 0, 0
+}
+
+Sprite AREBF0, 100, 76
+{
+    Offset 53, 72
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_f0.png", 0, 0
+}
+
+Sprite AREBR0, 38, 27
+{
+    Offset 18, 13
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_r0.png", 0, 0
+}
+
+Sprite AREBG0, 95, 73
+{
+    Offset 48, 68
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_g0.png", 0, 0
+}
+
+Sprite AREBS0, 44, 21
+{
+    Offset 20, 13
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_s0.png", 0, 0
+}
+
+Sprite AREBH0, 98, 68
+{
+    Offset 49, 62
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_h0.png", 0, 0
+}
+
+Sprite AREBI0, 99, 55
+{
+    Offset 50, 48
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_i0.png", 0, 0
+}
+
+Sprite AREBJ0, 99, 34
+{
+    Offset 50, 27
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_j0.png", 0, 0
+}
+
+Sprite AREBK0, 99, 25
+{
+    Offset 50, 18
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_k0.png", 0, 0
+}
+
+Sprite AREBL0, 99, 27
+{
+    Offset 50, 18
+    Patch "assets/sprites/monsters/ettin/arpg_mn_ettin_gib_l0.png", 0, 0
+}

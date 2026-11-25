@@ -8,6 +8,8 @@ of its Hexen dependencies. Descriptive `arpg_*.png` filenames are mapped to
 four-character runtime sprite names by `mod/standalone/TEXTURES`. See the
 [naming convention](naming-convention.md) and
 [existing asset catalog](../asset-catalog.md).
+The two complete technical frame sets are in [animations.md](animations.md)
+and [animation-frames.csv](animation-frames.csv).
 
 ## First boot: connected prototype resources
 
@@ -21,7 +23,7 @@ four-character runtime sprite names by `mod/standalone/TEXTURES`. See the
 | `textures/arpg_tx_wall_a.png` | `ARWALL1`, four room walls | Hexen walls | Connected; placeholder |
 | `textures/arpg_tx_floor_a.png` | `ARFLOOR`, room floor | Hexen flats | Connected; placeholder |
 | `textures/arpg_tx_ceiling_a.png` | `ARCEIL`, ceiling and `BRDR_*` screen border | Hexen flats and border | Connected; placeholder |
-| `mod/standalone/maps/MAP01/TEXTMAP` | Original one-room UDMF map | Hexen maps | Connected; prototype |
+| `mod/standalone/maps/MAP01.wad` | Original one-room UDMF map, editable in UDB | Hexen maps | Connected; prototype |
 | `mod/standalone/zscript/prototype.zs` | Independent player, weapon, attack, pickup, minimal HP HUD | Hexen actors and status bar | Connected; prototype |
 | Generated `PLAYPAL`, `COLORMAP` | Original RGB332 palette and identity colour map | IWAD palette and colour map | Connected; generated |
 
@@ -31,6 +33,13 @@ files. The prototype uses the engine's Doom-family game configuration in
 `IWADINFO` as a technical base, but does not include or request `DOOM.WAD`.
 
 ## Prepared files
+
+The new axe and Ettin planning sets contain 117 original geometric PNGs with
+one-to-one technical canvas, offset and frame mapping. They are included in
+the standalone IPK3 under new runtime identifiers `ARXA`, `ARET` and `AREB`,
+but no prototype actor selects them yet. The private Hexen reference PNGs are
+outside this repository and outside every build. See
+[animations.md](animations.md) for the complete mapping and timing data.
 
 Paths below are relative to `mod/assets/`. The source generator is
 `tools/generate-standalone-placeholders.ps1`. Each image is original geometry,

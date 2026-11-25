@@ -6,6 +6,7 @@ Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $source = Join-Path $root 'mod/standalone'
+$privateRefs = Join-Path (Split-Path $root -Parent) '_PRIVATE_HEXEN_REFS'
 $outputDir = Join-Path $root 'build/standalone'
 $output = Join-Path $outputDir 'HEXEN-ARPG-Standalone.ipk3'
 
@@ -19,6 +20,21 @@ $art = @(
     'textures/arpg_tx_floor_a.png',
     'textures/arpg_tx_ceiling_a.png'
 )
+$menuArt = @('title','new_game','options','load','save','quit','episodes','skills','cursor') |
+    ForEach-Object { 'ui/menu/arpg_ui_menu_' + $_ + '.png' }
+$art += $menuArt
+if (@($menuArt | Where-Object { -not (Test-Path -LiteralPath (Join-Path (Join-Path $root 'mod/assets') $_) -PathType Leaf) }).Count) {
+    & (Join-Path $PSScriptRoot 'generate-standalone-menu-placeholders.ps1')
+}
+$animationManifest = Join-Path $root 'docs/standalone/animation-frames.csv'
+if (Test-Path -LiteralPath $animationManifest -PathType Leaf) {
+    foreach ($frame in @(Import-Csv -LiteralPath $animationManifest)) {
+        if ($frame.standalone_file -notmatch '^sprites/(weapons/axe|monsters/ettin)/arpg_[a-z0-9_]+\.png$') {
+            throw "Unsafe standalone animation asset path: $($frame.standalone_file)"
+        }
+        $art += $frame.standalone_file
+    }
+}
 $missingArt = @($art | Where-Object { -not (Test-Path -LiteralPath (Join-Path (Join-Path $root 'mod/assets') $_) -PathType Leaf) })
 if ($missingArt.Count) {
     & (Join-Path $PSScriptRoot 'generate-standalone-placeholders.ps1') | Out-Null
@@ -37,8 +53,9 @@ foreach ($relative in $art) {
 foreach ($pair in $files) {
     if (-not (Test-Path -LiteralPath $pair[1] -PathType Leaf)) { throw "Missing standalone source: $($pair[1])" }
 }
-$mapText = Join-Path $source 'maps/MAP01/TEXTMAP'
-if (-not (Test-Path -LiteralPath $mapText -PathType Leaf)) { throw "Missing standalone map: $mapText" }
+$mapWad = Join-Path $source 'maps/MAP01.wad'
+if (-not (Test-Path -LiteralPath $mapWad -PathType Leaf)) { throw "Missing standalone map: $mapWad" }
+if ((Resolve-Path -LiteralPath $mapWad).Path.StartsWith($privateRefs, [StringComparison]::OrdinalIgnoreCase)) { throw 'Private reference path is forbidden in the standalone build.' }
 
 function Add-Bytes([IO.Compression.ZipArchive] $archive, [string] $name, [byte[]] $bytes) {
     $entry = $archive.CreateEntry($name, [IO.Compression.CompressionLevel]::Optimal)
@@ -46,32 +63,16 @@ function Add-Bytes([IO.Compression.ZipArchive] $archive, [string] $name, [byte[]
     try { $stream.Write($bytes, 0, $bytes.Length) } finally { $stream.Dispose() }
 }
 
-function New-MapWad([byte[]] $text) {
-    $memory = [IO.MemoryStream]::new()
-    $writer = [IO.BinaryWriter]::new($memory)
-    try {
-        $writer.Write([Text.Encoding]::ASCII.GetBytes('PWAD'))
-        $writer.Write([int]3)
-        $writer.Write([int]0)
-        $entries = @()
-        foreach ($lump in @(@('MAP01', [byte[]]@()), @('TEXTMAP', $text), @('ENDMAP', [byte[]]@()))) {
-            $position = [int]$memory.Position
-            $data = [byte[]]$lump[1]
-            $writer.Write($data)
-            $entries += ,@($lump[0], $position, $data.Length)
-        }
-        $directory = [int]$memory.Position
-        foreach ($entry in $entries) {
-            $writer.Write([int]$entry[1])
-            $writer.Write([int]$entry[2])
-            $name = [byte[]]::new(8)
-            [Text.Encoding]::ASCII.GetBytes([string]$entry[0]).CopyTo($name, 0)
-            $writer.Write($name)
-        }
-        $memory.Position = 8
-        $writer.Write($directory)
-        return $memory.ToArray()
-    } finally { $writer.Dispose(); $memory.Dispose() }
+function Assert-StandaloneMap([string] $path) {
+    $bytes = [IO.File]::ReadAllBytes($path)
+    if ($bytes.Length -lt 12 -or [Text.Encoding]::ASCII.GetString($bytes, 0, 4) -ne 'PWAD') { throw 'Standalone map must be a PWAD.' }
+    $count = [BitConverter]::ToInt32($bytes, 4)
+    $directory = [BitConverter]::ToInt32($bytes, 8)
+    if ($count -lt 3 -or $directory -lt 12 -or [long]$directory + [long]$count * 16 -gt $bytes.Length) { throw 'Invalid standalone map directory.' }
+    $names = for ($i = 0; $i -lt $count; $i++) { [Text.Encoding]::ASCII.GetString($bytes, $directory + $i * 16 + 8, 8).Trim([char]0) }
+    if ($names[0] -ne 'MAP01' -or $names -notcontains 'TEXTMAP' -or $names -notcontains 'ENDMAP') { throw 'MAP01.wad must contain MAP01, TEXTMAP and ENDMAP.' }
+    foreach ($name in $names) { if ($name -match '^(PLAYPAL|COLORMAP|S_START|S_END|P_START|P_END|F_START|F_END|ZSCRIPT|TEXTURES)$') { throw "Map WAD contains forbidden resource lump: $name" } }
+    return $bytes
 }
 
 # A self-made RGB332 palette and identity colormap. No IWAD palette is read.
@@ -92,9 +93,15 @@ try {
     $archive = [IO.Compression.ZipFile]::Open($temporary, [IO.Compression.ZipArchiveMode]::Create)
     try {
         foreach ($pair in $files) {
-            Add-Bytes $archive $pair[0] ([IO.File]::ReadAllBytes($pair[1]))
+            if ($pair[0] -eq 'TEXTURES') {
+                $baseText = [IO.File]::ReadAllText($pair[1])
+                $animationText = [IO.File]::ReadAllText((Join-Path $source 'ANIMATION_TEXTURES'))
+                Add-Bytes $archive 'TEXTURES' ([Text.Encoding]::UTF8.GetBytes($baseText + "`n" + $animationText))
+            } else {
+                Add-Bytes $archive $pair[0] ([IO.File]::ReadAllBytes($pair[1]))
+            }
         }
-        Add-Bytes $archive 'maps/MAP01.wad' (New-MapWad ([IO.File]::ReadAllBytes($mapText)))
+        Add-Bytes $archive 'maps/MAP01.wad' (Assert-StandaloneMap $mapWad)
         Add-Bytes $archive 'PLAYPAL' $palette
         Add-Bytes $archive 'COLORMAP' $colormap
         Add-Bytes $archive 'docs/LICENSE' ([IO.File]::ReadAllBytes((Join-Path $root 'LICENSE')))

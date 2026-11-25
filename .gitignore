@@ -16,7 +16,8 @@ build/
 custom-maps/
 maps/
 !mod/standalone/maps/
-!mod/standalone/maps/**
+!mod/standalone/maps/MAP01.wad
+*.autosave*
 mod/assets/textures/sky/
 dist/
 temp/

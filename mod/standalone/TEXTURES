@@ -44,6 +44,21 @@ Flat ARCEIL, 64, 64
     Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0
 }
 
+// UZDoom's Doom-family menu fallback expects these compatibility names.
+// Every image below is original standalone art, not an IWAD extraction.
+Graphic M_DOOM, 256, 36 { Patch "assets/ui/menu/arpg_ui_menu_title.png", 0, 0 }
+Graphic M_NGAME, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_new_game.png", 0, 0 }
+Graphic M_OPTION, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_options.png", 0, 0 }
+Graphic M_LOADG, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_load.png", 0, 0 }
+Graphic M_SAVEG, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_save.png", 0, 0 }
+Graphic M_QUITG, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_quit.png", 0, 0 }
+Graphic M_EPISOD, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_episodes.png", 0, 0 }
+Graphic M_NEWG, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_new_game.png", 0, 0 }
+Graphic M_SKILL, 160, 36 { Patch "assets/ui/menu/arpg_ui_menu_skills.png", 0, 0 }
+Graphic M_SKULL1, 24, 24 { Patch "assets/ui/menu/arpg_ui_menu_cursor.png", 0, 0 }
+Graphic M_SKULL2, 24, 24 { Patch "assets/ui/menu/arpg_ui_menu_cursor.png", 0, 0 }
+Flat F_SKY1, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+
 // The Doom-family renderer requests these border graphics for reduced views.
 Graphic BRDR_T, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
 Graphic BRDR_B, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }

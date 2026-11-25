@@ -23,6 +23,14 @@ variant names (`common`, `idle`, `attack`) before the frame suffix. Keep the
 same stem across a related animation sequence. Never use a numeric suffix as
 an implicit replacement for a documented purpose.
 
+For full technical reference sets, append the **frame letter and rotation
+number** directly, such as `arpg_wp_axe_a0.png` or
+`arpg_mn_ettin_a1.png`. Rotation `0` means unrotated; `1`–`8` are viewing
+directions. A private reference uses the same stem plus `_ref`, for example
+`arpg_mn_ettin_a1_ref.png`, and lives only outside Git. The per-frame CSV
+records each exact correspondence and its 4-character standalone runtime
+prefix. Do not use the original Hexen sprite prefix as a runtime identifier.
+
 UZDoom ZScript sprite states use four-character runtime sprite prefixes and
 frame letters, whereas these descriptive source filenames may be longer.
 When a complete frame set exists, add a documented `TEXTURES` mapping from

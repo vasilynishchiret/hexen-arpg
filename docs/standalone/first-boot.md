@@ -32,6 +32,12 @@ display. The IPK3 contains a generated palette and colour map. Its source is
 in `mod/standalone/`; images are in `mod/assets/`. The build script lists every
 included source explicitly. See [resource-map.md](resource-map.md).
 
+The editable UDMF map is `mod/standalone/maps/MAP01.wad`. See the
+[UDB workflow](udb-workflow.md) for the edit → save → build → play cycle.
+Additional technical axe and Ettin placeholder frames are packaged as
+unselected planning assets; the prototype does not use a Hexen monster or
+weapon. See [animations.md](animations.md).
+
 The weapon, player sprite, ring, effects, and environment art are geometric
 placeholders. There is no monster, soundtrack, sound design, campaign,
 inventory, or progression system here. Engine-supplied menu and console UI
