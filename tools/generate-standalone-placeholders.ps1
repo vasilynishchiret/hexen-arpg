@@ -22,7 +22,10 @@ $specs = @(
     @('ui/arpg_ui_inventory_bg.png', 'panel', '#37495B', 256, 160),
     @('ui/arpg_ui_slot_empty.png', 'slot', '#728496', 48, 48),
     @('effects/arpg_fx_lightning_hit_a.png', 'lightning', '#78CBF4', 64, 64),
-    @('effects/arpg_fx_melee_hit_a.png', 'impact', '#F5CE79', 64, 64)
+    @('effects/arpg_fx_melee_hit_a.png', 'impact', '#F5CE79', 64, 64),
+    @('textures/arpg_tx_wall_a.png', 'wall', '#67849A', 64, 64),
+    @('textures/arpg_tx_floor_a.png', 'floor', '#64806A', 64, 64),
+    @('textures/arpg_tx_ceiling_a.png', 'ceiling', '#43586A', 64, 64)
 )
 
 foreach ($spec in $specs) {
@@ -113,6 +116,28 @@ foreach ($spec in $specs) {
                     $g.DrawLine($light, $x1, $y1, $x2, $y2)
                 }
                 $g.FillEllipse($fill, 25, 25, 14, 14)
+            }
+            'wall' {
+                $g.FillRectangle($dark, 0, 0, 64, 64)
+                for ($row = 0; $row -lt 4; $row++) {
+                    $offset = if ($row % 2) { -16 } else { 0 }
+                    for ($col = 0; $col -lt 4; $col++) {
+                        $x = $col * 32 + $offset
+                        $g.DrawRectangle($thin, $x + 1, $row * 16 + 1, 30, 14)
+                    }
+                }
+            }
+            'floor' {
+                $g.FillRectangle($dark, 0, 0, 64, 64)
+                for ($i = 0; $i -lt 64; $i += 16) {
+                    $g.DrawLine($thin, $i, 0, $i, 63)
+                    $g.DrawLine($thin, 0, $i, 63, $i)
+                }
+            }
+            'ceiling' {
+                $g.FillRectangle($dark, 0, 0, 64, 64)
+                $g.DrawLine($thin, 0, 0, 63, 63)
+                $g.DrawLine($thin, 63, 0, 0, 63)
             }
         }
         $bitmap.Save($output, [System.Drawing.Imaging.ImageFormat]::Png)

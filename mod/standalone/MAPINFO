@@ -1,0 +1,23 @@
+GameInfo
+{
+    PlayerClasses = "ARPGStandalonePlayer"
+    StatusBarClass = "ARPGStandaloneStatusBar"
+}
+
+map MAP01 "First Room"
+{
+    levelnum = 1
+    next = "MAP01"
+    sky1 = "ARCEIL"
+}
+
+episode MAP01
+{
+    name = "Standalone Prototype"
+}
+
+skill prototype
+{
+    name = "Prototype"
+    defaultskill
+}

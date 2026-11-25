@@ -1,0 +1,10 @@
+IWad
+{
+    Name = "HEXEN-ARPG Standalone Prototype"
+    Autoname = "hexen-arpg.standalone"
+    Game = "Doom"
+    Config = "Doom"
+    IWADName = "HEXEN-ARPG-Standalone.ipk3"
+    MustContain = "MAP01"
+    BannerColors = "1e 2e 40", "72 c9 8d"
+}

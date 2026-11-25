@@ -1,13 +1,34 @@
 # Standalone dependency and replacement map
 
-This inventory describes the **current Hexen mod**, not a playable standalone
-build. `Prepared` means an original placeholder PNG exists. `Connected` means
-the running mod uses it; **none of the new placeholders are connected**. All
-existing actor states, `mod/TEXTURES`, `mod/MAPINFO`, launchers, and gameplay
-remain unchanged. Descriptive `arpg_*.png` filenames require new four-character
-runtime sprite mappings before a ZScript state can display them. See the
+The first independent prototype is packaged from `mod/standalone/` and an
+explicit list of original `mod/assets/` images. It does not load the original
+Hexen mod, its maps, or a commercial IWAD. `Connected` below applies only to
+the prototype. The full Hexen-ARPG game still runs separately and retains all
+of its Hexen dependencies. Descriptive `arpg_*.png` filenames are mapped to
+four-character runtime sprite names by `mod/standalone/TEXTURES`. See the
 [naming convention](naming-convention.md) and
 [existing asset catalog](../asset-catalog.md).
+
+## First boot: connected prototype resources
+
+| Standalone source | Runtime use | Replaces for prototype | Status |
+| --- | --- | --- | --- |
+| `sprites/weapons/arpg_wp_cleric_sword_idle_a.png` | `ARWPA0`, independent `ARPGStandaloneWeapon` idle frame | Hexen weapon graphics | Connected; placeholder |
+| `sprites/weapons/arpg_wp_cleric_sword_attack_a.png` | `ARWPB0`, attack frame | Hexen attack graphics | Connected; placeholder |
+| `sprites/items/arpg_it_chest_common_a.png` | `ARPLA0`, independent player world sprite | Hexen player sprites | Connected; temporary placeholder |
+| `sprites/items/arpg_it_ring_common_a.png` | `ARITA0`, prototype token pickup | Hexen item sprites | Connected; placeholder |
+| `effects/arpg_fx_melee_hit_a.png` | `ARFXA0`, melee impact puff | Hexen impact sprite | Connected; placeholder |
+| `textures/arpg_tx_wall_a.png` | `ARWALL1`, four room walls | Hexen walls | Connected; placeholder |
+| `textures/arpg_tx_floor_a.png` | `ARFLOOR`, room floor | Hexen flats | Connected; placeholder |
+| `textures/arpg_tx_ceiling_a.png` | `ARCEIL`, ceiling and `BRDR_*` screen border | Hexen flats and border | Connected; placeholder |
+| `mod/standalone/maps/MAP01/TEXTMAP` | Original one-room UDMF map | Hexen maps | Connected; prototype |
+| `mod/standalone/zscript/prototype.zs` | Independent player, weapon, attack, pickup, minimal HP HUD | Hexen actors and status bar | Connected; prototype |
+| Generated `PLAYPAL`, `COLORMAP` | Original RGB332 palette and identity colour map | IWAD palette and colour map | Connected; generated |
+
+The package uses the UZDoom engine's built-in `ConsoleFont` for HUD text; that
+font is **not copied into this repository or IPK3**. There are no sound or music
+files. The prototype uses the engine's Doom-family game configuration in
+`IWADINFO` as a technical base, but does not include or request `DOOM.WAD`.
 
 ## Prepared files
 
@@ -18,21 +39,21 @@ not extracted or traced Hexen artwork. A single `a` frame is a planning sample,
 
 | Standalone file | Purpose and intended use | Current dependency to replace | Status |
 | --- | --- | --- | --- |
-| `sprites/weapons/arpg_wp_cleric_sword_idle_a.png` | Cleric sword view, idle; future `equipped.zs` state mapping | `ARAX` sword state, including `FAXE` source frames in `TEXTURES` | Prepared; not connected |
-| `sprites/weapons/arpg_wp_cleric_sword_attack_a.png` | Cleric sword view, first attack pose | `ARAX` attack sequence and `FAXEN0` source frame | Prepared; not connected |
+| `sprites/weapons/arpg_wp_cleric_sword_idle_a.png` | Cleric sword view, idle; future `equipped.zs` state mapping | `ARAX` sword state, including `FAXE` source frames in `TEXTURES` | Connected to prototype; not to full ARPG |
+| `sprites/weapons/arpg_wp_cleric_sword_attack_a.png` | Cleric sword view, first attack pose | `ARAX` attack sequence and `FAXEN0` source frame | Connected to prototype; not to full ARPG |
 | `sprites/weapons/arpg_wp_cleric_mace_idle_a.png` | Cleric mace view | `CMCE` frames in `equipped.zs` | Prepared; not connected |
 | `sprites/weapons/arpg_wp_cleric_staff_idle_a.png` | Cleric staff view | `CSSF` frames in `equipped.zs` | Prepared; not connected |
 | `sprites/weapons/arpg_wp_cleric_firestorm_idle_a.png` | Cleric fire weapon view | `CFLM` frames in `equipped.zs` | Prepared; not connected |
 | `sprites/items/arpg_it_sword_common_a.png` | Sword ground and inventory icon | Current `ARAW` original project sprite, `ground_weapon.zs` | Prepared; not connected; optional replacement |
-| `sprites/items/arpg_it_chest_common_a.png` | Armor chest ground and inventory icon | `AR_1` / `ARM1A0` in `ground_weapon.zs` | Prepared; not connected |
-| `sprites/items/arpg_it_ring_common_a.png` | Ring ground and inventory icon | Current `ARRG` original project sprite, `ground_weapon.zs` | Prepared; not connected; optional replacement |
+| `sprites/items/arpg_it_chest_common_a.png` | Armor chest ground and inventory icon | `AR_1` / `ARM1A0` in `ground_weapon.zs` | Used temporarily as prototype player sprite; not connected to full ARPG |
+| `sprites/items/arpg_it_ring_common_a.png` | Ring ground and inventory icon | Current `ARRG` original project sprite, `ground_weapon.zs` | Connected as prototype token; not to full ARPG |
 | `sprites/gems/arpg_gem_blue_a.png` | Blue upgrade stone, world and bag | `MAN1` animation in `gems.zs`; `MAN1I0` in `hud/inventory.zs` | Prepared; not connected |
 | `sprites/gems/arpg_gem_green_a.png` | Green upgrade stone, world and bag | `MAN2` animation in `gems.zs`; `MAN2G0` in `hud/inventory.zs` | Prepared; not connected |
 | `sprites/gems/arpg_gem_combined_a.png` | Combined pickup containing both gem types | `MAN3` animation in `gems.zs` | Prepared; not connected |
 | `ui/arpg_ui_inventory_bg.png` | Inventory panel background | Current `ARPGInventoryHud` uses drawn text and built-in menu APIs; no image background | Prepared; not connected; new optional presentation |
 | `ui/arpg_ui_slot_empty.png` | Empty equipment/bag slot | Current text-only slot display in `hud/inventory.zs` | Prepared; not connected; new optional presentation |
 | `effects/arpg_fx_lightning_hit_a.png` | Lightning impact | `LightningFloor` / `LightningCeiling` and their Hexen `MLFX` / `MLF2` art | Prepared; not connected; projectile classes still needed |
-| `effects/arpg_fx_melee_hit_a.png` | Melee impact | `AxePuffGlow`, `HammerPuff`, `ARPGSwordPuff`, with `FAXE` / `FHFX` art | Prepared; not connected; effect classes still needed |
+| `effects/arpg_fx_melee_hit_a.png` | Melee impact | `AxePuffGlow`, `HammerPuff`, `ARPGSwordPuff`, with `FAXE` / `FHFX` art | Connected to prototype; full ARPG effect classes still needed |
 
 ## Remaining Hexen dependencies by system
 
@@ -51,11 +72,10 @@ not extracted or traced Hexen artwork. A single `a` frame is a planning sample,
 | Audio and music | Hexen IWAD and engine definitions supply weapon, monster, world, UI sounds and campaign music. There are no project audio files or `SNDINFO`/music mappings | Compose/record/license all sounds and music, then add original logical names and mappings. `mod/assets/sounds/` and `music/` are reserved. |
 | Campaign and launcher | `Play.bat` / `tools/launch.ps1` require a lawful `HEXEN.WAD`; current map names, map scripts, TIDs and events belong to Hexen or compatible WADs | Independent IWAD/game package, launch path, maps, scripts, startup assets, title/branding, plus clean save/profile migration plan. |
 
-`mod/TEXTURES` is the only active custom image mapping file. `mod/MAPINFO`
-contains only player classes and event handlers. `mod/zscript.txt` includes
-the active source modules. No new mapping file is included, and no current
-references were redirected to staged placeholders. The existing original
-Hexen art is **not** copied into `mod/assets/`.
+The original mod still uses `mod/TEXTURES`, `mod/MAPINFO`, and `mod/zscript.txt`.
+The separate prototype uses `mod/standalone/TEXTURES`, `MAPINFO`, and
+`zscript.txt`. No original-mod references were redirected. Hexen art is **not**
+copied into `mod/assets/`.
 
 ## Connection gate
 

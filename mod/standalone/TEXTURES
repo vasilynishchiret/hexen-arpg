@@ -1,0 +1,55 @@
+// Runtime names are separate from descriptive source PNG names.
+Sprite ARPLA0, 48, 48
+{
+    Offset 24, 44
+    Patch "assets/sprites/items/arpg_it_chest_common_a.png", 0, 0
+}
+
+Sprite ARWPA0, 128, 96
+{
+    Offset -96, -72
+    Patch "assets/sprites/weapons/arpg_wp_cleric_sword_idle_a.png", 0, 0
+}
+
+Sprite ARWPB0, 128, 96
+{
+    Offset -96, -72
+    Patch "assets/sprites/weapons/arpg_wp_cleric_sword_attack_a.png", 0, 0
+}
+
+Sprite ARITA0, 48, 48
+{
+    Offset 24, 40
+    Patch "assets/sprites/items/arpg_it_ring_common_a.png", 0, 0
+}
+
+Sprite ARFXA0, 64, 64
+{
+    Offset 32, 32
+    Patch "assets/effects/arpg_fx_melee_hit_a.png", 0, 0
+}
+
+Texture ARWALL1, 64, 64
+{
+    Patch "assets/textures/arpg_tx_wall_a.png", 0, 0
+}
+
+Flat ARFLOOR, 64, 64
+{
+    Patch "assets/textures/arpg_tx_floor_a.png", 0, 0
+}
+
+Flat ARCEIL, 64, 64
+{
+    Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0
+}
+
+// The Doom-family renderer requests these border graphics for reduced views.
+Graphic BRDR_T, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_B, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_L, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_R, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_TL, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_TR, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_BL, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }
+Graphic BRDR_BR, 64, 64 { Patch "assets/textures/arpg_tx_ceiling_a.png", 0, 0 }

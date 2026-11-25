@@ -5,8 +5,11 @@
 Copyright © 2026 Vasily Nishchiret for contributions owned by him.
 
 The project-authored program text in `mod/zscript/**`, `mod/zscript.txt`,
-`mod/CVARINFO`, `mod/KEYCONF`, `mod/MAPINFO`, `mod/MENUDEF`, `mod/TEXTURES`,
-`Play.bat`, `Play-Custom-Map.bat`, and `tools/**` is licensed under the GNU
+`mod/standalone/IWADINFO`, `mod/standalone/MAPINFO`,
+`mod/standalone/TEXTURES`, `mod/standalone/zscript.txt`,
+`mod/standalone/zscript/**`, `mod/CVARINFO`, `mod/KEYCONF`, `mod/MAPINFO`, `mod/MENUDEF`,
+`mod/TEXTURES`, `Play.bat`, `Play-Custom-Map.bat`, `Play-Standalone.bat`, and
+`tools/**` is licensed under the GNU
 General Public License, version 3 or any later version (GPL-3.0-or-later).
 The complete license text is in [LICENSE](LICENSE). References in these files
 to external resource names do not license the referenced resources.
@@ -25,7 +28,9 @@ rights from their owners. This notice does not relicense third-party code.
 
 The eight tracked PNG files in `mod/patches/arpg_sword/**` and
 `mod/patches/arpg_ring/**`, the standalone placeholder PNG files in
-`mod/assets/sprites/**`, `mod/assets/ui/**`, and `mod/assets/effects/**`, and
+`mod/assets/sprites/**`, `mod/assets/textures/**`, `mod/assets/ui/**`, and
+`mod/assets/effects/**`, the original prototype map in
+`mod/standalone/maps/**`, and
 original project documentation are covered by
 [LICENSES/ORIGINAL-CONTENT.md](LICENSES/ORIGINAL-CONTENT.md), not automatically
 by the GPL. The seven sword PNGs were confirmed original
